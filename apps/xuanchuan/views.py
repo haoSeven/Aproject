@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponseRedirect
@@ -13,13 +15,13 @@ class MessageDraftView(View):
     """
 
     def get(self, request):
-        message = MessageDraft()
-        add_time = message.add_time
+        add_time = datetime.now()
 
-
-        return render(request, '', {
+        return render(request, 'xc_draft.html', {
             "add_time": add_time,
         })
+
+
 
     def post(self, request):
         message = MessageDraft()

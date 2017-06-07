@@ -1,0 +1,33 @@
+body{margin: 0; padding: 0;}
+.text_center{
+	text-align: center;
+	
+}
+
+.textarea_style{
+	text-align: center;
+	height:60px;
+	margin-top: 30px;
+		
+}
+.content_textarea{
+	height: 130px;
+	width: 100%;
+}
+.content_text{
+	text-align: center;
+	margin-top: 72px;
+}
+.remark_textarea{
+	height: 60px;
+	width: 100%
+}
+.remark_text{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.label_mar {
+	margin-left: 3px;
+	margin-right: 3px;
+}
