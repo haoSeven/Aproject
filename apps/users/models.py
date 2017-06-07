@@ -47,6 +47,7 @@ class UserProfile(AbstractUser):
     role = models.CharField(max_length=20, verbose_name='角色')
     position = models.CharField(max_length=20, verbose_name='职位')
     team = models.ForeignKey(Team, verbose_name='隶属小组', null=True, blank=True)
+    mobile = models.CharField(max_length=11, verbose_name='电话', default='')
 
     def __str__(self):
         return self.username
