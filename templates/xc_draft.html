@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/write_css.css' %}">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container" >
+    <header >
+        <h4 class="text_center">宣传信息发布</h4>
+        <div>
+        <span>态状：</span>
+        <span style="color:#2894FF" id="state">未审核</span>
+        </div>
+
+    </header>
+
+    <section>
+        <table class="table table-bordered">
+        <section>
+            <tbody>
+            <tr>
+                <th class="text_center">申请部门</th>
+                <td class="text_center">{{ request.user.team }}</td>
+                <th class="text_center">申请时间</th>
+                <td class="text_center" ><span id="applytime">{{ add_time }}</span></td>
+            </tr>
+            <tr>
+                <th class="text_center">申请人</th>
+                <td class="text_center">{{ request.user.name }}</td>
+                <th class="text_center">联系电话</th>
+                <td class="text_center">{{ request.user.mobile }}</td>
+            </tr>
+            <tr>
+                <th class="text_center">*标题</th>
+                <td colspan="3"><input style="width: 100%" id="title"></td>
+            </tr>
+            </section>
+        <section>
+            <tr>
+                <th class="text_center">*类别</th>
+                <td colspan="3">
+                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="电视媒体类" />电视媒体类</label>
+                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="网络媒体类" />网络媒体类 </label>
+                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="电梯海报类" />电梯海报类 </label>
+                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="新闻稿件类" />新闻稿件类 </label>
+                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="微博微信类" />微博微信类 </label>
+                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="其他" />其他 </label>
+                </td>
+
+            </tr>
+                <tr>
+                    <th class="text_center">发布媒介（对象）</th>
+                    <td colspan="3" id="media_select">
+                        <label>新闻稿件类：</label>
+                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="广州日报" />广州日报</label>
+                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="南方都市报" />南方都市报 </label>
+                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="南方周末" />南方周末 </label><br>
+                        <label>微博微信类：</label>
+                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="中心微博" />中心微博 </label>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="text_center">信息发布（投放）开始时间</th>
+                    <td><input style="width: 100%" id="starttime"></input></td>
+                    <th class="text_center">信息发布（投放）结束时间</th>
+                    <td><input style="width: 100%" id="endtime"></input></td>
+                </tr>
+                <tr>
+                    <th ><div class="content_text">内容</div></th>
+                    <td colspan="3"><textarea class="content_textarea" id="content"> </textarea></td>
+                </tr>
+            </section>
+
+
+        <section>
+                <tr>
+                    <th><div class="remark_text">备注</div></th>
+                    <td colspan="3"><textarea class="remark_textarea" id="remarks"> </textarea></td>
+                </tr>
+                <tr>
+                     <th><div class="textarea_style">附件</div></th>
+                     <td colspan="3"><input type="file" name="file" id="file"></td>
+                </tr>
+                <tr>
+                     <th><div class="textarea_style">领导审批意见</div></th>
+                     <td colspan="3"></td>
+                </tr>
+                <tr>
+                        <th colspan="2">选择意见：
+                        <select style="width: 80%" id="sele_suggest"  onchange="change()">
+                            <option>----------请选择----------</option>
+                            <option>同意</option>
+                            <option>拟同意，待领导审批。</option>
+                            <option>请重新修改。</option>
+                        </select></th>
+                        <th colspan="2">功能操作：</th>
+                </tr>
+                <tr>
+                        <th colspan="2">
+                        填写审批意见：
+                        <textarea class="remark_textarea" id="input_suggest"></textarea>
+                        </th>
+                        <td colspan="2">
+                            <div>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送科室领导</button>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送部门领导</button></div>
+                            <div style="padding-top: 5px">
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送中心领导</button>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">退回拟稿人</button></div>
+                        </td>
+
+
+
+                </tr>
+                </section>
+            </tbody>
+        </table>
+        </section>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        选择提交
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container" id="full_border">
+                        <div class="text_center">
+                            <select style="width: 30%" id="select" onchange="test()">
+                                <option value="0">-----请选择部门------</option>
+                                <option value="a">A部门</option>
+                                <option value="b">B部门</option>
+                                <option value="c">C部门</option>
+                            </select>
+                        </div>
+                        <div class="text_center" id="check_border">
+                            <form action="" method="get">
+                                <div id="0"> </div>
+                                <div id="a"  style="display:none">
+                                    <label><input name="role" type="checkbox" value="老1" />老1</label>
+                                    <label><input name="role" type="checkbox" value="老2" />老2</label>
+                                    <label><input name="role" type="checkbox" value="老3" />老3</label> </div>
+                                <div id="b"  style="display:none">
+                                    <label><input name="role" type="checkbox" value="老4" />老4</label>
+                                    <label><input name="role" type="checkbox" value="老5" />老5</label>
+                                    <label><input name="role" type="checkbox" value="老6" />老6</label>
+                                    <label><input name="role" type="checkbox" value="老7" />老7</label> </div>
+                                <div id="c"  style="display:none">
+                                    <label><input name="role" type="checkbox" value="老8" />老8</label>
+                                    <label><input name="role" type="checkbox" value="老9" />老9 </label>
+                                    <label><input name="role" type="checkbox" value="老10" />老10 </label></div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="send_form">
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+</div>
+
+<script src="{% static 'js/event.js' %}"></script>
+
+<script type="text/javascript">
+    $("#send_form").click(function(){              //点击提交按钮
+
+        var state=$("#state").html();               //获取状态
+        var time=$("#applytime").html();            //获取申请时间
+        var title=$("#title").val();                 // 获取标题
+        var starttime=$("#starttime").val();        // 获取开始时间
+        var endtime=$("#endtime").val();              // 获取结束时间
+        var content=$("#content").val();             //获取内容
+        var remarks=$("#remarks").val();              // 获取备注
+
+        var style = [];                                        //获取类别
+        $("input:checkbox[name='style']:checked").each(function() {
+            style.push($(this).val());
+        });
+
+        var object = [];                                        //获取发布媒体
+        $("input:checkbox[name='object']:checked").each(function() {
+            object.push($(this).val());
+        });
+
+        var sendee = [];                                          //获取接收人
+        $("input:checkbox[name='role']:checked").each(function() {
+            sendee.push($(this).val());
+        });
+
+        var formdata = new FormData();
+        formdata.append('state', state);        //状态
+        formdata.append('time', time);          //申请时间
+        formdata.append('title', title);         //标题
+        formdata.append('starttime', starttime);    //开始时间
+        formdata.append('endtime', endtime);        //结束时间
+        formdata.append('content', content);        //内容
+        formdata.append('remarks', remarks);        //备注
+        formdata.append('style', style);            //媒体类型
+        formdata.append('object', object);          //对象
+        formdata.append('sendee', sendee);          //接收人
+        formdata.append('file', $('#file')[0].files[0]);    //文件
+        $.ajax({
+            url: "{% url 'xc:message_draft' %}",
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+            },
+            success: function (data) {
+
+            },
+            error: function (data) {
+
+            }
+        })
+    })
+
+</script>
+</body>
+</html>
