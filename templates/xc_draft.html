@@ -213,33 +213,22 @@
             sendee.push($(this).val());
         });
 
-        var formdata = new FormData();
-        formdata.append('state', state);        //状态
-        formdata.append('time', time);          //申请时间
-        formdata.append('title', title);         //标题
-        formdata.append('starttime', starttime);    //开始时间
-        formdata.append('endtime', endtime);        //结束时间
-        formdata.append('content', content);        //内容
-        formdata.append('remarks', remarks);        //备注
-        formdata.append('style', style);            //媒体类型
-        formdata.append('object', object);          //对象
-        formdata.append('sendee', sendee);          //接收人
-        formdata.append('file', $('#file')[0].files[0]);    //文件
+
         $.ajax({
             url: "{% url 'xc:message_draft' %}",
             type: 'POST',
             cache: false,
-            data: formdata,
-            processData: false,
-            contentType: false,
+            data: {"state": state, "title": title, 'time': time, "start_time": starttime, "end_time": endtime,
+                "style": style, "content": content, "remark": remarks, 'media': object, 'accept_user': sendee},
+            dataType: "json",
             beforeSend: function (xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
             },
             success: function (data) {
-
+                window.location.reload();
             },
             error: function (data) {
-
+                console.log(error)
             }
         })
     })

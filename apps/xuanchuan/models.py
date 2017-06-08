@@ -42,9 +42,11 @@ class Opinion(models.Model):
 class MessageDraft(models.Model):
     draft_user = models.ForeignKey(UserProfile, verbose_name='起草人', related_name='draft_user')
     title = models.CharField(max_length=30, verbose_name='标题')
+    status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
+                              , default='wait')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='申请时间')
-    start_time = models.DateTimeField(default=datetime.now, verbose_name='开始时间')
-    end_time = models.DateTimeField(default=datetime.now, verbose_name='结束时间')
+    start_time = models.CharField(default='', verbose_name='开始时间', max_length=20)
+    end_time = models.CharField(default='', verbose_name='结束时间', max_length=20)
     content = models.TextField(max_length=500, verbose_name='内容')
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
@@ -52,7 +54,7 @@ class MessageDraft(models.Model):
     category = models.ManyToManyField(Category, verbose_name='类型')
     media = models.ManyToManyField(ObjMedia, verbose_name='媒体对象')
     accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='message_accept_user')
-    opinion = models.ForeignKey(Opinion, verbose_name='领导意见')
+    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', null=True, blank=True, default='')
 
     class Meta:
         verbose_name = '宣传信息起草表'
@@ -66,6 +68,8 @@ class MessageDraft(models.Model):
 class Items(models.Model):
     draft_user = models.ForeignKey(UserProfile, verbose_name='起草人')
     title = models.CharField(max_length=30, verbose_name='标题')
+    status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
+                              , default='wait')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,

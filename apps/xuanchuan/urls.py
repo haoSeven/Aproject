@@ -11,5 +11,5 @@ __date__ = '2017/5/26 21:59'
 
 urlpatterns = [
     # 宣传管理信息表
-    url(r'messagedraft/$', MessageDraftView.as_view(), name='message_draft')
+    url(r'^messagedraft/$', MessageDraftView.as_view(), name='message_draft')
 ]
