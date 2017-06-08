@@ -16,8 +16,14 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from users.views import Index
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^xuanchuan/', include('xuanchuan.urls', namespace='xc'))
+
+    # 首页
+    url(r'^$', Index.as_view(), name='index'),
+
+    url(r'^xc/', include('xuanchuan.urls', namespace='xc'))
 ]

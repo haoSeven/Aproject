@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}首页{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    {% block custom_css %}{% endblock %}
+<body>
+<div class="container">
+    <nav class="navbar navbar-light bg-faded">
+        <div class="row">
+            <div class="col-md-10">
+                <h2>XX血液中心无偿献血综合服务平台</h2></div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-secondary">注册</button>
+                <button type="button" class="btn btn-secondary">登录</button>
+            </div>
+        </div>
+    </nav>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a href="mywork.html" class="nav-link active" target="mainiframe">我的工作台</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">宣传管理</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" target="mainiframe">宣传事务概览</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">宣传事务管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">宣传计划管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">宣传方案管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">宣传事务查询统计</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">宣传工作总结报告</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">招募管理</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" target="mainiframe">招募事务概览</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">招募事务管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">招募计划管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">招募方案管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">招募事务查询统计</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">招募工作总结报告</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">服务管理</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" target="mainiframe">服务事务概览</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">服务事务管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">服务计划管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">服务方案管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">服务事务查询统计</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">服务效果追踪分析</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">服务工作总结报告</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">献血者综合服务查询</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">知识库管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">来电页面</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">统计报表</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" target="mainiframe">工作计划统计</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">工作方案统计</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">宣传管理计划</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">招募管理计划</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">服务管理计划</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">绩效考核</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">志愿者管理</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">系统维护</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" target="mainiframe">系统公告</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">接口管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">系统参数管理</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">系统管理</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" target="mainiframe">机构管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">人员管理</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" target="mainiframe">角色管理</a>
+            </div>
+        </li>
+    </ul>
+{#    <Iframe name="mainiframe" class="mt-4" src="mywork.html" width="100%" height="100%" scrolling="no"#}
+{#            frameborder="0"></iframe>#}
+    {% block content %}{% endblock %}
+    <div class="center">
+        <p style="text-align:center;">XX血液中心无偿献血综合服务平台 报障热线：</p>
+    </div>
+</div>
+{% block custom_js %}{% endblock %}
+
+</body>
+</html>
