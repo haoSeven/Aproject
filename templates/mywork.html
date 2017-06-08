@@ -1,0 +1,81 @@
+{% extends 'mainiframe.html' %}
+
+{% block content %}
+    <table class="table table-bordered">
+		<thead>
+			<button type="button" class="btn btn-secondary">代办(3)</button>
+			<button type="button" class="btn btn-secondary">已办(3)</button>
+			<button type="button" class="btn btn-secondary">>>更多</button>
+		</thead>
+			<thead>
+				<tr>
+					<th width="5%">No</th>
+					<th>标题</th>
+					<th width="20%">类型</th>
+					<th width="10%">发送人</th>
+					<th width="20%">发送时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Tanmay</td>
+					<td>Bangalore</td>
+					<td>560001</td>
+					<td>Bangalore</td>
+					<td>560001</td>
+				</tr>
+				<tr>
+					<td>Sachin</td>
+					<td>Mumbai</td>
+					<td>400003</td>
+					<td>Bangalore</td>
+					<td>560001</td>
+				</tr>
+				<tr>
+					<td>Uma</td>
+					<td>Pune</td>
+					<td>411027</td>
+					<td>Bangalore</td>
+					<td>560001</td>
+				</tr>
+			</tbody>
+		</table>
+    <div class="row">
+		<div class="col-md-6">
+		<table class="table table-bordered">
+		<thead>
+			<button type="button" class="btn btn-secondary">我参与的计划(2)</button>
+			<button type="button" class="btn btn-secondary">我参与的方案(2)</button>
+			<button type="button" class="btn btn-secondary">>>更多</button>
+		</thead>
+			<tbody>
+				<tr>
+					<td width="80%">Tanmay</td>
+					<td width="20%">Bangalore</td>
+				</tr>
+				<tr>
+					<td width="80%">Sachin</td>
+					<td width="20%">Mumbai</td>
+				</tr>
+			</tbody>
+		</table></div>
+		<div class="col-md-6">
+		<table class="table table-bordered">
+		<thead>
+			<button type="button" class="btn btn-secondary">系统消息(2)</button>
+			<button type="button" class="btn btn-secondary">>>更多</button>
+		</thead>
+			<tbody>
+				<tr>
+					<td width="80%">Tanmay</td>
+					<td width="20%">Bangalore</td>
+				</tr>
+				<tr>
+					<td width="80%">Sachin</td>
+					<td width="20%">Mumbai</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</div>
+{% endblock %}
