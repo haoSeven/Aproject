@@ -87,3 +87,31 @@ class MessageDraftView(View):
 
         return HttpResponse('{"status": "fail"}', content_type="application/json")
 
+
+class MessageInfoView(View):
+    """
+    宣传信息统计页面
+    """
+    def get(self, request):
+
+        return render(request, 'information_count.html', {
+
+        })
+
+class MessageManagementView(View):
+    """
+    宣传信息管理页面
+    """
+    def get(self, request):
+        return render(request, 'Publicity_management.html', {
+
+        })
+
+class MessageSearchView(View):
+    """
+    宣传信息查询页面
+    """
+    def get(self, request):
+        return render(request, 'Publish_query.html', {
+
+        })

@@ -1,21 +1,11 @@
-<!DOCTYPE html>
+{% extends 'mainiframe.html' %}
 {% load staticfiles %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'css/write_css.css' %}">
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
 
-    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% block title %}
+宣传信息发布
+{% endblock %}
 
-<div class="container" >
+{% block content %}
     <header >
         <h4 class="text_center">宣传信息发布</h4>
         <div>
@@ -181,9 +171,9 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+{% endblock %}
 
-
-</div>
+{% block custom_js %}
 
 <script src="{% static 'js/event.js' %}"></script>
 
@@ -235,5 +225,11 @@
     })
 
 </script>
-</body>
-</html>
+{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/write_css.css' %}">
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock %}
