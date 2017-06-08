@@ -213,6 +213,8 @@
             sendee.push($(this).val());
         });
 
+        var file=$("#file")[0].files[0];
+        console.log(file);
 
         $.ajax({
             url: "{% url 'xc:message_draft' %}",
@@ -228,7 +230,6 @@
                 window.location.reload();
             },
             error: function (data) {
-                console.log(error)
             }
         })
     })

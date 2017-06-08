@@ -44,6 +44,7 @@ class MessageDraftView(View):
             style = request.POST.getlist('style[]', [])
             media = request.POST.getlist('media[]', [])
             accept_user = request.POST.getlist('accept_user[]', [])
+            file = request.POST.get('file', '')
 
             message_draft = MessageDraft()
             message_draft.draft_user = request.user
@@ -54,32 +55,33 @@ class MessageDraftView(View):
             message_draft.end_time = end_time
             message_draft.content = content
             message_draft.remark = remark
+            message_draft.file = file
 
             # 保存文件 ！
 
-            message_draft.save()
+            # message_draft.save()
 
-            lis = MessageDraft.objects.get(id=message_draft.id)
+            # lis = MessageDraft.objects.get(id=message_draft.id)
             # 保存类型
-            for c in style:
-                category = Category(name=c)
-                if not category:
-                    category.name = c
-                    category.save()
-                    lis.category.add(category)
-            # 保存媒体对象
-            for m in media:
-                media = ObjMedia(name=m)
-                if not media:
-                    media.name = m
-                    media.save()
-                    lis.media.add(media)
-
-            # 修改   保存接受人的id
-            for a in accept_user:
-                accept_user = UserProfile(id=a)
-                if accept_user:
-                   lis.accept_user.add(accept_user)
+            # for c in style:
+            #     category = Category(name=c)
+            #     if not category:
+            #         category.name = c
+            #         category.save()
+            #         lis.category.add(category)
+            # # 保存媒体对象
+            # for m in media:
+            #     media = ObjMedia(name=m)
+            #     if not media:
+            #         media.name = m
+            #         media.save()
+            #         lis.media.add(media)
+            #
+            # # 修改   保存接受人的id
+            # for a in accept_user:
+            #     accept_user = UserProfile(id=a)
+            #     if accept_user:
+            #        lis.accept_user.add(accept_user)
 
             return HttpResponse('{"status": "success"}', content_type="application/json")
 
