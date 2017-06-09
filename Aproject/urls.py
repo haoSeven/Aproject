@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.static import serve
 
 from users.views import Index, HandleMessageDraftView
+from .settings import MEDIA_ROOT
 
 
 urlpatterns = [
@@ -27,4 +29,7 @@ urlpatterns = [
     url(r'^xc/', include('xuanchuan.urls', namespace='xc')),
     # 审批宣传信息申请
     url(r'^messagedraft/(?P<message_id>\d+)/$', HandleMessageDraftView.as_view(), name='handle_message_draft'),
+
+    # media图像地址 配置上传文件访问地址函数
+    url(r'^media/(?P<path>.*)/$', serve, {"document_root": MEDIA_ROOT}),
 ]

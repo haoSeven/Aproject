@@ -2,7 +2,7 @@
 
 from django.conf.urls import url
 
-from .views import MessageDraftView, MessageInfoView, MessageManagementView, MessageSearchView
+from .views import MessageDraftView, MessageInfoView, MessageManagementView, MessageSearchView, MessageDraftFileUploadView
 
 
 __author__ = 'haoSev7'
@@ -18,4 +18,6 @@ urlpatterns = [
     url(r'^management/$', MessageManagementView.as_view(), name='management'),
 
     url(r'^messagesearch/$', MessageSearchView.as_view(), name='messagesearch'),
+
+    url(r'^messagedraftupload/$', MessageDraftFileUploadView.as_view(), name='message_upload')
 ]

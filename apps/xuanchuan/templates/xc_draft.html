@@ -77,11 +77,8 @@
                 <tr>
                      <th><div class="textarea_style">附件</div></th>
                     <td colspan="3">
-                        <form id="fileupload" enctype="multipart/form-data">
-                            <input type="hidden" id="file_id" name="file_id" value="">
-                            <input type="file" name="file" id="file">
-                            {% csrf_token %}
-                        </form>
+                        <input type="hidden" id="lis_id" name="lis_id" value="">
+                        <input type="file" name="file" id="file">
                     </td>
 
                 </tr>
@@ -203,7 +200,7 @@
         $("input:checkbox[name='role']:checked").each(function() {
             sendee.push($(this).val());
         });
-        var lis_id = "";
+
         $.ajax({
             url: "{% url 'xc:message_draft' %}",
             type: 'POST',
@@ -216,7 +213,32 @@
             },
             success: function (data) {
                 if (data.status === 'success'){
-                    lis_id = data.lis_id;
+                    $("#lis_id").val(data.lis_id);
+                    var formData = new FormData();
+                    var lis_id = $("#lis_id").val();
+                    formData.append("file", $("#file")[0].files[0]);
+                    formData.append("lis_id", lis_id);
+
+                    $.ajax({
+                        url:"{% url 'xc:message_upload' %}",
+                        type: 'POST',
+                        cache: false,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        async: true,
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        },
+                        success: function (data) {
+                            if (data.status === 'success'){
+                                window.location.reload();
+                            }
+                            },
+                            error: function (data) {
+
+                            }
+                    })
                 } else if(data.status === 'fail'){
 
                 }
@@ -225,19 +247,7 @@
             }
         });
 
-        $.ajax({
-            url:"",
-            type: 'POST',
-            cache: false,
-            data: $("#fileupload").serialize(),
-            async: true,
-            success: function (data) {
-                window.location.reload();
-            },
-            error: function (data) {
 
-            }
-        })
     })
 
 </script>
