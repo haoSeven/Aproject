@@ -17,27 +17,15 @@
 				</tr>
 			</thead>
 			<tbody>
+				{% for messagedraft in all_messagedaft %}
 				<tr>
-					<td>Tanmay</td>
-					<td>Bangalore</td>
-					<td>560001</td>
-					<td>Bangalore</td>
-					<td>560001</td>
+					<td>{{ messagedraft.id }}</td>
+					<td><a href="{% url 'handle_message_draft' messagedraft.id %}">{{ messagedraft.title }}</a></td>
+					<td>{{ messagedraft.style }}</td>
+					<td>{{ messagedraft.draft_user }}</td>
+					<td>{{ messagedraft.add_time }}</td>
 				</tr>
-				<tr>
-					<td>Sachin</td>
-					<td>Mumbai</td>
-					<td>400003</td>
-					<td>Bangalore</td>
-					<td>560001</td>
-				</tr>
-				<tr>
-					<td>Uma</td>
-					<td>Pune</td>
-					<td>411027</td>
-					<td>Bangalore</td>
-					<td>560001</td>
-				</tr>
+            {% endfor %}
 			</tbody>
 		</table>
     <div class="row">

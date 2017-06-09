@@ -44,6 +44,7 @@ class MessageDraft(models.Model):
     title = models.CharField(max_length=30, verbose_name='标题')
     status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
                               , default='wait')
+    style = models.CharField(max_length=20, default="宣传信息申请", verbose_name="宣传信息申请")
     add_time = models.DateTimeField(default=datetime.now, verbose_name='申请时间')
     start_time = models.CharField(default='', verbose_name='开始时间', max_length=20)
     end_time = models.CharField(default='', verbose_name='结束时间', max_length=20)
