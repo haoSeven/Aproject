@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 
 from .models import MessageDraft, ObjMedia, Category
+from .forms import MessageDraftFileUploadForm
 from users.models import UserProfile
 
 
@@ -19,8 +20,13 @@ class MessageDraftView(View):
     def get(self, request):
         add_time = datetime.now()
 
+        all_category = Category.objects.all()
+        all_media = ObjMedia.objects.all()
+
         return render(request, 'xc_draft.html', {
             "add_time": add_time,
+            "all_category": all_category,
+            "all_media": all_media,
         })
 
 
@@ -55,27 +61,20 @@ class MessageDraftView(View):
             message_draft.end_time = end_time
             message_draft.content = content
             message_draft.remark = remark
-            message_draft.file = file
 
             # 保存文件 ！
 
-            # message_draft.save()
+            message_draft.save()
 
             # lis = MessageDraft.objects.get(id=message_draft.id)
             # 保存类型
             # for c in style:
             #     category = Category(name=c)
-            #     if not category:
-            #         category.name = c
-            #         category.save()
-            #         lis.category.add(category)
+            #     lis.category.add(category)
             # # 保存媒体对象
             # for m in media:
             #     media = ObjMedia(name=m)
-            #     if not media:
-            #         media.name = m
-            #         media.save()
-            #         lis.media.add(media)
+            #     lis.media.add(media)
             #
             # # 修改   保存接受人的id
             # for a in accept_user:
@@ -83,9 +82,17 @@ class MessageDraftView(View):
             #     if accept_user:
             #        lis.accept_user.add(accept_user)
 
-            return HttpResponse('{"status": "success"}', content_type="application/json")
+            return HttpResponse('{"status": "success", "lis_id": {0}}'.format(message_draft.id), content_type="application/json")
 
         return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+class MessageDraftFileUploadView(View):
+
+    def post(self, request):
+        file_id = request.POST.get("file_id", '')
+        file_update_form = MessageDraftFileUploadForm(request.POST, request.FILES)
+        pass
 
 
 class MessageInfoView(View):
