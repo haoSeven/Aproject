@@ -40,24 +40,18 @@
             <tr>
                 <th class="text_center">*类别</th>
                 <td colspan="3">
-                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="电视媒体类" />电视媒体类</label>
-                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="网络媒体类" />网络媒体类 </label>
-                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="电梯海报类" />电梯海报类 </label>
-                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="新闻稿件类" />新闻稿件类 </label>
-                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="微博微信类" />微博微信类 </label>
-                    <label style="padding-left: 10px"><input name="style" type="checkbox" value="其他" />其他 </label>
+                    {% for category in all_category %}
+                     <label style="padding-left: 10px"><input name="style" type="checkbox" value="{{ category.name }}" />{{ category.name }}</label>
+                    {% endfor %}
                 </td>
 
             </tr>
                 <tr>
                     <th class="text_center">发布媒介（对象）</th>
                     <td colspan="3" id="media_select">
-                        <label>新闻稿件类：</label>
-                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="广州日报" />广州日报</label>
-                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="南方都市报" />南方都市报 </label>
-                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="南方周末" />南方周末 </label><br>
-                        <label>微博微信类：</label>
-                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="中心微博" />中心微博 </label>
+                        {% for media in all_media %}
+                        <label style="padding-left: 10px"><input name="object" type="checkbox" value="{{ media.name }}" />{{ media.name }}</label>
+                        {% endfor %}
 
                     </td>
                 </tr>
@@ -82,7 +76,14 @@
                 </tr>
                 <tr>
                      <th><div class="textarea_style">附件</div></th>
-                     <td colspan="3"><input type="file" name="file" id="file"></td>
+                    <td colspan="3">
+                        <form id="fileupload" enctype="multipart/form-data">
+                            <input type="hidden" id="file_id" name="file_id" value="">
+                            <input type="file" name="file" id="file">
+                            {% csrf_token %}
+                        </form>
+                    </td>
+
                 </tr>
                 <tr>
                      <th><div class="textarea_style">领导审批意见</div></th>
@@ -202,8 +203,7 @@
         $("input:checkbox[name='role']:checked").each(function() {
             sendee.push($(this).val());
         });
-
-
+        var lis_id = "";
         $.ajax({
             url: "{% url 'xc:message_draft' %}",
             type: 'POST',
@@ -215,10 +215,27 @@
                 xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
             },
             success: function (data) {
+                if (data.status === 'success'){
+                    lis_id = data.lis_id;
+                } else if(data.status === 'fail'){
+
+                }
+            },
+            error: function (data) {
+            }
+        });
+
+        $.ajax({
+            url:"",
+            type: 'POST',
+            cache: false,
+            data: $("#fileupload").serialize(),
+            async: true,
+            success: function (data) {
                 window.location.reload();
             },
             error: function (data) {
-                console.log(error)
+
             }
         })
     })

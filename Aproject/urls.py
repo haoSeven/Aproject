@@ -16,14 +16,15 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from users.views import Index
+from users.views import Index, HandleMessageDraftView
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-
     # 首页
     url(r'^$', Index.as_view(), name='index'),
-
-    url(r'^xc/', include('xuanchuan.urls', namespace='xc'))
+    # 宣传信息URL配置
+    url(r'^xc/', include('xuanchuan.urls', namespace='xc')),
+    # 审批宣传信息申请
+    url(r'^messagedraft/(?P<message_id>\d+)/$', HandleMessageDraftView.as_view(), name='handle_message_draft'),
 ]
