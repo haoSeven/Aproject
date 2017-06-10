@@ -10,7 +10,7 @@ from django.http import HttpResponse
 
 from .models import MessageDraft, ObjMedia, Category
 from .forms import MessageDraftFileUploadForm, MessageDraftIdForm
-from users.models import UserProfile
+from users.models import UserProfile, Team
 
 
 class MessageDraftView(View):
@@ -23,11 +23,13 @@ class MessageDraftView(View):
 
         all_category = Category.objects.all()
         all_media = ObjMedia.objects.all()
+        all_team = Team.objects.all()
 
         return render(request, 'xc_draft.html', {
             "add_time": add_time,
             "all_category": all_category,
             "all_media": all_media,
+            "all_team": all_team,
         })
 
 
