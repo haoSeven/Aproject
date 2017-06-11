@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.views.static import serve
 
 from users.views import Index, HandleMessageDraftView
+from xuanchuan.views import GetReceiverView
 from .settings import MEDIA_ROOT
 
 
@@ -29,6 +30,8 @@ urlpatterns = [
     url(r'^xc/', include('xuanchuan.urls', namespace='xc')),
     # 审批宣传信息申请
     url(r'^messagedraft/(?P<message_id>\d+)/$', HandleMessageDraftView.as_view(), name='handle_message_draft'),
+    # 获取发送人
+    url(r'^getreceiver/$', GetReceiverView.as_view(), name='get_receiver'),
 
     # media图像地址 配置上传文件访问地址函数
     url(r'^media/(?P<path>.*)/$', serve, {"document_root": MEDIA_ROOT}),

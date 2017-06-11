@@ -24,6 +24,9 @@ class Office(models.Model):
     def __str__(self):
         return self.office_name
 
+    def get_team(self):
+        return self.team_set.all()
+
 
 class Team(models.Model):
     office = models.ForeignKey(Office, verbose_name='科室名称')
@@ -35,6 +38,9 @@ class Team(models.Model):
 
     def __str__(self):
         return self.team_name
+
+    def get_users(self):
+        return self.userprofile_set.all()
 
 
 class UserProfile(AbstractUser):

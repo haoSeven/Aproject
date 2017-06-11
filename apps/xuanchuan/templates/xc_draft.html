@@ -78,8 +78,11 @@
                 <tr>
                      <th><div class="textarea_style">附件</div></th>
                     <td colspan="3">
-                        <input type="hidden" id="lis_id" name="lis_id" value="">
-                        <input type="file" name="file" id="file">
+                        <form id="file_update" enctype="multipart/form-data">
+                            <input type="hidden" id="lis_id" name="lis_id" value="">
+                            <input type="file" name="file" id="file">
+                        </form>
+
                     </td>
 
                 </tr>
@@ -122,7 +125,7 @@
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content" style="width:150%">
+            <div class="modal-content" style="width:180%">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel">
                         选择提交
@@ -132,27 +135,21 @@
                    <div id='inputbox' class="box" style="height:100%;">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="card card-block" style="height:400px; overflow:auto;">
+                            <div class="card card-block" style="height:400px; width: 80%; overflow:auto;">
                               <h4 class="card-title">组织机构</h4>
                               <p class="card-text">
                                   <ul id="tree" class="filetree">
-                                    <li><span class="folder">广州血液中心</span>
+                                    <li><span class="folder">血液中心</span>
                                         <ul>
-                                            <li><span class="folder">单位领导</span></li>
-                                            <li><span class="folder">办公室</span></li>
-                                            <li><span class="folder">人事科</span></li>
-                                            <li><span class="folder">业务管理科</span>
+                                            {% for office in all_office %}
+                                            <li><span class="folder" id="{{ office.id }}">{{ office.office_name }}</span>
                                                 <ul>
-                                                    <li><span class="folder">小组1</span></li>
-                                                    <li><span class="folder">小组2</span></li>
+                                                    {% for team in office.get_team %}
+                                                    <li><span class="folder"><a onclick="getUser(this.id)" id="{{ team.id }}">{{ team.team_name }}</a></span></li>
+                                                    {% endfor %}
                                                 </ul>
                                             </li>
-                                            <li><span class="folder">财务科</span>
-                                                <ul>
-                                                    <li><span class="folder">小组1</span></li>
-                                                    <li><span class="folder">小组2</span></li>
-                                                </ul>
-                                            </li>
+                                            {% endfor %}
                                         </ul>
                                     </li>
                                 </ul>
@@ -162,12 +159,12 @@
                     <div class="col-md-3">
                         <div class="card card-block" style="height:400px; overflow:auto;">
                           <h4 class="card-title">候选人员</h4>
-                          <p class="card-text">
-                              <li><span >张三(业务管理科)</span></li>
-                              <li><span>李四(业务管理科)</span></li>
-                              <li><span>王五(业务管理科)</span></li>
-                            <li><span >周六(业务管理科)</span></li>
-                              </p>
+                            <p class="card-text">
+                            <ul id="get_user">
+
+                            </ul>
+
+                            </p>
                           </div>
                       </div>
                       <div class="col-xs-2" style="margin-top: 20%">
@@ -179,10 +176,9 @@
                         <div class="card card-block" style="height:400px; overflow:auto;">
                           <h4 class="card-title">选中人员</h4>
                           <p class="card-text">
-                             <li><span >张三(业务管理科)</span></li>
-                             <li><span>李四(业务管理科)</span></li>
-                             <li><span>王五(业务管理科)</span></li>
-                             <li><span >周六(业务管理科)</span>
+                             <ul id="select_user">
+
+                            </ul>
                              </p>
                          </div>
                      </div>
@@ -204,7 +200,6 @@
 
 {% block custom_js %}
 
-<script src="{% static 'js/event.js' %}"></script>
 <script src="{% static 'js/jquery.js' %}"></script>
 <script src="{% static 'js/jquery.cookie.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/jquery.treeview.js' %}" type="text/javascript"></script>
@@ -230,17 +225,13 @@
             object.push($(this).val());
         });
 
-        var sendee = [];                                          //获取接收人
-        $("input:checkbox[name='role']:checked").each(function() {
-            sendee.push($(this).val());
-        });
 
         $.ajax({
             url: "{% url 'xc:message_draft' %}",
             type: 'POST',
             cache: false,
             data: {"state": state, "title": title, 'time': time, "start_time": starttime, "end_time": endtime,
-                "style": style, "content": content, "remark": remarks, 'media': object, 'accept_user': sendee},
+                "style": style, "content": content, "remark": remarks, 'media': object, 'accept_user': selected_user},
             dataType: "json",
             beforeSend: function (xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
@@ -248,29 +239,30 @@
             success: function (data) {
                 if (data.status === 'success'){
                     $("#lis_id").val(data.lis_id);
-                    var formData = new FormData();
-                    var lis_id = $("#lis_id").val();
-                    formData.append("file", $("#file")[0].files[0]);
-                    formData.append("lis_id", lis_id);
+                    var formData = new FormData($("#file_update")[0]);
+{#                    var lis_id = $("#lis_id").val();#}
+{#                    formData.append("file", $("#file")[0].files[0]);#}
+{#                    formData.append("lis_id", lis_id);#}
 
                     $.ajax({
                         url:"{% url 'xc:message_upload' %}",
                         type: 'POST',
                         cache: false,
+                        processData: false,  // 不处理数据
+                        contentType: false,   // 不设置内容类型
+
                         data: formData,
-                        processData: false,
-                        contentType: false,
-                        async: true,
+
                         beforeSend: function (xhr, settings) {
                             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                         },
                         success: function (data) {
                             if (data.status === 'success'){
                                 window.location.reload();
+                            }else if(data.status === 'fail'){
+                                console.log(formData.get("lis_id"));
+                                console.log(formData.get("file"));
                             }
-                            },
-                            error: function (data) {
-
                             }
                     })
                 } else if(data.status === 'fail'){
@@ -280,9 +272,8 @@
             error: function (data) {
             }
         });
+    });
 
-
-    })
 
 </script>
 {% endblock %}
@@ -293,4 +284,5 @@
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/event.js' %}"></script>
 {% endblock %}
