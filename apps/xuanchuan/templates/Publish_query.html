@@ -53,7 +53,8 @@
         </ol>
     </form>
     <div class="col-xs-3">
-        <button type="submit"class="btn btn-secondary" >新建</button>
+{#        <button type="submit"class="btn btn-secondary" >新建</button>#}
+        <button class="btn btn-secondary"><a href="{% url 'xc:message_draft' %}">新建</a></button>
         <button type="submit" class="btn btn-secondary">归纳</button>
         <button type="" class="btn btn-secondary" >删除</button>
     </div>
@@ -72,7 +73,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for messagee in all_messagees %}
+        {% for messagee in all_messagees.object_list %}
         <tr>
             <th scope="row"><input type="checkbox"/></th>
             <td>{{ messagee.id }}</td>
@@ -88,17 +89,36 @@
         </tbody>
     </table>
     <div style="text-align:center">
-        <a  href="#" id="btn1">首页</a>
-        <a  href="#" id="btn2">上一页</a>
-        <a  href="#" id="btn3">下一页</a>
-        <a  href="#" id="btn4">尾页</a>
+        <a  href="?page=1" id="btn1">首页</a>
+        {% if all_messagees.has_previous %}
+            <a  href="?{{ all_messagees.previous_page_number.querystring }}" id="btn2">上一页</a>
+            {% else  %}
+            <a  href="#" id="btn2">上一页</a>
+        {% endif %}
+        {% if all_messagees.has_next %}
+            <a  href="?{{ all_messagees.next_page_number.querystring }}" id="btn3">下一页</a>
+            {% else %}
+            <a  href="#" id="btn3">下一页</a>
+        {% endif %}
+
+        <a  href="?page={{ count }}" id="btn4">尾页</a>
         <a>转到 </a>
         <input id="changePage" type="text" size="1" maxlength="4"/>
         <a>页 </a>
         <a  href="#" id="btn5">跳转</a>
     </div>
 {% endblock %}
+{% block custom_js %}
+<script type="text/javascript">
+    $("#btn5").click(function () {
+        var apage = $("#changePage").val();
+        $("#btn5").attr("href", "?page="+apage+"");
+    })
 
+
+
+</script>
+{% endblock %}
 
 
 

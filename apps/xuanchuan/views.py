@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.core import serializers
+from pure_pagination import PageNotAnInteger, Paginator
 
 from .models import MessageDraft, ObjMedia, Category
 from users.models import UserProfile, Office, Team
@@ -148,6 +149,19 @@ class MessageSearchView(View):
     """
     def get(self, request):
         all_messagees = MessageDraft.objects.all()
+        count = all_messagees.count()
+        count = count % 3 + 1
+
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_messagees, 3, request=request)
+
+        messages = p.page(page)
+
         return render(request, 'Publish_query.html', {
-        "all_messagees": all_messagees,
+            "all_messagees": messages,
+            "count": int(count),
         })
