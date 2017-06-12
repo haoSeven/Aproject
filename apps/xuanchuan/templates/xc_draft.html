@@ -257,9 +257,7 @@
                             if (data.status === 'success'){
                                 window.location.reload();
                             }else if(data.status === 'fail'){
-                                console.log(formData.get("lis_id"));
-                                console.log(formData.get("file"));
-                                window.location.href("{% url 'index' %}");
+                                window.location.reload();
                             }
                         }
                     })
