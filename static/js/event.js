@@ -41,3 +41,9 @@ function getUser(id) {
             $("#get_user").html(con);
         })
     }
+
+//设置跳转页面
+function Skip () {
+        var apage = $("#changePage").val();
+        $("#btn5").attr("href", "?page="+apage+"");
+}

@@ -1,5 +1,5 @@
 {% extends 'mainiframe.html' %}
-
+{% load staticfiles %}
 {% block title %}
 宣传信息发布查询
 {% endblock %}
@@ -26,27 +26,23 @@
                 <input type="text" id="applytime" style="height: 35px;width: 150px"/>
                 &nbsp&nbsp
                 <label>类别:</label>
-                <select style="height: 35px">
-                    <option value="1">全部</option>
-                    <option value="2">电视媒体类</option>
-                    <option value="3">网络媒体类</option>
-                    <option value="4">电梯海报类</option>
-                    <option value="5">新闻媒体类</option>
-                    <option value="6">微博微信类</option>
-                    <option value="7">其他</option>
+                <select style="height: 35px" id="category">
+                    <option value="">全部</option>
+                    {% for category in all_category %}
+                         <option value="{{ category.name }}">{{ category.name }}</option>
+                    {% endfor %}
                 </select>
                 &nbsp&nbsp
                 <label>状态:</label>
-                <select style="height: 35px">
-                    <option value="1">全部</option>
-                    <option value="2">待审批</option>
-                    <option value="3">执行中</option>
-                    <option value="4">已归档</option>
+                <select style="height: 35px" id="style">
+                    <option value="">全部</option>
+                    <option value="已审批">已审批</option>
+                    <option value="未审核">未审核</option>
                 </select>
                 &nbsp&nbsp&nbsp
 
                 <div class="col-xs-3">
-                    <button type="submit"class="btn btn-secondary" >查询</button>
+                    <button type="submit"class="btn btn-secondary" onclick="SearchDraft()" ><a id="search" href="#">查询</a></button>
                     <button type="reset" class="btn btn-secondary">重置</button>
                 </div>
             </div>
@@ -73,16 +69,16 @@
         </tr>
         </thead>
         <tbody>
-        {% for messagee in all_messagees.object_list %}
+        {% for message in all_messages.object_list %}
         <tr>
             <th scope="row"><input type="checkbox"/></th>
-            <td>{{ messagee.id }}</td>
-            <td>{{ messagee.title }}</td>
+            <td>{{ message.id }}</td>
+            <td>{{ message.title }}</td>
+            <td>{{ message.category }}</td>
             <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>{{ messagee.draft_user }}</td>
-            <td>{{ messagee.add_time }}</td>
-            <td>{{ messagee.status }}</td>
+            <td>{{ message.draft_user }}</td>
+            <td>{{ message.add_time }}</td>
+            <td>{{ message.status }}</td>
         </tr>
         {% endfor %}
 
@@ -90,13 +86,13 @@
     </table>
     <div style="text-align:center">
         <a  href="?page=1" id="btn1">首页</a>
-        {% if all_messagees.has_previous %}
-            <a  href="?{{ all_messagees.previous_page_number.querystring }}" id="btn2">上一页</a>
+        {% if all_messages.has_previous %}
+            <a  href="?{{ all_messages.previous_page_number.querystring }}" id="btn2">上一页</a>
             {% else  %}
             <a  href="#" id="btn2">上一页</a>
         {% endif %}
-        {% if all_messagees.has_next %}
-            <a  href="?{{ all_messagees.next_page_number.querystring }}" id="btn3">下一页</a>
+        {% if all_messages.has_next %}
+            <a  href="?{{ all_messages.next_page_number.querystring }}" id="btn3">下一页</a>
             {% else %}
             <a  href="#" id="btn3">下一页</a>
         {% endif %}
@@ -105,19 +101,20 @@
         <a>转到 </a>
         <input id="changePage" type="text" size="1" maxlength="4"/>
         <a>页 </a>
-        <a  href="#" id="btn5">跳转</a>
+        <a  href="" id="btn5" onclick="Skip()">跳转</a>
     </div>
 {% endblock %}
 {% block custom_js %}
-<script type="text/javascript">
-    $("#btn5").click(function () {
-        var apage = $("#changePage").val();
-        $("#btn5").attr("href", "?page="+apage+"");
-    })
-
-
-
-</script>
+<script type="text/javascript" src="{% static 'js/event.js' %}" ></script>
+    <script type="text/javascript">
+    function SearchDraft(){
+        var title = $("#title").val();
+        var proposer = $("#proposer").val();
+        var category = $("#category").val();
+        var style = $("#style").val();
+        $("#search").attr("href","?title="+title+"&proposer="+proposer+"&category="+category+"&style="+style+"")
+    }
+    </script>
 {% endblock %}
 
 
