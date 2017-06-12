@@ -2,10 +2,12 @@
  * Created by Administrator on 2017/6/5.
  */
 
+
 function change() {
     var obj=document.getElementById('sele_suggest').value;
     document.getElementById('input_suggest').value=obj;
 }
+
 $(function () { $('#myModal').modal('hide')});
 
 // 获取接受人

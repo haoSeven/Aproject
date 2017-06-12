@@ -184,7 +184,7 @@ $("#send_form").click(function () {
             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
         },
         success: function (data) {
-
+            window.location.href("{% url 'index' %}");
         }
     })
 })
