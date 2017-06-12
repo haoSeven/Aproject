@@ -69,6 +69,7 @@ class MessageDraft(models.Model):
 
     def get_category(self):
         return self.category.all().count()
+
     def get_media(self):
         return self.media.all().count()
 # end 宣传事务信息起草

@@ -73,7 +73,7 @@
         <tr>
             <th scope="row"><input type="checkbox"/></th>
             <td>{{ message.id }}</td>
-            <td>{{ message.title }}</td>
+            <td><a href="{% url 'handle_message_draft' message.id %}">{{ message.title }}</a></td>
             <td>{{ message.get_category }}</td>
             <td>{{ message.get_media }}</td>
             <td>{{ message.draft_user }}</td>
