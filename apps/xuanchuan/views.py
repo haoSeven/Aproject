@@ -25,7 +25,6 @@ class MessageDraftView(View):
         all_media = ObjMedia.objects.all()
         all_office = Office.objects.all()
 
-
         return render(request, 'xc_draft.html', {
             "add_time": add_time,
             "all_category": all_category,

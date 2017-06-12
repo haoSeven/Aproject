@@ -80,7 +80,7 @@
                 </tr>
                 <tr>
                      <th><div class="textarea_style">领导审批意见</div></th>
-                     <td colspan="3"></td>
+                     <td colspan="3">{{ messagedaft.opinion.content }}</td>
                 </tr>
                 <tr>
                         <th colspan="2">选择意见：
@@ -170,7 +170,25 @@
 {% block custom_js %}
 
 <script src="{% static 'js/event.js' %}"></script>
+<script type="text/javascript">
+$("#send_form").click(function () {
+    var opinion = $("#input_suggest").val();
+    var lis_id = "{{ messagedaft.id }}";
 
+    $.ajax({
+        type: "POST",
+        data : {"opinion": opinion, "lis_id": lis_id},
+        url: {% url 'send_opinion' %},
+        cache: false,
+        beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+        },
+        success: function (data) {
+
+        }
+    })
+})
+</script>
 
 {% endblock %}
 

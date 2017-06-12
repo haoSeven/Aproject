@@ -3,9 +3,11 @@
 {% block content %}
     <table class="table table-bordered">
 		<thead>
-			<button type="button" class="btn btn-secondary">代办(3)</button>
-			<button type="button" class="btn btn-secondary">已办(3)</button>
-			<button type="button" class="btn btn-secondary">>>更多</button>
+{#			<button type="button" class="btn btn-secondary">代办({{ no_count }})</button>#}
+{#			<button type="button" class="btn btn-secondary">已办({{ has_count }})</button>#}
+            <a href="?shiwu=daiban" style="margin: 0 5px;">代办({{ no_count }})&nbsp&nbsp</a>
+            <a href="?shiwu=yiban" style="margin: 0 5px;">已办({{ has_count }})&nbsp&nbsp</a>
+			<a>>>更多</a>
 		</thead>
 			<thead>
 				<tr>
@@ -17,7 +19,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for messagedraft in all_messagedaft %}
+            {% if status == 2 %}
+                {% for messagedraft in has_message %}
 				<tr>
 					<td>{{ messagedraft.id }}</td>
 					<td><a href="{% url 'handle_message_draft' messagedraft.id %}">{{ messagedraft.title }}</a></td>
@@ -26,6 +29,17 @@
 					<td>{{ messagedraft.add_time }}</td>
 				</tr>
             {% endfor %}
+                {% else %}
+                {% for messagedraft in all_messagedaft %}
+				<tr>
+					<td>{{ messagedraft.id }}</td>
+					<td><a href="{% url 'handle_message_draft' messagedraft.id %}">{{ messagedraft.title }}</a></td>
+					<td>{{ messagedraft.style }}</td>
+					<td>{{ messagedraft.draft_user }}</td>
+					<td>{{ messagedraft.add_time }}</td>
+				</tr>
+            {% endfor %}
+            {% endif %}
 			</tbody>
 		</table>
     <div class="row">

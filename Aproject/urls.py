@@ -30,6 +30,8 @@ urlpatterns = [
     url(r'^xc/', include('xuanchuan.urls', namespace='xc')),
     # 审批宣传信息申请
     url(r'^messagedraft/(?P<message_id>\d+)/$', HandleMessageDraftView.as_view(), name='handle_message_draft'),
+    # 提交建议
+    url(r'^sendopinion/$', HandleMessageDraftView.as_view(), name='send_opinion'),
     # 获取发送人
     url(r'^getreceiver/$', GetReceiverView.as_view(), name='get_receiver'),
 
