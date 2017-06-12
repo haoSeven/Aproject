@@ -106,7 +106,7 @@ class MessageDraftFileUploadView(View):
     保存宣传信息起草表附件
     """
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
 
         lis_id = request.POST.get('lis_id', '')
         file = request.FILES.get("file", None)

@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>{% block title %}首页{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
     {% block custom_css %}{% endblock %}
 <body>
@@ -133,9 +135,8 @@
         <p style="text-align:center;">XX血液中心无偿献血综合服务平台 报障热线：</p>
     </div>
 </div>
-    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-{% block custom_js %}{% endblock %}
+
+    {% block custom_js %}{% endblock %}
 
 </body>
 </html>
