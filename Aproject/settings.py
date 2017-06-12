@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'xuanchuan',
+    'pure_pagination',
 ]
 
 AUTH_USER_MODEL = 'users.UserProfile'
