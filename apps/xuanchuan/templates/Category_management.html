@@ -1,0 +1,97 @@
+{% extends 'mainiframe.html' %}
+
+{% block title %}
+    宣传信息类别管理
+{% endblock %}
+
+{% block custom_css %}
+    <style>
+        th {text-align:center}
+        p{font-size:20px }
+        /*option{font-size:10px }*/
+    </style>
+{% endblock %}
+
+{% block content %}
+    <form class="form-inline" >
+        <ol class="breadcrumb" style="width:100%">
+            <div class="form-group">
+
+                <label>媒介:</label>
+                <input type="text" id="proposer" style="height: 35px;width: 150px"/>
+                &nbsp&nbsp&nbsp
+                <div class="col-xs-3">
+                    <button type="submit"class="btn btn-secondary" >查询</button>
+                    <button type="reset" class="btn btn-secondary">重置</button>
+                </div>
+            </div>
+        </ol>
+    </form>
+    <div class="col-xs-3">
+        <button type="submit"class="btn btn-secondary" >新建</button>
+        <button type="" class="btn btn-secondary" >删除</button>
+    </div>
+    <br>
+    <table class="table table-bordered" style="text-align:center;">
+        <thead>
+        <tr >
+            <th > <input type="checkbox"/></th>
+            <th>No.</th>
+            <th>名称</th>
+            <th>状态</th>
+            <th>创建人</th>
+            <th>最后修改时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row"><input type="checkbox"/></th>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+
+        </tr>
+        <tr>
+            <th scope="row"><input type="checkbox"/></th>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+
+        </tr>
+        <tr>
+            <th scope="row"><input type="checkbox"/></th>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+
+        </tr>
+        <tr>
+            <th scope="row"><input type="checkbox"/></th>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+
+        </tr>
+        <tr>
+            <th scope="row"><input type="checkbox"/></th>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+            <td>&nbsp</td>
+
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}
+
+
+

@@ -150,3 +150,14 @@ class MessageSearchView(View):
         return render(request, 'Publish_query.html', {
 
         })
+
+
+class MessageCategoryManageView(View):
+    """
+    宣传信息类别管理页面
+    """
+    def get(self, request):
+
+        return render(request, 'Category_management.html', {
+
+        })

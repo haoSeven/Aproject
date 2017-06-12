@@ -8,7 +8,7 @@ function change() {
     document.getElementById('input_suggest').value=obj;
 }
 
-$(function () { $('#myModal').modal('hide')});
+// $(function () { $('#myModal').modal('hide')});
 
 // 获取接受人
 var selected_user = [];
