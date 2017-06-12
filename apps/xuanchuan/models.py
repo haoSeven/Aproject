@@ -7,6 +7,9 @@ from users.models import UserProfile
 
 class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name='类别名称')
+    status = models.CharField(choices=(("ty", "停用"), ("qy", "启用")), max_length=5, verbose_name='状态', default='qy')
+    create_user = models.ForeignKey(UserProfile, verbose_name='创建人', default='')
+    add_time = models.DateTimeField(default=datetime.now, verbose_name='申请时间')
 
     class Meta:
         verbose_name = '类别'
