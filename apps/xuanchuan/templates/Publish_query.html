@@ -72,56 +72,19 @@
         </tr>
         </thead>
         <tbody>
+        {% for messagee in all_messagees %}
         <tr>
             <th scope="row"><input type="checkbox"/></th>
+            <td>{{ messagee.id }}</td>
+            <td>{{ messagee.title }}</td>
             <td>&nbsp</td>
             <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
+            <td>{{ messagee.draft_user }}</td>
+            <td>{{ messagee.add_time }}</td>
+            <td>{{ messagee.status }}</td>
         </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
+        {% endfor %}
+
         </tbody>
     </table>
     <div style="text-align:center">

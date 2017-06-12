@@ -147,6 +147,7 @@ class MessageSearchView(View):
     宣传信息查询页面
     """
     def get(self, request):
+        all_messagees = MessageDraft.objects.all()
         return render(request, 'Publish_query.html', {
-
+        "all_messagees": all_messagees,
         })
