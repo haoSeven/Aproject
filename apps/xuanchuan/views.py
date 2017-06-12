@@ -148,22 +148,38 @@ class MessageSearchView(View):
     宣传信息查询页面
     """
     def get(self, request):
-        all_messagees = MessageDraft.objects.all()
-        count = all_messagees.count()
+        all_messages = MessageDraft.objects.all()
+        all_category = Category.objects.all()
+        count = all_messages.count()
         count = count % 3 + 1
+
+        title = request.GET.get("title", '')
+        proposer = request.GET.get("proposer", '')
+        category = request.GET.get("category", '')
+        style = request.GET.get("style",'')
+
+        if title:
+            all_messages = all_messages.filter(title=title)
+        if proposer:
+            all_messages = all_messages.filter(draft_user__username=proposer)
+        if category:
+            all_messages = all_messages.filter(category__name=category)
+        if style:
+            all_messages = all_messages.filter(status=style)
 
         try:
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 1
 
-        p = Paginator(all_messagees, 3, request=request)
+        p = Paginator(all_messages, 3, request=request)
 
         messages = p.page(page)
 
         return render(request, 'Publish_query.html', {
-            "all_messagees": messages,
+            "all_messages": messages,
             "count": int(count),
+            "all_category": all_category,
         })
 
 
