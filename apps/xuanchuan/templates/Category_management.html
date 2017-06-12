@@ -44,51 +44,16 @@
         </tr>
         </thead>
         <tbody>
+        {% for category in all_category %}
         <tr>
             <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>{{ category.status}}</td>
+            <td>{{ category.create_user.name }}</td>
+            <td>{{ category.add_time }}</td>
         </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-
-        </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

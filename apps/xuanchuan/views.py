@@ -156,7 +156,7 @@ class MessageSearchView(View):
         title = request.GET.get("title", '')
         proposer = request.GET.get("proposer", '')
         category = request.GET.get("category", '')
-        style = request.GET.get("style",'')
+        style = request.GET.get("style", '')
 
         if title:
             all_messages = all_messages.filter(title=title)
@@ -189,6 +189,8 @@ class MessageCategoryManageView(View):
     """
     def get(self, request):
 
-        return render(request, 'Category_management.html', {
+        all_category = Category.objects.all()
 
+        return render(request, 'Category_management.html', {
+            "all_category": all_category,
         })
