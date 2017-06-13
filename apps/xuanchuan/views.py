@@ -247,3 +247,53 @@ class ItemReceiverCountView(View):
         return render(request, 'receive_count.html', {
 
         })
+
+
+class ItemMakeView(View):
+
+    """
+    宣传物资制作页面
+    """
+
+    def get(self, request):
+        add_time = datetime.now()
+
+        return render(request, '', {
+            'add_time': add_time,
+        })
+
+    def post(self, request):
+        title = request.POST.get('title', '')
+        status = request.POST.get('state', '')
+
+        # 修改时间格式
+        time = request.POST.get('time', '')
+        patten = '年|月'
+        time = re.sub(patten, '-', time)
+        time = re.sub('日', '', time)
+
+        pass
+
+
+class ItemReceiveView(View):
+    """
+    宣传物资领用表
+    """
+    def get(self, request):
+        add_time = datetime.now()
+
+        return render(request, '', {
+            'add_time': add_time,
+        })
+
+    def post(self, request):
+        title = request.POST.get('title', '')
+        status = request.POST.get('state', '')
+
+        # 修改时间格式
+        time = request.POST.get('time', '')
+        patten = '年|月'
+        time = re.sub(patten, '-', time)
+        time = re.sub('日', '', time)
+
+        pass
