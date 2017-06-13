@@ -17,13 +17,13 @@
         <ol class="breadcrumb">
             <div class="form-group">
                 <label>标题：</label>
-                <input type="text" id="title" style="height: 35px;width: 200px"/>
+                <input type="text" id="title" name="title" style="height: 35px;width: 200px"/>
                 &nbsp &nbsp
                 <label>申请人:</label>
-                <input type="text" id="proposer" style="height: 35px;width: 80px"/>
+                <input type="text" id="proposer" name="proposer" style="height: 35px;width: 80px"/>
                 &nbsp&nbsp
                 <label>申请部门:</label>
-                <input type="text" id="applytime" style="height: 35px;width: 150px"/>
+                <input type="text" id="proposedepartment" style="height: 35px;width: 150px"/>
                 &nbsp&nbsp
                 <label>状态:</label>
                 <select style="height: 35px" id="style">
@@ -60,15 +60,15 @@
         </tr>
         </thead>
         <tbody>
-        {% for message in all_messages.object_list %}
+        {% for itemreceivemessage in all_itemreceivemessage.object_list %}
         <tr>
             <th scope="row"><input type="checkbox"/></th>
-            <td></td>
-            <td><a href=""></a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{ itemreceivemessage.id }}</td>
+            <td><a href="">{{ itemreceivemessage.title }}</a></td>
+            <td>{{ itemreceivemessage.draft_user.team.team_name }}</td>
+            <td>{{ itemreceivemessage.draft_user }}</td>
+            <td>{{ itemreceivemessage.add_time }}</td>
+            <td>{{ itemreceivemessage.status }}</td>
         </tr>
         {% endfor %}
 
@@ -76,13 +76,13 @@
     </table>
     <div style="text-align:center">
         <a  href="?page=1" id="btn1">首页</a>
-        {% if all_messages.has_previous %}
-            <a  href="?{{ all_messages.previous_page_number.querystring }}" id="btn2">上一页</a>
+        {% if all_itemreceivemessage.has_previous %}
+            <a  href="?{{ all_itemreceivemessage.previous_page_number.querystring }}" id="btn2">上一页</a>
             {% else  %}
             <a  href="#" id="btn2">上一页</a>
         {% endif %}
-        {% if all_messages.has_next %}
-            <a  href="?{{ all_messages.next_page_number.querystring }}" id="btn3">下一页</a>
+        {% if all_itemreceivemessage.has_next %}
+            <a  href="?{{ all_itemreceivemessage.next_page_number.querystring }}" id="btn3">下一页</a>
             {% else %}
             <a  href="#" id="btn3">下一页</a>
         {% endif %}
@@ -100,9 +100,9 @@
     function SearchDraft(){
         var title = $("#title").val();
         var proposer = $("#proposer").val();
-        var category = $("#category").val();
+        var proposedepartment = $("#proposedepartment").val();
         var style = $("#style").val();
-        $("#search").attr("href","?title="+title+"&proposer="+proposer+"&category="+category+"&style="+style+"")
+        $("#search").attr("href","?title="+title+"&proposer="+proposer+"&proposedepartment="+proposedepartment+"&style="+style+"")
     }
     </script>
 {% endblock %}

@@ -75,7 +75,7 @@ class MessageDraft(models.Model):
 # end 宣传事务信息起草
 
 
-class Items(models.Model):
+class ItemsMake(models.Model):
     draft_user = models.ForeignKey(UserProfile, verbose_name='起草人')
     title = models.CharField(max_length=30, verbose_name='标题')
     status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
@@ -84,9 +84,9 @@ class Items(models.Model):
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
-    accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='items_accept_user')
-    opinion = models.ForeignKey(Opinion, verbose_name='领导意见')
-
+    accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='itemsmake_accept_user')
+    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
+    sum_cost = models.FloatField(verbose_name='总费用')
     class Meta:
         verbose_name = '宣传资料制作'
         verbose_name_plural = verbose_name
@@ -105,7 +105,7 @@ class ItemMake(models.Model):
     adv_com_contact = models.CharField(max_length=20, verbose_name='广告公司联系人', null=True, blank=True)
     adv_com_mobile = models.CharField(max_length=11, verbose_name='广告公司联系方式')
     cost = models.FloatField(verbose_name='费用')
-    lis = models.ForeignKey(Items, verbose_name='宣传资料制作表')
+    lis = models.ForeignKey(ItemsMake, verbose_name='宣传资料制作表')
     make_method = models.CharField(max_length=20, verbose_name='制作方式')
 
     class Meta:
@@ -127,13 +127,33 @@ class UseMethod(models.Model):
         return self.name
 
 
+class ItemsReceive(models.Model):
+    draft_user = models.ForeignKey(UserProfile, verbose_name='起草人')
+    title = models.CharField(max_length=30, verbose_name='标题')
+    status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
+                              , default='wait')
+    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    remark = models.CharField(max_length=200, verbose_name='备注')
+    file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
+                            null=True, blank=True, default='')
+    accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='itemsreceive_accept_user')
+    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
+
+    class Meta:
+        verbose_name = '宣传资料制作'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.title
+
+
 class NeedItem(models.Model):
     name = models.CharField(max_length=20, verbose_name='宣传品名称', default='')
     unit = models.CharField(max_length=20, verbose_name='单位', default='')
     nums = models.IntegerField(verbose_name='数量', default=0)
     remark = models.CharField(max_length=50, verbose_name='备注', null=True, blank=True)
     use_method = models.ForeignKey(UseMethod, verbose_name='使用方向')
-    lis = models.ForeignKey(Items, verbose_name='宣传资料领用表')
+    lis = models.ForeignKey(ItemsReceive, verbose_name='宣传资料领用表')
 
     class Meta:
         verbose_name = '需要领用的宣传资料'

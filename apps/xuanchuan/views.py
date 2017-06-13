@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from pure_pagination import PageNotAnInteger, Paginator
 
-from .models import MessageDraft, ObjMedia, Category
+from .models import MessageDraft, ObjMedia, Category, ItemsMake,ItemsReceive
 from users.models import UserProfile, Office, Team
 
 
@@ -192,7 +192,7 @@ class MessageCategoryManageView(View):
     """
     def get(self, request):
 
-        all_category = Category.objects.all()
+        all_category = Category.objects.filter()
 
         return render(request, 'Category_management.html', {
             "all_category": all_category,
@@ -202,12 +202,56 @@ class ItemsMakeSearchView(View):
     """
     宣传物资制作查询页面
     """
-
     def get(self, request):
+        # 获取宣传物资制作的所有申请表
+        all_itemsmakemessage = ItemsMake.objects.all()
+        # 计算页数
+        count = all_itemsmakemessage.count()
+        count = count % 3 + 1
+        # 获取前端传递的 查询条件
+        title = request.GET.get("title", '')
+        proposer = request.GET.get("proposer", '')
+        makestyle = request.GET.get("makestyle", '')
+        minsum = request.GET.get("minsum", 0)
+        if minsum == '':
+            minsum = 0
+        else:
+            minsum = int(minsum)
 
+        maxsum = request.GET.get("maxsum", 0)
+        if maxsum == '':
+            maxsum = 0
+        else:
+            maxsum = int(maxsum)
+        style = request.GET.get("style", '')
 
+        # 对前端传递的查询条件进行过滤
+        if title:
+            all_itemsmakemessage = all_itemsmakemessage.filter(title=title)
+        if proposer:
+            all_itemsmakemessage = all_itemsmakemessage.filter(draft_user__username=proposer)
+        if style:
+            all_itemsmakemessage = all_itemsmakemessage.filter(status=style)
+
+        if minsum and maxsum == 0:
+            all_itemsmakemessage = all_itemsmakemessage.filter(sum_cost__gte=minsum)
+        elif minsum == 0 and maxsum:
+            all_itemsmakemessage = all_itemsmakemessage.filter(sum_cost__lte=maxsum)
+        elif minsum and maxsum:
+            all_itemsmakemessage = all_itemsmakemessage.filter(sum_cost__range=(minsum, maxsum))
+
+        # 分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_itemsmakemessage, 3, request=request)
+
+        messages = p.page(page)
         return render(request, 'item_make_search.html', {
-
+            "all_itemsmakemessage": messages,
+            "count": int(count)
         })
 
 
@@ -229,10 +273,38 @@ class ItemReceiverSearchView(View):
     """
     宣传物资领用查询页面
     """
-
     def get(self,request):
-        return render(request, 'item_receive_search.html', {
+        all_itemreceivemessage = ItemsReceive.objects.all()
+        count = all_itemreceivemessage.count()
+        count = count % 3 + 1
 
+        title = request.GET.get("title", '')
+        proposer = request.GET.get("proposer", '')
+        proposedepartment = request.GET.get("proposedepartment", '')
+        style = request.GET.get("style", '')
+
+        if title:
+            all_itemreceivemessage = all_itemreceivemessage.filter(title=title)
+        if proposer:
+            all_itemreceivemessage = all_itemreceivemessage.filter(draft_user__username=proposer)
+        if proposedepartment:
+            all_itemreceivemessage = all_itemreceivemessage.filter(draft_user__team__team_name=proposedepartment)
+        if style:
+            all_itemreceivemessage = all_itemreceivemessage.filter(status=style)
+
+
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_itemreceivemessage, 3, request=request)
+
+        messages = p.page(page)
+
+        return render(request, 'item_receive_search.html', {
+            "all_itemreceivemessage": messages,
+            "count": count
         })
 
 

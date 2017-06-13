@@ -23,16 +23,16 @@
                 <input type="text" id="proposer" style="height: 35px;width: 80px"/>
                 &nbsp&nbsp
                 <label>制作方式:</label>
-                <select style="height: 35px" id="category">
+                <select style="height: 35px" id="makestyle">
                     <option value="">全部</option>
-                    <option value="">制作方式1</option>
-                    <option value="">制作方式2</option>
+                    <option value="制作方式1">制作方式1</option>
+                    <option value="制作方式2">制作方式2</option>
                 </select>
                 &nbsp&nbsp
-                <label>类别:</label>
-                <input type="text" id="proposer" style="height: 35px;width: 80px"/>
+                <label>总费用:</label>
+                <input type="text" id="minsum" style="height: 35px;width: 80px"/>
                 <label>-</label>
-                <input type="text" id="proposer" style="height: 35px;width: 80px"/>
+                <input type="text" id="maxsum" style="height: 35px;width: 80px"/>
                 &nbsp&nbsp
                 <label>状态:</label>
                 <select style="height: 35px" id="style">
@@ -70,15 +70,15 @@
         </tr>
         </thead>
         <tbody>
-        {% for message in all_messages.object_list %}
+        {% for itemsmakemessage in all_itemsmakemessage.object_list %}
         <tr>
             <th scope="row"><input type="checkbox"/></th>
+            <td>{{ itemsmakemessage.id }}</td>
+            <td><a href="">{{ itemsmakemessage.title }}</a></td>
             <td></td>
-            <td><a href=""></a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{ itemsmakemessage.sum_cost }}</td>
+            <td>{{ itemsmakemessage.draft_user }}</td>
+            <td>{{ itemsmakemessage.status }}</td>
         </tr>
         {% endfor %}
 
@@ -86,13 +86,13 @@
     </table>
     <div style="text-align:center">
         <a  href="?page=1" id="btn1">首页</a>
-        {% if all_messages.has_previous %}
-            <a  href="?{{ all_messages.previous_page_number.querystring }}" id="btn2">上一页</a>
+        {% if all_itemsmakemessage.has_previous %}
+            <a  href="?{{ all_itemsmakemessage.previous_page_number.querystring }}" id="btn2">上一页</a>
             {% else  %}
             <a  href="#" id="btn2">上一页</a>
         {% endif %}
-        {% if all_messages.has_next %}
-            <a  href="?{{ all_messages.next_page_number.querystring }}" id="btn3">下一页</a>
+        {% if all_itemsmakemessage.has_next %}
+            <a  href="?{{ all_itemsmakemessage.next_page_number.querystring }}" id="btn3">下一页</a>
             {% else %}
             <a  href="#" id="btn3">下一页</a>
         {% endif %}
@@ -110,9 +110,14 @@
     function SearchDraft(){
         var title = $("#title").val();
         var proposer = $("#proposer").val();
-        var category = $("#category").val();
+        var makestyle = $("#makestyle").val();
+        var minsum =  $("#minsum").val();
+        console.log(minsum);
+        var maxsum = $("#maxsum").val();
+        console.log(maxsum);
         var style = $("#style").val();
-        $("#search").attr("href","?title="+title+"&proposer="+proposer+"&category="+category+"&style="+style+"")
+        $("#search").attr("href","?title="+title+"&proposer="+proposer+"&makestyle="+makestyle+"" +
+            "&style="+style+"&minsum="+minsum+"&maxsum="+maxsum+"")
     }
     </script>
 {% endblock %}
