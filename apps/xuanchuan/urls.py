@@ -25,11 +25,11 @@ urlpatterns = [
     # 宣传信息类别管理页面
     url(r'^messagecategory/$', MessageCategoryManageView.as_view(), name='management_category'),
     # 宣传物资制作查询页面
-    url(r'^itemmakesearch', ItemsMakeSearchView.as_view(), name='itemmakesearch'),
+    url(r'^itemmakesearch/$', ItemsMakeSearchView.as_view(), name='itemmakesearch'),
     # 宣传物资制作统计页面
     url(r'^itemmakecount/$', ItemsMakeCountView.as_view(), name='item_make_count'),
     # 宣传物资制作查询页面
-    url(r'^itemreceiversearch', ItemReceiverSearchView.as_view(), name='itemreceiversearch'),
+    url(r'^itemreceiversearch/$', ItemReceiverSearchView.as_view(), name='itemreceiversearch'),
     # 宣传物资领用统计页面
     url(r'^itemreceivercount/$', ItemReceiverCountView.as_view(), name='item_receiver_count'),
 ]
