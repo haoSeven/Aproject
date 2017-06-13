@@ -91,6 +91,9 @@ class MessageDraftView(View):
 
 
 class GetReceiverView(View):
+    """
+    获取 小组下的成员
+    """
 
     def get(self, request):
         team_id = request.GET.get('id', '')
@@ -193,4 +196,30 @@ class MessageCategoryManageView(View):
 
         return render(request, 'Category_management.html', {
             "all_category": all_category,
+        })
+
+
+class ItemsMakeCountView(View):
+
+    """
+    宣传物资制作统计页面
+    """
+
+    def get(self, request):
+
+        return render(request, 'promo_count.html', {
+
+        })
+
+
+class ItemReceiverCountView(View):
+
+    """
+    宣传物资领用统计页面
+    """
+
+    def get(self, request):
+
+        return render(request, 'receive_count.html', {
+
         })
