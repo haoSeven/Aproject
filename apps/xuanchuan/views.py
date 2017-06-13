@@ -198,6 +198,19 @@ class MessageCategoryManageView(View):
             "all_category": all_category,
         })
 
+class ItemsMakeSearchView(View):
+    """
+    宣传物资制作查询页面
+    """
+
+    def get(self, request):
+
+
+        return render(request, 'item_make_search.html', {
+
+        })
+
+
 
 class ItemsMakeCountView(View):
 
@@ -208,6 +221,17 @@ class ItemsMakeCountView(View):
     def get(self, request):
 
         return render(request, 'promo_count.html', {
+
+        })
+
+class ItemReceiverSearchView(View):
+
+    """
+    宣传物资领用查询页面
+    """
+
+    def get(self,request):
+        return render(request, 'item_receive_search.html', {
 
         })
 
