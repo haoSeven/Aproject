@@ -7,7 +7,8 @@ from users.models import UserProfile
 
 class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name='类别名称')
-    status = models.CharField(choices=(("停用", "停用"), ("启用", "启用")), max_length=5, verbose_name='状态', default='启用')
+    status = models.CharField(choices=(("stop", "停用"), ("active", "启用")), max_length=5,
+                              verbose_name='状态', default='active')
     create_user = models.ForeignKey(UserProfile, verbose_name='创建人', default='')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='申请时间')
 
@@ -87,6 +88,7 @@ class ItemsMake(models.Model):
     accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='itemsmake_accept_user')
     opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
     sum_cost = models.FloatField(verbose_name='总费用')
+
     class Meta:
         verbose_name = '宣传资料制作'
         verbose_name_plural = verbose_name

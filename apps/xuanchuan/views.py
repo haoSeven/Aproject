@@ -198,6 +198,7 @@ class MessageCategoryManageView(View):
             "all_category": all_category,
         })
 
+
 class ItemsMakeSearchView(View):
     """
     宣传物资制作查询页面
@@ -255,7 +256,6 @@ class ItemsMakeSearchView(View):
         })
 
 
-
 class ItemsMakeCountView(View):
 
     """
@@ -267,6 +267,7 @@ class ItemsMakeCountView(View):
         return render(request, 'promo_count.html', {
 
         })
+
 
 class ItemReceiverSearchView(View):
 
