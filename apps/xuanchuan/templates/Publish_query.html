@@ -73,12 +73,12 @@
         <tr>
             <th scope="row"><input type="checkbox"/></th>
             <td>{{ message.id }}</td>
-            <td><a href="{% url 'handle_message_draft' message.id %}">{{ message.title }}</a></td>
+            <td><a href="{% url 'handle_message_draft' message.id %}">{{ message.main.title }}</a></td>
             <td>{{ message.get_category }}</td>
             <td>{{ message.get_media }}</td>
-            <td>{{ message.draft_user }}</td>
-            <td>{{ message.add_time }}</td>
-            <td>{{ message.status }}</td>
+            <td>{{ message.main.draft_user.name }}</td>
+            <td>{{ message.main.add_time }}</td>
+            <td>{{ message.main.status }}</td>
         </tr>
         {% endfor %}
 

@@ -20,23 +20,23 @@
 			</thead>
 			<tbody>
             {% if status == 2 %}
-                {% for messagedraft in has_message %}
+                {% for draft in has_draft %}
 				<tr>
-					<td>{{ messagedraft.id }}</td>
-					<td><a href="{% url 'handle_message_draft' messagedraft.id %}">{{ messagedraft.title }}</a></td>
-					<td>{{ messagedraft.style }}</td>
-					<td>{{ messagedraft.draft_user }}</td>
-					<td>{{ messagedraft.add_time }}</td>
+					<td>{{ draft.id }}</td>
+					<td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+					<td>{{ draft.style }}</td>
+					<td>{{ draft.draft_user }}</td>
+					<td>{{ draft.add_time }}</td>
 				</tr>
             {% endfor %}
                 {% else %}
-                {% for messagedraft in all_messagedaft %}
+                {% for draft in all_draft %}
 				<tr>
-					<td>{{ messagedraft.id }}</td>
-					<td><a href="{% url 'handle_message_draft' messagedraft.id %}">{{ messagedraft.title }}</a></td>
-					<td>{{ messagedraft.style }}</td>
-					<td>{{ messagedraft.draft_user }}</td>
-					<td>{{ messagedraft.add_time }}</td>
+					<td>{{ draft.id }}</td>
+					<td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+					<td>{{ draft.style }}</td>
+					<td>{{ draft.draft_user }}</td>
+					<td>{{ draft.add_time }}</td>
 				</tr>
             {% endfor %}
             {% endif %}

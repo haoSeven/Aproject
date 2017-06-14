@@ -2,18 +2,18 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import JsonResponse
 
-from xuanchuan.models import MessageDraft, Opinion
+from xuanchuan.models import MessageDraft, Opinion,DraftBase
 
 
 class Index(View):
 
     def get(self, request):
 
-        all_messagedaft = MessageDraft.objects.filter(accept_user=request.user.id, status='未审核')
-        has_message = MessageDraft.objects.filter(accept_user=request.user.id, status='已审批')
+        all_draft = DraftBase.objects.filter(accept_user=request.user.id, status='未审核').order_by('-add_time')
+        has_draft = DraftBase.objects.filter(accept_user=request.user.id, status='已审批').order_by('-add_time')
 
-        no_count = all_messagedaft.count()
-        has_count = has_message.count()
+        no_count = all_draft.count()
+        has_count = has_draft.count()
         show = request.GET.get('shiwu' '')
         status = 1
         if show == 'daiban':
@@ -22,8 +22,8 @@ class Index(View):
             status = 2
 
         return render(request, 'mywork.html', {
-            'all_messagedaft': all_messagedaft,
-            'has_message': has_message,
+            'all_draft': all_draft,
+            'has_draft': has_draft,
             "no_count": no_count,
             "has_count": has_count,
             'status': status,
@@ -32,14 +32,15 @@ class Index(View):
 
 class HandleMessageDraftView(View):
 
-    def get(self, request, message_id):
-        messagedaft = MessageDraft.objects.get(id=message_id)
-        categorys = messagedaft.category.all()
-        medias = messagedaft.media.all()
+    def get(self, request, draft_id, style):
+        draft = DraftBase.objects.get(id=draft_id, style=style)
+
+        categorys = draft.messagedraft.category.all()
+        medias = draft.messagedraft.media.all()
         return render(request, 'sp_draft.html', {
-            'messagedaft': messagedaft,
-            "categorys": categorys,
-            "medias": medias,
+            'draft': draft,
+            'categorys': categorys,
+            'medias': medias,
         })
 
     def post(self, request):
@@ -51,11 +52,13 @@ class HandleMessageDraftView(View):
         opinion.leader = request.user
         opinion.save()
 
-        lis = MessageDraft.objects.get(id=lis_id)
+        draft = DraftBase.objects.get(id=lis_id)
+
         if MessageDraft:
-            lis.opinion_id = opinion.id
-            lis.status = '已审批'
-            lis.save()
+            draft.messagedraft.opinion_id = opinion.id
+            draft.status = '已审批'
+            draft.messagedraft.save()
+            draft.save()
 
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})

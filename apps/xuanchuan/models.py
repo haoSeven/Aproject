@@ -5,9 +5,27 @@ from django.db import models
 from users.models import UserProfile
 
 
+class DraftBase(models.Model):
+    draft_user = models.ForeignKey(UserProfile, verbose_name='起草人', related_name='draft_user')
+    title = models.CharField(max_length=30, verbose_name='标题')
+    status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
+                              , default='wait')
+    style = models.CharField(max_length=20, default="", verbose_name="表单申请申请")
+
+    add_time = models.DateTimeField(default='', verbose_name='申请时间')
+    accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='accept_user')
+    class Meta:
+        verbose_name = '基础表'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.title
+
+
 class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name='类别名称')
-    status = models.CharField(choices=(("停用", "停用"), ("启用", "启用")), max_length=5, verbose_name='状态', default='启用')
+    status = models.CharField(choices=(("stop", "停用"), ("active", "启用")), max_length=5,
+                              verbose_name='状态', default='active')
     create_user = models.ForeignKey(UserProfile, verbose_name='创建人', default='')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='申请时间')
 
@@ -43,12 +61,7 @@ class Opinion(models.Model):
 
 
 class MessageDraft(models.Model):
-    draft_user = models.ForeignKey(UserProfile, verbose_name='起草人', related_name='draft_user')
-    title = models.CharField(max_length=30, verbose_name='标题')
-    status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
-                              , default='wait')
-    style = models.CharField(max_length=20, default="宣传信息申请", verbose_name="宣传信息申请")
-    add_time = models.DateTimeField(default='', verbose_name='申请时间')
+    main =  models.OneToOneField(DraftBase, verbose_name='基础信息')
     start_time = models.CharField(default='', verbose_name='开始时间', max_length=20)
     end_time = models.CharField(default='', verbose_name='结束时间', max_length=20)
     content = models.TextField(max_length=500, verbose_name='内容')
@@ -57,7 +70,6 @@ class MessageDraft(models.Model):
                             null=True, blank=True, default='')
     category = models.ManyToManyField(Category, verbose_name='类型')
     media = models.ManyToManyField(ObjMedia, verbose_name='媒体对象')
-    accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='message_accept_user')
     opinion = models.ForeignKey(Opinion, verbose_name='领导意见', null=True, blank=True, default='')
 
     class Meta:
@@ -65,7 +77,7 @@ class MessageDraft(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.title
+        return self.style
 
     def get_category(self):
         return self.category.all().count()
@@ -76,23 +88,20 @@ class MessageDraft(models.Model):
 
 
 class ItemsMake(models.Model):
-    draft_user = models.ForeignKey(UserProfile, verbose_name='起草人')
-    title = models.CharField(max_length=30, verbose_name='标题')
-    status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
-                              , default='wait')
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    main = models.OneToOneField(DraftBase, verbose_name='基础信息')
+    style = models.CharField(max_length=20, default="宣传品制作", verbose_name="宣传品制作")
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
-    accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='itemsmake_accept_user')
     opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
     sum_cost = models.FloatField(verbose_name='总费用')
+
     class Meta:
         verbose_name = '宣传资料制作'
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.title
+        return self.style
 
 
 class ItemMake(models.Model):
@@ -128,15 +137,11 @@ class UseMethod(models.Model):
 
 
 class ItemsReceive(models.Model):
-    draft_user = models.ForeignKey(UserProfile, verbose_name='起草人')
-    title = models.CharField(max_length=30, verbose_name='标题')
-    status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
-                              , default='wait')
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    main = models.OneToOneField(DraftBase, verbose_name='基础信息')
+    style = models.CharField(max_length=20, default="宣传品领用", verbose_name="宣传品领用")
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
-    accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='itemsreceive_accept_user')
     opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
 
     class Meta:
