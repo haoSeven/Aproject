@@ -64,11 +64,11 @@
         <tr>
             <th scope="row"><input type="checkbox"/></th>
             <td>{{ itemreceivemessage.id }}</td>
-            <td><a href="">{{ itemreceivemessage.title }}</a></td>
-            <td>{{ itemreceivemessage.draft_user.team.team_name }}</td>
-            <td>{{ itemreceivemessage.draft_user }}</td>
-            <td>{{ itemreceivemessage.add_time }}</td>
-            <td>{{ itemreceivemessage.status }}</td>
+            <td><a href="">{{ itemreceivemessage.main.title }}</a></td>
+            <td>{{ itemreceivemessage.main.draft_user.team.team_name }}</td>
+            <td>{{ itemreceivemessage.main.draft_user.name }}</td>
+            <td>{{ itemreceivemessage.main.add_time }}</td>
+            <td>{{ itemreceivemessage.main.status }}</td>
         </tr>
         {% endfor %}
 

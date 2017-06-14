@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from pure_pagination import PageNotAnInteger, Paginator
 
-from .models import MessageDraft, ObjMedia, Category, ItemsMake,ItemsReceive
+from .models import MessageDraft, ObjMedia, Category, ItemsMake,ItemsReceive,DraftBase
 from users.models import UserProfile, Office, Team
 
 
@@ -51,37 +51,43 @@ class MessageDraftView(View):
             end_time = request.POST.get('end_time', '')
             content = request.POST.get('content', '')
             remark = request.POST.get('remark', '')
-            style = request.POST.getlist('style[]', [])
+            category = request.POST.getlist('category[]', [])
             media = request.POST.getlist('media[]', [])
             accept_users = request.POST.getlist('accept_user[]', [])
+            style = request.POST.get('style', '')
+
+            draft_base = DraftBase()
+            draft_base.draft_user = request.user
+            draft_base.title = title
+            draft_base.status = status
+            draft_base.add_time = time
+            draft_base.style = style
+            draft_base.save()
 
             message_draft = MessageDraft()
-            message_draft.draft_user = request.user
-            message_draft.title = title
-            message_draft.status = status
-            message_draft.add_time = time
             message_draft.start_time = start_time
             message_draft.end_time = end_time
             message_draft.content = content
             message_draft.remark = remark
-
+            message_draft.main = draft_base
             message_draft.save()
 
-            lis = MessageDraft.objects.get(id=message_draft.id)
+            lis_message = MessageDraft.objects.get(id=message_draft.id)
+            lis_draft_base = DraftBase.objects.get(id=draft_base.id)
             # 保存类型
-            for c in style:
+            for c in category:
                 category = Category.objects.get(name=c)
-                lis.category.add(category)
+                lis_message.category.add(category)
             # # 保存媒体对象
             for m in media:
                 media = ObjMedia.objects.get(name=m)
-                lis.media.add(media)
+                lis_message.media.add(media)
 
             # 修改   保存接受人的id
             for a in accept_users:
                 accept_user = UserProfile.objects.get(id=a)
                 if accept_user:
-                    lis.accept_user.add(accept_user)
+                    lis_draft_base.accept_user.add(accept_user)
 
             recall = {"status": "success", "lis_id": message_draft.id}
 
@@ -159,16 +165,16 @@ class MessageSearchView(View):
         title = request.GET.get("title", '')
         proposer = request.GET.get("proposer", '')
         category = request.GET.get("category", '')
-        style = request.GET.get("style", '')
+        status = request.GET.get("style", '')
 
         if title:
-            all_messages = all_messages.filter(title=title)
+            all_messages = all_messages.filter(main__title=title)
         if proposer:
-            all_messages = all_messages.filter(draft_user__username=proposer)
+            all_messages = all_messages.filter(main__draft_user__name=proposer)
         if category:
             all_messages = all_messages.filter(category__name=category)
-        if style:
-            all_messages = all_messages.filter(status=style)
+        if status:
+            all_messages = all_messages.filter(main__status=status)
 
         try:
             page = request.GET.get('page', 1)
@@ -228,11 +234,11 @@ class ItemsMakeSearchView(View):
 
         # 对前端传递的查询条件进行过滤
         if title:
-            all_itemsmakemessage = all_itemsmakemessage.filter(title=title)
+            all_itemsmakemessage = all_itemsmakemessage.filter(main__title=title)
         if proposer:
-            all_itemsmakemessage = all_itemsmakemessage.filter(draft_user__username=proposer)
+            all_itemsmakemessage = all_itemsmakemessage.filter(main__draft_user__username=proposer)
         if style:
-            all_itemsmakemessage = all_itemsmakemessage.filter(status=style)
+            all_itemsmakemessage = all_itemsmakemessage.filter(main__status=style)
 
         if minsum and maxsum == 0:
             all_itemsmakemessage = all_itemsmakemessage.filter(sum_cost__gte=minsum)
@@ -285,13 +291,13 @@ class ItemReceiverSearchView(View):
         style = request.GET.get("style", '')
 
         if title:
-            all_itemreceivemessage = all_itemreceivemessage.filter(title=title)
+            all_itemreceivemessage = all_itemreceivemessage.filter(main__title=title)
         if proposer:
-            all_itemreceivemessage = all_itemreceivemessage.filter(draft_user__username=proposer)
+            all_itemreceivemessage = all_itemreceivemessage.filter(main__draft_user__username=proposer)
         if proposedepartment:
             all_itemreceivemessage = all_itemreceivemessage.filter(draft_user__team__team_name=proposedepartment)
         if style:
-            all_itemreceivemessage = all_itemreceivemessage.filter(status=style)
+            all_itemreceivemessage = all_itemreceivemessage.filter(main__status=style)
 
 
         try:

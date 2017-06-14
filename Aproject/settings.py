@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'xuanchuan',
+    'plan',
     'pure_pagination',
 ]
 
@@ -87,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shixun',
         'USER': 'root',
-        'PASSWORD': 'hao123456',
+        'PASSWORD': '123456',
         'HOST': '127.0.0.1'
     }
 }

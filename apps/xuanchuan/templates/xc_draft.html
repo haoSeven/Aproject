@@ -214,9 +214,9 @@
         var content=$("#content").val();             //获取内容
         var remarks=$("#remarks").val();              // 获取备注
 
-        var style = [];                                        //获取类别
+        var category = [];                                        //获取类别
         $("input:checkbox[name='style']:checked").each(function() {
-            style.push($(this).val());
+            category.push($(this).val());
         });
 
         var object = [];                                        //获取发布媒体
@@ -230,7 +230,8 @@
             type: 'POST',
             cache: false,
             data: {"state": state, "title": title, 'time': time, "start_time": starttime, "end_time": endtime,
-                "style": style, "content": content, "remark": remarks, 'media': object, 'accept_user': selected_user},
+                "category": category, "content": content, "remark": remarks, 'media': object, 'accept_user': selected_user, "style": "宣传信息申请"},
+
             dataType: "json",
             beforeSend: function (xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")

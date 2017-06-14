@@ -74,11 +74,11 @@
         <tr>
             <th scope="row"><input type="checkbox"/></th>
             <td>{{ itemsmakemessage.id }}</td>
-            <td><a href="">{{ itemsmakemessage.title }}</a></td>
+            <td><a href="">{{ itemsmakemessage.main.title }}</a></td>
             <td></td>
             <td>{{ itemsmakemessage.sum_cost }}</td>
-            <td>{{ itemsmakemessage.draft_user }}</td>
-            <td>{{ itemsmakemessage.status }}</td>
+            <td>{{ itemsmakemessage.main.draft_user.name }}</td>
+            <td>{{ itemsmakemessage.main.status }}</td>
         </tr>
         {% endfor %}
 
