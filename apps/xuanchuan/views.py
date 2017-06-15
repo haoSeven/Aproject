@@ -10,7 +10,8 @@ from django.http import HttpResponse
 from django.core import serializers
 from pure_pagination import PageNotAnInteger, Paginator
 
-from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount
+from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount,\
+    ItemMakeCount, ItemReceiveCount
 from users.models import UserProfile, Office, Team
 
 
@@ -337,8 +338,30 @@ class ItemsMakeCountView(View):
 
     def get(self, request):
 
-        return render(request, 'promo_count.html', {
+        all_item_make_count = ItemMakeCount.objects.all()
 
+        manual_sum = 0
+        adv_sum = 0
+        video_sum = 0
+        leaflet_sum = 0
+        other_sum = 0
+
+        for i in all_item_make_count:
+            manual_sum += i.manual_count
+            adv_sum += i.adv_count
+            video_sum += i.video_count
+            leaflet_sum += i.leaflet_count
+            other_sum += i.other_count
+        all_sum = manual_sum + adv_sum + video_sum + leaflet_sum + other_sum
+
+        return render(request, 'promo_count.html', {
+            "all_item_make_count": all_item_make_count,
+            "manual_sum": manual_sum,
+            "adv_sum": adv_sum,
+            "video_sum": video_sum,
+            "leaflet_sum": leaflet_sum,
+            "other_sum": other_sum,
+            "all_sum": all_sum
         })
 
 
@@ -390,8 +413,30 @@ class ItemReceiverCountView(View):
 
     def get(self, request):
 
-        return render(request, 'receive_count.html', {
+        all_item_receive_count = ItemReceiveCount.objects.all()
 
+        manual_sum = 0
+        badge_sum = 0
+        pendant_sum = 0
+        ticket_sum = 0
+        other_sum = 0
+
+        for i in all_item_receive_count:
+            manual_sum += i.manual_count
+            badge_sum += i.badge_count
+            pendant_sum += i.pendant_count
+            ticket_sum += i.ticket_count
+            other_sum += i.other_count
+        all_sum = manual_sum + badge_sum + pendant_sum + ticket_sum + other_sum
+
+        return render(request, 'receive_count.html', {
+            "all_item_receive_count": all_item_receive_count,
+            "manual_sum": manual_sum,
+            "badge_sum": badge_sum,
+            "pendant_sum": pendant_sum,
+            "ticket_sum": ticket_sum,
+            "other_sum": other_sum,
+            "all_sum": all_sum,
         })
 
 

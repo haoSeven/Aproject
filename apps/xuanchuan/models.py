@@ -179,7 +179,7 @@ class CategoryCount(models.Model):
     other_count = models.IntegerField(verbose_name='其他', default=0)
 
     class Meta:
-        verbose_name = '需要领用的宣传资料'
+        verbose_name = '宣传信息发布统计'
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -188,3 +188,42 @@ class CategoryCount(models.Model):
     def get_sum(self):
         return self.tv_count + self.internet_count + self.lift_count + \
                self.news_count + self.webo_count + self.other_count
+
+
+class ItemMakeCount(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name='用户', default='')
+    manual_count = models.IntegerField(verbose_name='手册', default=0)
+    adv_count = models.IntegerField(verbose_name='广告', default=0)
+    video_count = models.IntegerField(verbose_name='视频', default=0)
+    leaflet_count = models.IntegerField(verbose_name='单张', default=0)
+    other_count = models.IntegerField(verbose_name='其他', default=0)
+
+    class Meta:
+        verbose_name = '宣传物资领用统计'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.user.name
+
+    def get_sum(self):
+        return self.manual_count + self.adv_count + self.video_count + self.leaflet_count + self.other_count
+
+
+class ItemReceiveCount(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name='用户', default='')
+    manual_count = models.IntegerField(verbose_name='手册', default=0)
+    badge_count = models.IntegerField(verbose_name='胸章', default=0)
+    pendant_count = models.IntegerField(verbose_name='吊坠', default=0)
+    ticket_count = models.IntegerField(verbose_name='电影票', default=0)
+    other_count = models.IntegerField(verbose_name='其他', default=0)
+
+    class Meta:
+        verbose_name = '宣传物资领用统计'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.user.name
+
+    def get_sum(self):
+
+        return self.manual_count + self.badge_count + self.pendant_count + self.ticket_count + self.other_count

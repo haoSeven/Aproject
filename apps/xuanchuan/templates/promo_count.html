@@ -41,49 +41,31 @@
         </tr>
         </thead>
         <tbody>
+        {% for count in all_item_make_count %}
         <tr>
             <th scope="row">1</th>
-            <td>李建明</td>
-            <td>4</td>
-            <td>7</td>
-            <td>6</td>
-            <td>3</td>
-            <td>3</td>
-            <td>2</td>
+            <td>{{ count.user.name }}</td>
+            <td>{{ count.manual_count }}</td>
+            <td>{{ count.adv_count }}</td>
+            <td>{{ count.video_count }}</td>
+            <td>{{ count.leaflet_count }}</td>
+            <td>{{ count.other_count }}</td>
+            <td>{{ count.get_sum }}</td>
         </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>张世红</td>
-            <td>1</td>
-            <td></td>
-            <td>3</td>
-            <td>2</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>罗定</td>
-            <td></td>
-            <td>2</td>
-            <td>1</td>
-            <td>3</td>
-            <td>3</td>
-            <td>2</td>
-        </tr>
-        </tbody>
-        <thead>
-        <tr>
-            <th>-</th>
-            <th>总计</th>
-            <th>11</th>
-            <th>23</th>
-            <th>22</th>
-            <th></th>
-            <th></th>
-            <th>32</th>
-        </tr>
+        {% endfor %}
         </thead>
+         <thead>
+         <tr>
+             <th>-</th>
+             <th>总计</th>
+             <th>{{ manual_sum }}</th>
+             <th>{{ adv_sum }}</th>
+             <th>{{ video_sum }}</th>
+             <th>{{ leaflet_sum }}</th>
+             <th>{{ other_sum }}</th>
+             <th>{{ all_sum }}</th>
+         </tr>
+         </thead>
     </table>
 {% endblock %}
 
