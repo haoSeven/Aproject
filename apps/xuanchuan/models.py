@@ -10,7 +10,7 @@ class DraftBase(models.Model):
     title = models.CharField(max_length=30, verbose_name='标题')
     status = models.CharField(choices=(('wait', '待审批'), ('success', '已审批')), max_length=10, verbose_name='状态'
                               , default='wait')
-    style = models.CharField(max_length=20, default="", verbose_name="表单申请申请")
+    style = models.CharField(max_length=20, default="", verbose_name="表单申请类型")
 
     add_time = models.DateTimeField(default='', verbose_name='申请时间')
     accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='accept_user')
