@@ -25,7 +25,7 @@ class DraftBase(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name='类别名称')
-    status = models.CharField(choices=(("stop", "停用"), ("active", "启用")), max_length=5,
+    status = models.CharField(choices=(("stop", "停用"), ("active", "启用")), max_length=6,
                               verbose_name='状态', default='active')
     create_user = models.ForeignKey(UserProfile, verbose_name='创建人', default='')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='申请时间')
@@ -62,7 +62,7 @@ class Opinion(models.Model):
 
 
 class MessageDraft(models.Model):
-    main =  models.OneToOneField(DraftBase, verbose_name='基础信息')
+    main = models.OneToOneField(DraftBase, verbose_name='基础信息')
     start_time = models.CharField(default='', verbose_name='开始时间', max_length=20)
     end_time = models.CharField(default='', verbose_name='结束时间', max_length=20)
     content = models.TextField(max_length=500, verbose_name='内容')
@@ -78,7 +78,7 @@ class MessageDraft(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.style
+        return self.main.title
 
     def get_category(self):
         return self.category.all().count()
@@ -150,7 +150,7 @@ class ItemsReceive(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.title
+        return self.main.title
 
 
 class NeedItem(models.Model):
@@ -167,3 +167,24 @@ class NeedItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CategoryCount(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name='用户', default='')
+    tv_count = models.IntegerField(verbose_name='电视媒体类', default=0)
+    internet_count = models.IntegerField(verbose_name='网络媒体类', default=0)
+    lift_count = models.IntegerField(verbose_name='电梯海报类', default=0)
+    news_count = models.IntegerField(verbose_name='新闻媒体类', default=0)
+    webo_count = models.IntegerField(verbose_name='微博微信类', default=0)
+    other_count = models.IntegerField(verbose_name='其他', default=0)
+
+    class Meta:
+        verbose_name = '需要领用的宣传资料'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.user.name
+
+    def get_sum(self):
+        return self.tv_count + self.internet_count + self.lift_count + \
+               self.news_count + self.webo_count + self.other_count

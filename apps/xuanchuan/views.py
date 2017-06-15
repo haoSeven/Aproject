@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from pure_pagination import PageNotAnInteger, Paginator
 
-from .models import MessageDraft, ObjMedia, Category, ItemsMake,ItemsReceive,DraftBase
+from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount
 from users.models import UserProfile, Office, Team
 
 
@@ -74,10 +74,54 @@ class MessageDraftView(View):
 
             lis_message = MessageDraft.objects.get(id=message_draft.id)
             lis_draft_base = DraftBase.objects.get(id=draft_base.id)
+            category_count = CategoryCount.objects.filter(user=request.user)
+
             # 保存类型
             for c in category:
                 category = Category.objects.get(name=c)
                 lis_message.category.add(category)
+                if category_count:
+                    category_count = CategoryCount.objects.get(user=request.user)
+                    if c == '电视媒体':
+                        category_count.tv_count += 1
+                        category_count.save()
+                    elif c == '网络媒体':
+                        category_count.internet_count += 1
+                        category_count.save()
+                    elif c == '电梯海报':
+                        category_count.lift_count += 1
+                        category_count.save()
+                    elif c == '新闻稿件':
+                        category_count.news_count += 1
+                        category_count.save()
+                    elif c == '微博微信':
+                        category_count.webo_count += 1
+                        category_count.save()
+                    else:
+                        category_count.other_count += 1
+                        category_count.save()
+                else:
+                    category_count = CategoryCount()
+                    category_count.user = request.user
+                    if c == '电视媒体':
+                        category_count.tv_count += 1
+                        category_count.save()
+                    elif c == '网络媒体':
+                        category_count.internet_count += 1
+                        category_count.save()
+                    elif c == '电梯海报':
+                        category_count.lift_count += 1
+                        category_count.save()
+                    elif c == '新闻稿件':
+                        category_count.news_count += 1
+                        category_count.save()
+                    elif c == '微博微信':
+                        category_count.webo_count += 1
+                        category_count.save()
+                    else:
+                        category_count.other_count += 1
+                        category_count.save()
+
             # # 保存媒体对象
             for m in media:
                 media = ObjMedia.objects.get(name=m)
@@ -137,8 +181,31 @@ class MessageInfoView(View):
     """
     def get(self, request):
 
-        return render(request, 'information_count.html', {
+        category_count = CategoryCount.objects.all()
+        tv_sum = 0
+        inter_sum = 0
+        lift_sum = 0
+        news_sum = 0
+        weibo_sum = 0
+        other_sum = 0
+        for c in category_count:
+            tv_sum += c.tv_count
+            inter_sum += c.internet_count
+            lift_sum += c.lift_count
+            news_sum += c.news_count
+            weibo_sum += c.webo_count
+            other_sum += c.other_count
+        all_sum = tv_sum + inter_sum + lift_sum + news_sum + weibo_sum + other_sum
 
+        return render(request, 'information_count.html', {
+            "category_count": category_count,
+            'tv_sum': tv_sum,
+            'inter_sum': inter_sum,
+            'lift_sum': lift_sum,
+            'news_sum': news_sum,
+            'weibo_sum': weibo_sum,
+            'other_sum': other_sum,
+            'all_sum': all_sum,
         })
 
 
