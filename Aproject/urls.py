@@ -19,6 +19,7 @@ from django.views.static import serve
 
 from users.views import Index, HandleMessageDraftView
 from xuanchuan.views import GetReceiverView
+from plan.views import PlanSearchView
 from .settings import MEDIA_ROOT
 
 
@@ -28,6 +29,8 @@ urlpatterns = [
     url(r'^$', Index.as_view(), name='index'),
     # 宣传信息URL配置
     url(r'^xc/', include('xuanchuan.urls', namespace='xc')),
+    # 工作计划信息URL配置
+    url(r'^jh/', include('plan.urls', namespace='jh')),
     # 审批宣传信息申请
     url(r'^messagedraft/(?P<draft_id>\d+)&(?P<style>.*)/$', HandleMessageDraftView.as_view(), name='handle_message_draft'),
     # 提交建议
