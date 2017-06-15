@@ -24,6 +24,7 @@ class PropagatePlan(models.Model):
     def __str__(self):
         return self.main.title
 
+
 class WorkTarget(models.Model):
     target_user = models.ForeignKey(UserProfile, verbose_name='填指标者', related_name='target_user')
     add_time = models.DateTimeField(default='', verbose_name='申请时间')

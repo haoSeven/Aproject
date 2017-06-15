@@ -7,6 +7,8 @@ from django.views.generic import View
 
 from .models import PropagatePlan
 from pure_pagination import PageNotAnInteger, Paginator
+
+
 class PlanSearchView(View):
 
     def get(self, request):
