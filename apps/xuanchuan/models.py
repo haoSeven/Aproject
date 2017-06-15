@@ -14,6 +14,7 @@ class DraftBase(models.Model):
 
     add_time = models.DateTimeField(default='', verbose_name='申请时间')
     accept_user = models.ManyToManyField(UserProfile, verbose_name='接受人', related_name='accept_user')
+
     class Meta:
         verbose_name = '基础表'
         verbose_name_plural = verbose_name
