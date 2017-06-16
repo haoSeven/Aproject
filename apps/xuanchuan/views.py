@@ -13,9 +13,10 @@ from pure_pagination import PageNotAnInteger, Paginator
 from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount,\
     ItemMakeCount, ItemReceiveCount
 from users.models import UserProfile, Office, Team
+from utils.mixin_utils import LoginRequiredMixin
 
 
-class MessageDraftView(View):
+class MessageDraftView(LoginRequiredMixin, View):
     """
     宣传管理信息起草
     """
@@ -176,7 +177,7 @@ class MessageDraftFileUploadView(View):
         return HttpResponse('{"status": "fail"}', content_type="application/json")
 
 
-class MessageInfoView(View):
+class MessageInfoView(LoginRequiredMixin, View):
     """
     宣传信息统计页面
     """
@@ -210,7 +211,7 @@ class MessageInfoView(View):
         })
 
 
-class MessageManagementView(View):
+class MessageManagementView(LoginRequiredMixin, View):
     """
     宣传信息管理页面
     """
@@ -220,7 +221,7 @@ class MessageManagementView(View):
         })
 
 
-class MessageSearchView(View):
+class MessageSearchView(LoginRequiredMixin, View):
     """
     宣传信息查询页面
     """
@@ -260,7 +261,7 @@ class MessageSearchView(View):
         })
 
 
-class MessageCategoryManageView(View):
+class MessageCategoryManageView(LoginRequiredMixin, View):
     """
     宣传信息类别管理页面
     """
@@ -273,7 +274,7 @@ class MessageCategoryManageView(View):
         })
 
 
-class ItemsMakeSearchView(View):
+class ItemsMakeSearchView(LoginRequiredMixin, View):
     """
     宣传物资制作查询页面
     """
@@ -330,7 +331,7 @@ class ItemsMakeSearchView(View):
         })
 
 
-class ItemsMakeCountView(View):
+class ItemsMakeCountView(LoginRequiredMixin, View):
 
     """
     宣传物资制作统计页面
@@ -365,7 +366,7 @@ class ItemsMakeCountView(View):
         })
 
 
-class ItemReceiverSearchView(View):
+class ItemReceiverSearchView(LoginRequiredMixin, View):
 
     """
     宣传物资领用查询页面
@@ -405,7 +406,7 @@ class ItemReceiverSearchView(View):
         })
 
 
-class ItemReceiverCountView(View):
+class ItemReceiverCountView(LoginRequiredMixin, View):
 
     """
     宣传物资领用统计页面
@@ -440,7 +441,7 @@ class ItemReceiverCountView(View):
         })
 
 
-class ItemMakeView(View):
+class ItemMakeView(LoginRequiredMixin, View):
 
     """
     宣传物资制作页面
@@ -466,7 +467,7 @@ class ItemMakeView(View):
         pass
 
 
-class ItemReceiveView(View):
+class ItemReceiveView(LoginRequiredMixin, View):
     """
     宣传物资领用表
     """
@@ -490,7 +491,7 @@ class ItemReceiveView(View):
         pass
 
 
-class OverViewView(View):
+class OverViewView(LoginRequiredMixin, View):
     """
     宣传概览
     """
@@ -499,7 +500,7 @@ class OverViewView(View):
         return render(request, 'Overview.html', {})
 
 
-class ReportQueryView(View):
+class ReportQueryView(LoginRequiredMixin, View):
     """
     宣传工作总结报告查询
     """

@@ -15,10 +15,17 @@
         <div class="row">
             <div class="col-md-10">
                 <h2>XX血液中心无偿献血综合服务平台</h2></div>
+            {% if not request.user.is_authenticated %}
             <div class="col-md-2">
                 <button type="button" class="btn btn-secondary">注册</button>
-                <button type="button" class="btn btn-secondary">登录</button>
+                <button type="button" class="btn btn-secondary"><a href="{% url 'login' %}">登录</a></button>
             </div>
+                {% else %}
+            <div class="col-md-2">
+                <a href="">{{ request.user.name }}</a>|
+                <a href="{% url 'logout' %}">登出</a>
+            </div>
+            {% endif %}
         </div>
     </nav>
     <ul class="nav nav-tabs">

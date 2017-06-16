@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.static import serve
 
-from users.views import Index, HandleMessageDraftView
+from users.views import Index, HandleMessageDraftView, LoginView, LogoutView
 from xuanchuan.views import GetReceiverView, OverViewView
 from plan.views import PlanSearchView
 from .settings import MEDIA_ROOT
@@ -25,6 +25,10 @@ from .settings import MEDIA_ROOT
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    # 登录
+    url(r'^login/$', LoginView.as_view(), name='login'),
+    # 登出
+    url(r'^logout/$', LogoutView.as_view(), name='logout'),
     # 首页
     url(r'^$', Index.as_view(), name='index'),
     # 宣传信息URL配置
