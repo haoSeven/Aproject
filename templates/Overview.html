@@ -1,0 +1,295 @@
+{% extends 'mainiframe.html' %}
+{% load staticfiles %}
+
+{% block title %}
+宣传事物概览
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+        <div class="col-md-3">
+            <div class="card">
+              <div class="card-header">
+                  <h4 class="card-title">本年度宣传管理数据小档案</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">宣传计划13项，完成15项</li>
+                  <li  class="list-group-item">宣传方案 16 项，完成 10 项</li>
+                  <li class="list-group-item">
+                     <div class="panel panel-default">
+                         <div class="panel-heading" role="tab" id="headingOne">
+                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                信息发布
+                             </a>
+                         </div>
+                         <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                         <br>
+                             <p>电视媒体类 24 项</p>
+                             <p>网络媒体类 12 项</p>
+                             <p>电梯海报类 7 项</p>
+                             <p>新闻稿件类 5 项</p>
+                             <p>微博微信类 28 项</p>
+                             <p>其他 2 项</p>
+                         </div>
+                     </div>
+                 </li>
+                 <li class="list-group-item">
+                     <div class="panel panel-default">
+                         <div class="panel-heading" role="tab" id="headingTwo">
+                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                 宣传品(资料)制作 15 项，完成12 项
+                             </a>
+                         </div>
+                         <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                             <br>
+                             <p> 内部制作 10 项</p>
+                             <p> 广告公司制作 5 项</p>
+                             <p> 总费用 3980.00 元</p>
+                         </div>
+                     </div>
+                 </li>
+                 <li  class="list-group-item">宣传物资领用 89 项</li>
+              </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="row">
+
+                <!--本月宣传计划统计-->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        本月宣传计划统计
+                    </div>
+                    <div class="card-block">
+                        <div id="container1"></div>
+                    </div>
+                </div>
+            </div>
+
+                <!--本月宣传方案统计-->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        本月宣传方案统计
+                    </div>
+                    <div class="card-block">
+                        <div id="container2"></div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <br>
+
+                <!--近5月宣传品(资料)制作申请统计   -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            近5月宣传品(资料)制作申请统计
+                        </div>
+                        <div class="card-block">
+                            <div id="container3"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--近5月宣传物资领用统计-->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            近5月宣传物资领用统计
+                        </div>
+                        <div class="card-block">
+                            <div id="container4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!--本月宣传信息发布统计-->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            本月宣传信息发布统计
+                        </div>
+                        <div class="card-block">
+                            <div id="container5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block custom_js %}
+<script language="JavaScript">
+    $(document).ready(function () {
+        var chart={
+            type:'column'
+        };
+        var title = {   //标题
+            text: ''
+        };
+        var yAxis = {  //y轴
+            min: 0,
+            title: {
+                text:'数量 (项)',
+            }
+        };
+        var tooltip = {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0"></td>' +
+            '<td style="padding:0">{point.y:.1f} 项</td>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        };
+        <!--本月宣传计划统计-->
+        var xAxis1 = { //X轴
+            categories: ['宣传计划','经费预算计划','纪念品采购','物料计划'],
+            crosshair: true
+        };
+        <!--本月宣传方案统计-->
+        var xAxis2 = {
+            categories: ['普通宣传活动','重大专项宣传活动','固定献血者活动','成分献血者活动'],
+            crosshair: true
+        };
+        <!--近5月宣传品(资料)制作申请统计   -->
+        var xAxis3 = {
+            categories: ['2015/03','2015/04','2015/05','2015/06','2015/07'],
+            crosshair: true
+        };
+        <!--近5月宣传物资领用统计-->
+        var xAxis4 = {
+            categories:  ['2015/03','2015/04','2015/05','2015/06','2015/07'],
+            crosshair: true
+        };
+        <!--本月宣传信息发布统计-->
+        var xAxis5 = {
+            categories: ['普电视媒体类','网络媒体类','电梯海报类','新闻稿件类','微博微信类','其他'],
+            crosshair: true
+        };
+        var plotOptions={  //图例
+            column: {
+                colorByPoint: true,
+                pointWidth:45
+            }
+        };
+        <!--本月宣传计划统计-->
+        var series1= [{
+            name:'',
+            data: [16, 32, 15, 22],
+            showInLegend: false
+        }];
+        <!--本月宣传方案统计-->
+        var series2= [{
+            name:'',
+            data: [16, 32, 15, 22],
+            showInLegend: false
+        }];
+        <!--近5月宣传品(资料)制作申请统计   -->
+        var series3= [{
+            name:'',
+            type:'column',
+            data: [6, 14, 5, 10,8],
+            showInLegend: false
+        }, {
+            name: '',
+            type: 'line',
+            data: [6, 14, 5, 10, 8],
+            showInLegend: false
+        }
+        ];
+        <!--近5月宣传物资领用统计-->
+        var series4= [{
+            name:'',
+            type:'column',
+            data: [56, 81, 75, 90,53],
+            showInLegend: false
+        },
+            {
+                name:'',
+                type:'line',
+                data: [56, 81, 75, 90,53],
+                showInLegend: false
+            }
+        ];
+        <!--本月宣传信息发布统计-->
+        var series5= [{
+            name:'',
+            data: [15, 12, 9, 16,19,5],
+            showInLegend: false
+        }];
+
+        <!--本月宣传计划统计-->
+        var json = {};
+        json.chart = chart;
+        json.title = title;
+        json.xAxis = xAxis1;
+        json.yAxis = yAxis;
+        json.tooltip = tooltip;
+        json.plotOptions = plotOptions;
+        json.series = series1;
+        $('#container1').highcharts(json);
+
+        <!--本月宣传方案统计-->
+        var json = {};
+        json.chart = chart;
+        json.title = title;
+        json.xAxis = xAxis2;
+        json.yAxis = yAxis;
+        json.tooltip = tooltip;
+        json.plotOptions = plotOptions;
+        json.series = series2;
+        $('#container2').highcharts(json);
+
+        <!--近5月宣传品(资料)制作申请统计   -->
+        var json = {};
+        json.title = title;
+        json.xAxis = xAxis3;
+        json.yAxis = yAxis;
+        json.tooltip = tooltip;
+        json.plotOptions = plotOptions;
+        json.series = series3;
+        $('#container3').highcharts(json);
+
+        <!--近5月宣传物资领用统计-->
+        var json = {};
+        json.title = title;
+        json.xAxis = xAxis4;
+        json.yAxis = yAxis;
+        json.tooltip = tooltip;
+        json.plotOptions = plotOptions;
+        json.series = series4;
+        $('#container4').highcharts(json);
+
+        <!--本月宣传信息发布统计-->
+        var json = {};
+        json.chart = chart;
+        json.title = title;
+        json.xAxis = xAxis5;
+        json.yAxis = yAxis;
+        json.tooltip = tooltip;
+        json.plotOptions = plotOptions;
+        json.series = series5;
+        $('#container5').highcharts(json);
+    });
+</script>
+{% endblock %}
+
+
+{% block custom_css %}
+<script src="{% static 'js/highcharts.js' %}"></script>
+    <style type="text/css">
+        a:link {
+            text-decoration:none;
+        }
+    </style>
+{% endblock %}

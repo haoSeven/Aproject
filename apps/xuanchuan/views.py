@@ -488,3 +488,21 @@ class ItemReceiveView(View):
         time = re.sub('日', '', time)
 
         pass
+
+
+class OverViewView(View):
+    """
+    宣传概览
+    """
+    def get(self, request):
+
+        return render(request, 'Overview.html', {})
+
+
+class ReportQueryView(View):
+    """
+    宣传工作总结报告查询
+    """
+    def get(self, request):
+
+        return render(request, 'report_query.html', {})

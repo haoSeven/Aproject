@@ -4,7 +4,7 @@ from django.conf.urls import url
 
 from .views import MessageDraftView, MessageInfoView, MessageManagementView, MessageSearchView,\
     MessageDraftFileUploadView, MessageCategoryManageView, ItemsMakeCountView, ItemReceiverCountView,\
-    ItemsMakeSearchView, ItemReceiverSearchView, ItemMakeView
+    ItemsMakeSearchView, ItemReceiverSearchView, ItemMakeView, ReportQueryView
 
 
 __author__ = 'haoSev7'
@@ -34,4 +34,6 @@ urlpatterns = [
     url(r'^itemreceiversearch/$', ItemReceiverSearchView.as_view(), name='itemreceiversearch'),
     # 宣传物资领用统计页面
     url(r'^itemreceivercount/$', ItemReceiverCountView.as_view(), name='item_receiver_count'),
+    #
+    url(r'^report_query/$', ReportQueryView.as_view(), name='report_query'),
 ]

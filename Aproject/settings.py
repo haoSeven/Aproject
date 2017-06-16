@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'xuanchuan',
     'plan',
     'pure_pagination',
+    'project',
 ]
 
 AUTH_USER_MODEL = 'users.UserProfile'
@@ -88,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shixun',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'hao123456',
         'HOST': '127.0.0.1'
     }
 }
