@@ -449,7 +449,7 @@ class ItemMakeView(View):
     def get(self, request):
         add_time = datetime.now()
 
-        return render(request, '', {
+        return render(request, 'item_make.html', {
             'add_time': add_time,
         })
 

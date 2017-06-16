@@ -4,7 +4,7 @@ from django.conf.urls import url
 
 from .views import MessageDraftView, MessageInfoView, MessageManagementView, MessageSearchView,\
     MessageDraftFileUploadView, MessageCategoryManageView, ItemsMakeCountView, ItemReceiverCountView,\
-    ItemsMakeSearchView,ItemReceiverSearchView
+    ItemsMakeSearchView, ItemReceiverSearchView, ItemMakeView
 
 
 __author__ = 'haoSev7'
@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^messagedraftupload/$', MessageDraftFileUploadView.as_view(), name='message_upload'),
     # 宣传信息类别管理页面
     url(r'^messagecategory/$', MessageCategoryManageView.as_view(), name='management_category'),
+    # 宣传品制作申请页面
+    url(r'^itemmakedraft/$', ItemMakeView.as_view(), name='item_make_draft'),
     # 宣传物资制作查询页面
     url(r'^itemmakesearch/$', ItemsMakeSearchView.as_view(), name='itemmakesearch'),
     # 宣传物资制作统计页面
