@@ -11,7 +11,7 @@ from django.core import serializers
 from pure_pagination import PageNotAnInteger, Paginator
 
 from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount,\
-    ItemMakeCount, ItemReceiveCount
+    ItemMakeCount, ItemReceiveCount, NeedItem
 from users.models import UserProfile, Office, Team
 from utils.mixin_utils import LoginRequiredMixin
 
@@ -469,26 +469,82 @@ class ItemMakeView(LoginRequiredMixin, View):
 
 class ItemReceiveView(LoginRequiredMixin, View):
     """
-    宣传物资领用表
+    宣传物资领用申请
     """
     def get(self, request):
         add_time = datetime.now()
+        all_office = Office.objects.all()
 
-        return render(request, '', {
+        return render(request, 'wzly_draft.html', {
             'add_time': add_time,
+            "all_office": all_office,
         })
 
     def post(self, request):
-        title = request.POST.get('title', '')
-        status = request.POST.get('state', '')
+        if request.is_ajax():
+            title = request.POST.get('title', '')
+            status = request.POST.get('state', '')
 
-        # 修改时间格式
-        time = request.POST.get('time', '')
-        patten = '年|月'
-        time = re.sub(patten, '-', time)
-        time = re.sub('日', '', time)
+            # 修改时间格式
+            time = request.POST.get('time', '')
+            patten = '年|月'
+            time = re.sub(patten, '-', time)
+            time = re.sub('日', '', time)
 
-        pass
+            remark = request.POST.get('remark', '')
+            accept_users = request.POST.getlist('accept_user[]', [])
+            style = request.POST.get('style', '')
+
+            draft_base = DraftBase()
+            draft_base.draft_user = request.user
+            draft_base.title = title
+            draft_base.status = status
+            draft_base.add_time = time
+            draft_base.style = style
+            draft_base.save()
+
+            receiver_draft = ItemsReceive()
+            receiver_draft.remark = remark
+            receiver_draft.main = draft_base
+            receiver_draft.save()
+
+            lis_draft_base = DraftBase.objects.get(id=draft_base.id)
+
+            # 修改   保存接受人的id
+            for a in accept_users:
+                accept_user = UserProfile.objects.get(id=a)
+                if accept_user:
+                    lis_draft_base.accept_user.add(accept_user)
+
+            recall = {"status": "success", "lis_id": receiver_draft.id}
+
+            return HttpResponse(json.dumps(recall))
+
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+class ReceiveItemsView(LoginRequiredMixin, View):
+
+    def post(self, request):
+
+        lis_id = request.POST.get('lis_id', '')
+        name = request.POST.get('name', '')
+        place = request.POST.get('place', '')
+        count = request.POST.get('count', 0)
+        direction = request.POST.get('direction', '')
+        remark = request.POST.get('remark', '')
+        if lis_id:
+            need_item = NeedItem()
+            need_item.name = name
+            need_item.unit = place
+            need_item.nums = count
+            need_item.use_method = direction
+            need_item.remark = remark
+            need_item.lis_id = lis_id
+            need_item.save()
+
+            return HttpResponse('{"status": "success"}', content_type="application/json")
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
 
 
 class OverViewView(LoginRequiredMixin, View):

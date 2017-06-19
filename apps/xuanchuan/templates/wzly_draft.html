@@ -1,0 +1,290 @@
+﻿{% extends 'mainiframe.html' %}
+{% load staticfiles %}
+
+{% block title %}
+宣传物资领用
+{% endblock %}
+
+{% block content %}
+
+    <header >
+        <h4 class="text_center">宣传物资领用</h4>
+        <div>
+        <span>态状：</span>
+        <span style="color:#2894FF" id="state">未审核</span>
+        </div>
+
+    </header>
+    <section>
+        <table class="table table-bordered" id="order">
+            <tbody>
+
+            <tr>
+                <th class="text_center">申请部门</th>
+                <td class="text_center" colspan="2">{{ request.user.team }}</td>
+                <th class="text_center" >申请时间</th>
+                <td class="text_center" colspan="2" id="applytime">{{ add_time }}</td>
+            </tr>
+            <tr>
+                <th class="text_center">申请人</th>
+                <td class="text_center" colspan="2">{{ request.user.name }}</td>
+                <th class="text_center">联系电话</th>
+                <td class="text_center" colspan="2">{{ request.user.mobile }}</td>
+            </tr>
+            <tr>
+                <th class="text_center">*标题</th>
+                <td colspan="5"><input style="width: 100%" id="title"></input></td>
+            </tr>
+            <tr>
+                <th colspan="6" class="text_center">请在以下表格中填写需要领用的宣传物资</th>
+            </tr>
+
+
+
+            <section>
+                <tr>
+                    <td colspan="6">
+                    <button id="add_button" onclick="addonclick()">添加</button>
+
+                </tr>
+                <tr>
+
+                <th class="text_center"style="color:#2894FF">名称</th>
+                <th class="text_center"style="color:#2894FF">单位</th>
+                <th class="text_center"style="color:#2894FF">数量</th>
+                <th class="text_center"style="color:#2894FF">使用方向</th>
+                <th class="text_center"style="color:#2894FF">备注</th>
+                <th class="text_center"style="color:#2894FF">操作</th>
+                </tr>
+
+                <tr id="message0">
+                    <td><input style="width: 100%"></input></td>
+                    <td><input style="width: 100%"></input></td>
+                    <td><input style="width: 100%"></input></td>
+                    <td>
+                        <select style="width: 100%">
+                            <option>社区街道</option>
+                            <option>单位企业</option>
+                            <option>学校</option>
+                            <option>Audi</option>
+                        </select>
+                    </td>
+                    <td><input style="width: 100%"></input></td>
+                    <td>
+
+                    </td>
+                </tr>
+
+            </section>
+
+            <tr>
+                <th><div class="remark_text">备注</div></th>
+                <td colspan="6"><textarea class="remark_textarea" id="remarks"> </textarea></td>
+            </tr>
+            <tr>
+                <th><div class="textarea_style">附件</div></th>
+                    <td colspan="6">
+                        <input type="hidden" id="lis_id" name="lis_id" value="">
+                        <input type="file" name="file" id="file_upload">
+                    </td>
+            </tr>
+            <tr>
+                <th><div class="textarea_style">领导审批意见</div></th>
+                <td colspan="6"></td>
+            </tr>
+            <tr>
+                <th colspan="3">选择意见：
+                    <select style="width: 80%" id="sele_suggest"  onchange="change()">
+                        <option>----------请选择----------</option>
+                        <option>同意</option>
+                        <option>拟同意，待领导审批。</option>
+                        <option>请重新修改。</option>
+                    </select></th>
+                <th colspan="3">功能操作：</th>
+            </tr>
+            <tr>
+                <th colspan="3">
+                    填写审批意见：
+                    <textarea class="remark_textarea" id="input_suggest"> </textarea>
+                </th>
+                <td colspan="3">
+                    <div>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送科室领导</button>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送部门领导</button></div>
+                    <div style="padding-top: 5px">
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送中心领导</button>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">退回拟稿人</button></div>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:180%">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        选择提交
+                    </h4>
+                </div>
+                <div class="modal-body">
+                   <div id='inputbox' class="box" style="height:100%;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card card-block" style="height:400px; width: 80%; overflow:auto;">
+                              <h4 class="card-title">组织机构</h4>
+                              <p class="card-text">
+                                  <ul id="tree" class="filetree">
+                                    <li><span class="folder">血液中心</span>
+                                        <ul>
+                                            {% for office in all_office %}
+                                            <li><span class="folder" id="{{ office.id }}">{{ office.office_name }}</span>
+                                                <ul>
+                                                    {% for team in office.get_team %}
+                                                    <li><span class="folder"><a onclick="getUser(this.id)" id="{{ team.id }}">{{ team.team_name }}</a></span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">候选人员</h4>
+                            <p class="card-text">
+                            <ul id="get_user">
+
+                            </ul>
+
+                            </p>
+                          </div>
+                      </div>
+                      <div class="col-xs-2" style="margin-top: 20%">
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
+                         <br><br>
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;"> <还原 </button>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">选中人员</h4>
+                          <p class="card-text">
+                             <ul id="select_user">
+
+                            </ul>
+                             </p>
+                         </div>
+                     </div>
+                 </div></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="send()">
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock %}
+
+
+{% block custom_js %}
+    <script type="text/javascript">
+    	var k=1;
+        var deletid=[0];
+        function addonclick(){                  //添加行
+            var tab=document.getElementById('order');
+            var n=document.getElementById('message0').rowIndex+1;
+            var tr=tab.insertRow(n);
+            
+            tr.setAttribute("id","message"+k)
+            var td2=tr.insertCell(0)
+            var td3=tr.insertCell(1)
+            var td4=tr.insertCell(2)
+            var td5=tr.insertCell(3)
+            var td6=tr.insertCell(4)
+            var td1=tr.insertCell(5)
+            
+            deletid.push(k)
+
+            td1.innerHTML="<button type='button' id='delete"+k+"' onclick='deleteRow(this.id)'>删除</button>"
+            td2.innerHTML="<input style='width: 100%'></input>"
+            td3.innerHTML="<input style='width: 100%'></input>"
+            td4.innerHTML="<input style='width: 100%'></input>"
+            td5.innerHTML="<select style='width: 100%'> <option>社区街道</option> <option>单位企业</option> <option>学校</option> <option>Audi</option> </select>"
+            td6.innerHTML="<input style='width: 100%'></input>"
+			k++;
+            }
+        function deleteRow(k)           //删除行
+        {
+
+            k = parseInt(k.substring(6));
+            alert(k);
+            $("#message"+ k +"").remove();
+            deletid.pop(k)
+        }
+
+        function send()
+        {
+
+
+        	var state = $("#state").html(); 			//获取状态
+        	var time=$("#applytime").html();            //获取申请时间
+        	var title=$("#title").val();                 // 获取标题
+        	var remarks=$("#remarks").val();              // 获取备注
+
+            $.ajax({
+            url: "{% url 'xc:item_receive_draft' %}",
+            type: 'POST',
+            cache: false,
+            data: {"state": state, "title": title, 'time': time, "remark": remarks, 'accept_user': selected_user, "style": "物资领用申请"},
+
+            dataType: "json",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+            },
+                success: function (data) {
+                    var lis_id = data.lis_id;
+                    for (var i in deletid)	{										//获取领用内容
+                        var name = $("#message"+ i +" td:eq(0) input").val();		//获取物资名称
+                        var place = $("#message"+ i +" td:eq(1) input").val();		//获取领用单位
+                        var count = $("#message"+ i +" td:eq(2) input").val();		//获取数量
+                        var direction = $("#message"+ i +" td:eq(3) select").val();	//获取使用方向
+                        var remark = $("#message"+ i +" td:eq(4) input").val();		//获取备注
+                        $.ajax({
+                            url: "{% url 'xc:need_item' %}",
+                            type: 'POST',
+                            cache: false,
+                            data: {"name": name, "place": place, 'count': count, "direction": direction, 'remark': remark, 'lis_id': lis_id},
+                            dataType: "json",
+                            beforeSend: function (xhr, settings) {
+                                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                            },
+                            success: function (data) {
+
+                            }
+                        });
+                    }
+                }, error: function (data) {
+            }
+            });
+
+        }
+
+    </script>
+{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/write_css.css' %}">
+    <script src="{% static 'js/event.js' %}"></script>
+{% endblock %}
+
+

@@ -90,7 +90,6 @@ class MessageDraft(models.Model):
 
 class ItemsMake(models.Model):
     main = models.OneToOneField(DraftBase, verbose_name='基础信息')
-    style = models.CharField(max_length=20, default="宣传品制作", verbose_name="宣传品制作")
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
@@ -126,24 +125,12 @@ class ItemMake(models.Model):
         return self.name
 
 
-class UseMethod(models.Model):
-    name = models.CharField(max_length=15, verbose_name='使用方向')
-
-    class Meta:
-        verbose_name = '宣传资料使用方向'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-
 class ItemsReceive(models.Model):
     main = models.OneToOneField(DraftBase, verbose_name='基础信息')
-    style = models.CharField(max_length=20, default="宣传品领用", verbose_name="宣传品领用")
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
-    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
+    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='', null=True, blank=True)
 
     class Meta:
         verbose_name = '宣传资料制作'
@@ -158,7 +145,7 @@ class NeedItem(models.Model):
     unit = models.CharField(max_length=20, verbose_name='单位', default='')
     nums = models.IntegerField(verbose_name='数量', default=0)
     remark = models.CharField(max_length=50, verbose_name='备注', null=True, blank=True)
-    use_method = models.ForeignKey(UseMethod, verbose_name='使用方向')
+    use_method = models.CharField(max_length=20, verbose_name='使用方向', null=True, blank=True)
     lis = models.ForeignKey(ItemsReceive, verbose_name='宣传资料领用表')
 
     class Meta:
