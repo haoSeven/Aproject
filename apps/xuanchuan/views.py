@@ -10,11 +10,13 @@ from django.http import HttpResponse
 from django.core import serializers
 from pure_pagination import PageNotAnInteger, Paginator
 
-from .models import MessageDraft, ObjMedia, Category, ItemsMake,ItemsReceive,DraftBase
+from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount,\
+    ItemMakeCount, ItemReceiveCount, NeedItem
 from users.models import UserProfile, Office, Team
+from utils.mixin_utils import LoginRequiredMixin
 
 
-class MessageDraftView(View):
+class MessageDraftView(LoginRequiredMixin, View):
     """
     宣传管理信息起草
     """
@@ -74,10 +76,54 @@ class MessageDraftView(View):
 
             lis_message = MessageDraft.objects.get(id=message_draft.id)
             lis_draft_base = DraftBase.objects.get(id=draft_base.id)
+            category_count = CategoryCount.objects.filter(user=request.user)
+
             # 保存类型
             for c in category:
                 category = Category.objects.get(name=c)
                 lis_message.category.add(category)
+                if category_count:
+                    category_count = CategoryCount.objects.get(user=request.user)
+                    if c == '电视媒体':
+                        category_count.tv_count += 1
+                        category_count.save()
+                    elif c == '网络媒体':
+                        category_count.internet_count += 1
+                        category_count.save()
+                    elif c == '电梯海报':
+                        category_count.lift_count += 1
+                        category_count.save()
+                    elif c == '新闻稿件':
+                        category_count.news_count += 1
+                        category_count.save()
+                    elif c == '微博微信':
+                        category_count.webo_count += 1
+                        category_count.save()
+                    else:
+                        category_count.other_count += 1
+                        category_count.save()
+                else:
+                    category_count = CategoryCount()
+                    category_count.user = request.user
+                    if c == '电视媒体':
+                        category_count.tv_count += 1
+                        category_count.save()
+                    elif c == '网络媒体':
+                        category_count.internet_count += 1
+                        category_count.save()
+                    elif c == '电梯海报':
+                        category_count.lift_count += 1
+                        category_count.save()
+                    elif c == '新闻稿件':
+                        category_count.news_count += 1
+                        category_count.save()
+                    elif c == '微博微信':
+                        category_count.webo_count += 1
+                        category_count.save()
+                    else:
+                        category_count.other_count += 1
+                        category_count.save()
+
             # # 保存媒体对象
             for m in media:
                 media = ObjMedia.objects.get(name=m)
@@ -131,18 +177,41 @@ class MessageDraftFileUploadView(View):
         return HttpResponse('{"status": "fail"}', content_type="application/json")
 
 
-class MessageInfoView(View):
+class MessageInfoView(LoginRequiredMixin, View):
     """
     宣传信息统计页面
     """
     def get(self, request):
 
-        return render(request, 'information_count.html', {
+        category_count = CategoryCount.objects.all()
+        tv_sum = 0
+        inter_sum = 0
+        lift_sum = 0
+        news_sum = 0
+        weibo_sum = 0
+        other_sum = 0
+        for c in category_count:
+            tv_sum += c.tv_count
+            inter_sum += c.internet_count
+            lift_sum += c.lift_count
+            news_sum += c.news_count
+            weibo_sum += c.webo_count
+            other_sum += c.other_count
+        all_sum = tv_sum + inter_sum + lift_sum + news_sum + weibo_sum + other_sum
 
+        return render(request, 'information_count.html', {
+            "category_count": category_count,
+            'tv_sum': tv_sum,
+            'inter_sum': inter_sum,
+            'lift_sum': lift_sum,
+            'news_sum': news_sum,
+            'weibo_sum': weibo_sum,
+            'other_sum': other_sum,
+            'all_sum': all_sum,
         })
 
 
-class MessageManagementView(View):
+class MessageManagementView(LoginRequiredMixin, View):
     """
     宣传信息管理页面
     """
@@ -152,7 +221,7 @@ class MessageManagementView(View):
         })
 
 
-class MessageSearchView(View):
+class MessageSearchView(LoginRequiredMixin, View):
     """
     宣传信息查询页面
     """
@@ -192,7 +261,7 @@ class MessageSearchView(View):
         })
 
 
-class MessageCategoryManageView(View):
+class MessageCategoryManageView(LoginRequiredMixin, View):
     """
     宣传信息类别管理页面
     """
@@ -205,7 +274,7 @@ class MessageCategoryManageView(View):
         })
 
 
-class ItemsMakeSearchView(View):
+class ItemsMakeSearchView(LoginRequiredMixin, View):
     """
     宣传物资制作查询页面
     """
@@ -262,7 +331,7 @@ class ItemsMakeSearchView(View):
         })
 
 
-class ItemsMakeCountView(View):
+class ItemsMakeCountView(LoginRequiredMixin, View):
 
     """
     宣传物资制作统计页面
@@ -270,12 +339,34 @@ class ItemsMakeCountView(View):
 
     def get(self, request):
 
-        return render(request, 'promo_count.html', {
+        all_item_make_count = ItemMakeCount.objects.all()
 
+        manual_sum = 0
+        adv_sum = 0
+        video_sum = 0
+        leaflet_sum = 0
+        other_sum = 0
+
+        for i in all_item_make_count:
+            manual_sum += i.manual_count
+            adv_sum += i.adv_count
+            video_sum += i.video_count
+            leaflet_sum += i.leaflet_count
+            other_sum += i.other_count
+        all_sum = manual_sum + adv_sum + video_sum + leaflet_sum + other_sum
+
+        return render(request, 'promo_count.html', {
+            "all_item_make_count": all_item_make_count,
+            "manual_sum": manual_sum,
+            "adv_sum": adv_sum,
+            "video_sum": video_sum,
+            "leaflet_sum": leaflet_sum,
+            "other_sum": other_sum,
+            "all_sum": all_sum
         })
 
 
-class ItemReceiverSearchView(View):
+class ItemReceiverSearchView(LoginRequiredMixin, View):
 
     """
     宣传物资领用查询页面
@@ -315,7 +406,7 @@ class ItemReceiverSearchView(View):
         })
 
 
-class ItemReceiverCountView(View):
+class ItemReceiverCountView(LoginRequiredMixin, View):
 
     """
     宣传物资领用统计页面
@@ -323,12 +414,34 @@ class ItemReceiverCountView(View):
 
     def get(self, request):
 
-        return render(request, 'receive_count.html', {
+        all_item_receive_count = ItemReceiveCount.objects.all()
 
+        manual_sum = 0
+        badge_sum = 0
+        pendant_sum = 0
+        ticket_sum = 0
+        other_sum = 0
+
+        for i in all_item_receive_count:
+            manual_sum += i.manual_count
+            badge_sum += i.badge_count
+            pendant_sum += i.pendant_count
+            ticket_sum += i.ticket_count
+            other_sum += i.other_count
+        all_sum = manual_sum + badge_sum + pendant_sum + ticket_sum + other_sum
+
+        return render(request, 'receive_count.html', {
+            "all_item_receive_count": all_item_receive_count,
+            "manual_sum": manual_sum,
+            "badge_sum": badge_sum,
+            "pendant_sum": pendant_sum,
+            "ticket_sum": ticket_sum,
+            "other_sum": other_sum,
+            "all_sum": all_sum,
         })
 
 
-class ItemMakeView(View):
+class ItemMakeView(LoginRequiredMixin, View):
 
     """
     宣传物资制作页面
@@ -337,7 +450,7 @@ class ItemMakeView(View):
     def get(self, request):
         add_time = datetime.now()
 
-        return render(request, '', {
+        return render(request, 'item_make.html', {
             'add_time': add_time,
         })
 
@@ -354,25 +467,99 @@ class ItemMakeView(View):
         pass
 
 
-class ItemReceiveView(View):
+class ItemReceiveView(LoginRequiredMixin, View):
     """
-    宣传物资领用表
+    宣传物资领用申请
     """
     def get(self, request):
         add_time = datetime.now()
+        all_office = Office.objects.all()
 
-        return render(request, '', {
+        return render(request, 'wzly_draft.html', {
             'add_time': add_time,
+            "all_office": all_office,
         })
 
     def post(self, request):
-        title = request.POST.get('title', '')
-        status = request.POST.get('state', '')
+        if request.is_ajax():
+            title = request.POST.get('title', '')
+            status = request.POST.get('state', '')
 
-        # 修改时间格式
-        time = request.POST.get('time', '')
-        patten = '年|月'
-        time = re.sub(patten, '-', time)
-        time = re.sub('日', '', time)
+            # 修改时间格式
+            time = request.POST.get('time', '')
+            patten = '年|月'
+            time = re.sub(patten, '-', time)
+            time = re.sub('日', '', time)
 
-        pass
+            remark = request.POST.get('remark', '')
+            accept_users = request.POST.getlist('accept_user[]', [])
+            style = request.POST.get('style', '')
+
+            draft_base = DraftBase()
+            draft_base.draft_user = request.user
+            draft_base.title = title
+            draft_base.status = status
+            draft_base.add_time = time
+            draft_base.style = style
+            draft_base.save()
+
+            receiver_draft = ItemsReceive()
+            receiver_draft.remark = remark
+            receiver_draft.main = draft_base
+            receiver_draft.save()
+
+            lis_draft_base = DraftBase.objects.get(id=draft_base.id)
+
+            # 修改   保存接受人的id
+            for a in accept_users:
+                accept_user = UserProfile.objects.get(id=a)
+                if accept_user:
+                    lis_draft_base.accept_user.add(accept_user)
+
+            recall = {"status": "success", "lis_id": receiver_draft.id}
+
+            return HttpResponse(json.dumps(recall))
+
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+class ReceiveItemsView(LoginRequiredMixin, View):
+
+    def post(self, request):
+
+        lis_id = request.POST.get('lis_id', '')
+        name = request.POST.get('name', '')
+        place = request.POST.get('place', '')
+        count = request.POST.get('count', 0)
+        direction = request.POST.get('direction', '')
+        remark = request.POST.get('remark', '')
+        if lis_id:
+            need_item = NeedItem()
+            need_item.name = name
+            need_item.unit = place
+            need_item.nums = count
+            need_item.use_method = direction
+            need_item.remark = remark
+            need_item.lis_id = lis_id
+            need_item.save()
+
+            return HttpResponse('{"status": "success"}', content_type="application/json")
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+class OverViewView(LoginRequiredMixin, View):
+    """
+    宣传概览
+    """
+    def get(self, request):
+
+        return render(request, 'Overview.html', {})
+
+
+class ReportQueryView(LoginRequiredMixin, View):
+    """
+    宣传工作总结报告查询
+    """
+    def get(self, request):
+
+        return render(request, 'report_query.html', {})

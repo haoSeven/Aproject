@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}首页{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'css/starter-template.css' %}">
+{#    <link rel="stylesheet" href="{% static 'css/starter-template.css' %}">#}
     <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     {% block custom_css %}{% endblock %}
@@ -15,10 +15,17 @@
         <div class="row">
             <div class="col-md-10">
                 <h2>XX血液中心无偿献血综合服务平台</h2></div>
+            {% if not request.user.is_authenticated %}
             <div class="col-md-2">
                 <button type="button" class="btn btn-secondary">注册</button>
-                <button type="button" class="btn btn-secondary">登录</button>
+                <button type="button" class="btn btn-secondary"><a href="{% url 'login' %}">登录</a></button>
             </div>
+                {% else %}
+            <div class="col-md-2">
+                <a href="">{{ request.user.name }}</a>|
+                <a href="{% url 'logout' %}">登出</a>
+            </div>
+            {% endif %}
         </div>
     </nav>
     <ul class="nav nav-tabs">
@@ -29,17 +36,17 @@
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
                aria-expanded="false">宣传管理</a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#" target="mainiframe">宣传事务概览</a>
+                <a class="dropdown-item" href="{% url 'over_view' %}">宣传事务概览</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'xc:management' %}">宣传事务管理</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" target="mainiframe">宣传计划管理</a>
+                <a class="dropdown-item" href="{% url 'jh:plan_search' %}">宣传计划管理</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" target="mainiframe">宣传方案管理</a>
+                <a class="dropdown-item" href="{% url 'fa:Scheme_query' %}">宣传方案管理</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" target="mainiframe">宣传事务查询统计</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" target="mainiframe">宣传工作总结报告</a>
+                <a class="dropdown-item" href="{% url 'xc:report_query' %}">宣传工作总结报告</a>
             </div>
         </li>
         <li class="nav-item dropdown">
@@ -130,7 +137,8 @@
     </ul>
 {#    <Iframe name="mainiframe" class="mt-4" src="mywork.html" width="100%" height="100%" scrolling="no"#}
 {#            frameborder="0"></iframe>#}
-    {% block content %}{% endblock %}
+    <div class="mt-4">{% block content %}{% endblock %}</div>
+
     <div class="center">
         <p style="text-align:center;">XX血液中心无偿献血综合服务平台 报障热线：</p>
     </div>

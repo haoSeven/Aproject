@@ -25,7 +25,7 @@ class DraftBase(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name='类别名称')
-    status = models.CharField(choices=(("stop", "停用"), ("active", "启用")), max_length=5,
+    status = models.CharField(choices=(("stop", "停用"), ("active", "启用")), max_length=6,
                               verbose_name='状态', default='active')
     create_user = models.ForeignKey(UserProfile, verbose_name='创建人', default='')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='申请时间')
@@ -62,7 +62,7 @@ class Opinion(models.Model):
 
 
 class MessageDraft(models.Model):
-    main =  models.OneToOneField(DraftBase, verbose_name='基础信息')
+    main = models.OneToOneField(DraftBase, verbose_name='基础信息')
     start_time = models.CharField(default='', verbose_name='开始时间', max_length=20)
     end_time = models.CharField(default='', verbose_name='结束时间', max_length=20)
     content = models.TextField(max_length=500, verbose_name='内容')
@@ -78,7 +78,7 @@ class MessageDraft(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.style
+        return self.main.title
 
     def get_category(self):
         return self.category.all().count()
@@ -90,7 +90,6 @@ class MessageDraft(models.Model):
 
 class ItemsMake(models.Model):
     main = models.OneToOneField(DraftBase, verbose_name='基础信息')
-    style = models.CharField(max_length=20, default="宣传品制作", verbose_name="宣传品制作")
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
@@ -126,31 +125,19 @@ class ItemMake(models.Model):
         return self.name
 
 
-class UseMethod(models.Model):
-    name = models.CharField(max_length=15, verbose_name='使用方向')
-
-    class Meta:
-        verbose_name = '宣传资料使用方向'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-
 class ItemsReceive(models.Model):
     main = models.OneToOneField(DraftBase, verbose_name='基础信息')
-    style = models.CharField(max_length=20, default="宣传品领用", verbose_name="宣传品领用")
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
-    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
+    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='', null=True, blank=True)
 
     class Meta:
         verbose_name = '宣传资料制作'
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.title
+        return self.main.title
 
 
 class NeedItem(models.Model):
@@ -158,7 +145,7 @@ class NeedItem(models.Model):
     unit = models.CharField(max_length=20, verbose_name='单位', default='')
     nums = models.IntegerField(verbose_name='数量', default=0)
     remark = models.CharField(max_length=50, verbose_name='备注', null=True, blank=True)
-    use_method = models.ForeignKey(UseMethod, verbose_name='使用方向')
+    use_method = models.CharField(max_length=20, verbose_name='使用方向', null=True, blank=True)
     lis = models.ForeignKey(ItemsReceive, verbose_name='宣传资料领用表')
 
     class Meta:
@@ -167,3 +154,63 @@ class NeedItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CategoryCount(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name='用户', default='')
+    tv_count = models.IntegerField(verbose_name='电视媒体类', default=0)
+    internet_count = models.IntegerField(verbose_name='网络媒体类', default=0)
+    lift_count = models.IntegerField(verbose_name='电梯海报类', default=0)
+    news_count = models.IntegerField(verbose_name='新闻媒体类', default=0)
+    webo_count = models.IntegerField(verbose_name='微博微信类', default=0)
+    other_count = models.IntegerField(verbose_name='其他', default=0)
+
+    class Meta:
+        verbose_name = '宣传信息发布统计'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.user.name
+
+    def get_sum(self):
+        return self.tv_count + self.internet_count + self.lift_count + \
+               self.news_count + self.webo_count + self.other_count
+
+
+class ItemMakeCount(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name='用户', default='')
+    manual_count = models.IntegerField(verbose_name='手册', default=0)
+    adv_count = models.IntegerField(verbose_name='广告', default=0)
+    video_count = models.IntegerField(verbose_name='视频', default=0)
+    leaflet_count = models.IntegerField(verbose_name='单张', default=0)
+    other_count = models.IntegerField(verbose_name='其他', default=0)
+
+    class Meta:
+        verbose_name = '宣传物资领用统计'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.user.name
+
+    def get_sum(self):
+        return self.manual_count + self.adv_count + self.video_count + self.leaflet_count + self.other_count
+
+
+class ItemReceiveCount(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name='用户', default='')
+    manual_count = models.IntegerField(verbose_name='手册', default=0)
+    badge_count = models.IntegerField(verbose_name='胸章', default=0)
+    pendant_count = models.IntegerField(verbose_name='吊坠', default=0)
+    ticket_count = models.IntegerField(verbose_name='电影票', default=0)
+    other_count = models.IntegerField(verbose_name='其他', default=0)
+
+    class Meta:
+        verbose_name = '宣传物资领用统计'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.user.name
+
+    def get_sum(self):
+
+        return self.manual_count + self.badge_count + self.pendant_count + self.ticket_count + self.other_count

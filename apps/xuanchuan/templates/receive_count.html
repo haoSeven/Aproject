@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>宣传物资领用统计表</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link href="css/starter-template.css" rel="stylesheet">
-    <script src="css/jquery-3.1.1.min.js" type="text/javascript"></script>
-    <style>
-        th {text-align:center}
-    </style>
-</head>
-<body>
-<div class="container">
+{% extends 'mainiframe.html' %}
+{% load staticfiles %}
+
+{% block title %}
+宣传物资领用统计表
+{% endblock %}
+
+
+{% block content %}
     <form class="form-inline">
         <div class="form-group">
             <label for="timefirst">统计时段: </label>
@@ -49,50 +44,37 @@
         </tr>
         </thead>
         <tbody>
+        {% for count in all_item_receive_count %}
         <tr>
             <th scope="row">1</th>
-            <td>李建明</td>
-            <td>4</td>
-            <td>7</td>
-            <td>6</td>
-            <td>3</td>
-            <td>3</td>
-            <td>2</td>
+            <td>{{ count.user.name }}</td>
+            <td>{{ count.manual_count }}</td>
+            <td>{{ count.badge_count }}</td>
+            <td>{{ count.pendant_count }}</td>
+            <td>{{ count.ticket_count }}</td>
+            <td>{{ count.other_count }}</td>
+            <td>{{ count.get_sum }}</td>
         </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>张世红</td>
-            <td>1</td>
-            <td></td>
-            <td>3</td>
-            <td>2</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>罗定</td>
-            <td></td>
-            <td>2</td>
-            <td>1</td>
-            <td>3</td>
-            <td>3</td>
-            <td>2</td>
-        </tr>
+        {% endfor %}
         </tbody>
         <thead>
         <tr>
             <th>-</th>
             <th>总计</th>
-            <th>11</th>
-            <th>23</th>
-            <th>22</th>
-            <th></th>
-            <th></th>
-            <th>32</th>
+            <th>{{ manual_sum }}</th>
+            <th>{{ badge_sum }}</th>
+            <th>{{ pendant_sum }}</th>
+            <th>{{ ticket_sum }}</th>
+            <th>{{ other_sum }}</th>
+            <th>{{ all_sum }}</th>
         </tr>
         </thead>
     </table>
-</div>
-</body>
-</html>
+{% endblock %}
+
+
+{% block custom_css %}
+<style>
+    th {text-align:center}
+</style>
+{% endblock %}
