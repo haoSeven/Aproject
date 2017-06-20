@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.static import serve
 
-from users.views import Index, HandleMessageDraftView, LoginView, LogoutView
+from users.views import Index, HandleMessageDraftView, LoginView, LogoutView,HandleItemsReceiveView
 from xuanchuan.views import GetReceiverView, OverViewView
 from plan.views import PlanSearchView
 from .settings import MEDIA_ROOT
@@ -39,8 +39,12 @@ urlpatterns = [
     url(r'^fa/', include('project.urls', namespace='fa')),
     # 审批宣传信息申请
     url(r'^messagedraft/(?P<draft_id>\d+)&(?P<style>.*)/$', HandleMessageDraftView.as_view(), name='handle_message_draft'),
-    # 提交建议
+    #审批物资领用申请
+    url(r'^itemreceiver/(?P<draft_id>\d+)&(?P<style>.*)/$', HandleItemsReceiveView.as_view(), name='handle_itemreveiver_draft'),
+    # 提交宣传信息审批建议
     url(r'^sendopinion/$', HandleMessageDraftView.as_view(), name='send_opinion'),
+    # 提交物资领用审批建议
+    url(r'^itemreceiveropinion/$', HandleItemsReceiveView.as_view(), name='itemreceiver_opinion'),
     # 获取发送人
     url(r'^getreceiver/$', GetReceiverView.as_view(), name='get_receiver'),
     # 宣传概览

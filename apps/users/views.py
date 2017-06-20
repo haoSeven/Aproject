@@ -5,7 +5,7 @@ from django.views.generic import View
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
-from xuanchuan.models import MessageDraft, Opinion, DraftBase
+from xuanchuan.models import MessageDraft, Opinion, DraftBase, ItemsReceive, NeedItem
 from .forms import LoginForm
 
 
@@ -73,6 +73,37 @@ class HandleMessageDraftView(View):
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
 
+class HandleItemsReceiveView(View):
+
+    def get(self, request, draft_id, style):
+
+        draft = DraftBase.objects.get(id=draft_id, style=style)
+        needitems = draft.itemsreceive.needitem_set.all()
+
+        return render(request, 'sp_wzly.html', {
+            'draft': draft,
+            'needitems': needitems
+        })
+
+    def post(self, request):
+        content = request.POST.get('opinion', '')
+        lis_id = request.POST.get('lis_id', '')
+
+        opinion = Opinion()
+        opinion.content = content
+        opinion.leader = request.user
+        opinion.save()
+
+        draft = DraftBase.objects.get(id=lis_id)
+
+        if ItemsReceive:
+            draft.itemsreceive.opinion_id = opinion.id
+            draft.status = '已审批'
+            draft.itemsreceive.save()
+            draft.save()
+
+            return JsonResponse({"status": "success"})
+        return JsonResponse({"status": "fail"})
 
 class LoginView(View):
     """
