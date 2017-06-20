@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>宣传方案管理</title>
-	<link rel="stylesheet" href="css/write_css.css">
-	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+{% extends 'mainiframe.html' %}
+{% load staticfiles %}
+
+{% block title %}
+宣传方案管理
+{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="kindeditor/default/default.css" />
-    <script charset="utf-8" src="kindeditor/kindeditor-min.js"></script>
-    <script charset="utf-8" src="kindeditor/zh_CN.js"></script>
-</head>
-<body>
-	<div class="container" >
+	<link rel="stylesheet" href="{% static 'kindeditor/default/default.css' %}" />
+    <script charset="utf-8" src="{% static 'kindeditor/kindeditor-min.js' %}"></script>
+    <script charset="utf-8" src="{% static 'kindeditor/zh_CN.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" >
     <header >
         <h4 class="text_center">工作方案</h4>
         <p style="color:#2894FF">状态：待审批</p>
@@ -41,7 +44,7 @@
             <tr>
                 <th class="text_center">*方案类别
                 <td class="text_center" colspan="2">
-                    <select style="width: 100%">                       
+                    <select style="width: 100%">
                         <option>普通宣传活动</option>
                         <option>重大专项宣传活动</option>
                         <option>固定献血者活动</option>
@@ -51,32 +54,32 @@
                     </select></td></th>
                    <th class="text_center"></th><td class="text_center" colspan="2"></td>
             </tr>
-           
+
             <tr>
                 <th class="text_center">*负责人</th>
-                <td class="text_center" colspan="2">Mark</td>
+                <td class="text_center" colspan="2"><input name="principal"></td>
                 <th class="text_center">*成员</th>
-                <td class="text_center" colspan="2">Mark</td>
+                <td class="text_center" colspan="2"><input name="member"></td>
             </tr>
              <tr>
                 <th class="text_center">*预算(元)</th>
-                <td class="text_center" colspan="2">Mark</td>
+                <td class="text_center" colspan="2"><input name="budget"></td>
                 <th class="text_center">*实际费用(元)</th>
-                <td class="text_center" colspan="2">Mark</td>
+                <td class="text_center" colspan="2"><input name="actual_cost"></td>
             </tr>
             <tr>
                 <th class="text_center">*方案执行开始时间</th>
-                <td class="text_center" colspan="2">2015-7-1</td>
+                <td class="text_center" colspan="2"><input name="start_time"></td>
                 <th class="text_center">*方案执行结束时间</th>
-                <td class="text_center" colspan="2">2015-7-31</td>
+                <td class="text_center" colspan="2"><input name=""></td>
             </tr>
             <section>
             <tr>
             <th colspan="6" class="text_center">
             	<ul id="myTab" class="nav nav-tabs">
             		<li class="active"><a href="#main_text" data-toggle="tab">正文</a></li>
-            		<li><a href="#project" data-toggle="tab">项目</a></li> 
-            		<li><a href="#effect" data-toggle="tab">效果分析</a></li>             		
+            		<li><a href="#project" data-toggle="tab">项目</a></li>
+            		<li><a href="#effect" data-toggle="tab">效果分析</a></li>
             </ul>
             </th>
             </tr>
@@ -103,16 +106,16 @@
                 </tr>
 
                 <tr id="message">
-                    <td style="width: 5%"><input style="width: 100%"></input></td>
-                    <td style="width: 15%"><input style="width: 100%"></input></td>
-                    <td ><textarea style="width: 100%; height:25px"></textarea></td>
-                    <td style="width: 10%"><input style="width: 100%"></input></td>
-                    <td style="width: 10%"><input style="width: 100%"></input></td>
+                    <td style="width: 5%"></td>
+                    <td style="width: 15%"><input style="width: 100%"></td>
+                    <td ><input style="width: 100%"></td>
+                    <td style="width: 10%"><input style="width: 100%"></td>
+                    <td style="width: 10%"><input style="width: 100%"></td>
                     <td style="width: 7%"></td>
                 </tr>
             		</table>
             		</div>
-            	
+
             	<div class="tab-pane fade" id="effect">
             	<table class="table table-bordered">
             	<tr>
@@ -145,7 +148,7 @@
                 </tr>
                 </table>
             	</div>
-            	
+
             	</div>
             	</td>
             	</tr>
@@ -193,6 +196,10 @@
     </section>
 
 </div>
+{% endblock %}
+
+
+{% block custom_js %}
 <!-- KindEditor编辑器 -->
 <script language="javascript">
 	var editor;
@@ -222,7 +229,7 @@
 <script language='javascript'>
 	KindEditor.ready(function(K) {
 		K.create('#content1', {
-			pasteType : 0 
+			pasteType : 0
         }); //为0表示不能向编辑器红粘帖
 		K.create('#content2', {
 			pasteType : 1
@@ -246,11 +253,11 @@
             var td6=tr.insertCell(4)
             var td1=tr.insertCell(5)
             td1.innerHTML="<button type='button' onclick='deleteRow(this)'>删除</button>"
-            td2.innerHTML="<input style='width: 100%'></input>"
-            td3.innerHTML="<input style='width: 100%'></input>"
-            td4.innerHTML="<textarea style='width: 100%; height:25px'></textarea>"
-            td5.innerHTML="<input style='width: 100%'></input>"
-            td6.innerHTML="<input style='width: 100%'></input>"
+            td2.innerHTML=""
+            td3.innerHTML="<input style='width: 100%'>"
+            td4.innerHTML="<input style='width: 100%'>"
+            td5.innerHTML="<input style='width: 100%'>"
+            td6.innerHTML="<input style='width: 100%'>"
 
             }
         function deleteRow(r)           //删除行
@@ -272,5 +279,4 @@
             document.getElementById(value).style.display='block';
         }
     </script>
-</body>
-</html>
+{% endblock %}

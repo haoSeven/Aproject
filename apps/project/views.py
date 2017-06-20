@@ -12,3 +12,11 @@ class SchemeQueryView(View):
     def get(self, request):
         return render(request, 'Scheme_query.html', {})
 
+
+class SchemeDraftView(View):
+    """
+    宣传方案起草
+    """
+
+    def get(self, request):
+        return render(request, 'xc_ scheme.html', {})
