@@ -11,7 +11,7 @@
         <h4 class="text_center">宣传物资领用</h4>
         <div>
         <span>态状：</span>
-        <span style="color:#2894FF" id="state">未审核</span>
+        <span style="color:#2894FF" id="state">{{ draft.status }}</span>
         </div>
 
     </header>
@@ -21,19 +21,19 @@
 
             <tr>
                 <th class="text_center">申请部门</th>
-                <td class="text_center" colspan="2">{{ request.user.team }}</td>
+                <td class="text_center" colspan="2">{{ draft.draft_user.team }}</td>
                 <th class="text_center" >申请时间</th>
-                <td class="text_center" colspan="2" id="applytime">{{ add_time }}</td>
+                <td class="text_center" colspan="2" id="applytime">{{ draft.add_time }}</td>
             </tr>
             <tr>
                 <th class="text_center">申请人</th>
-                <td class="text_center" colspan="2">{{ request.user.name }}</td>
+                <td class="text_center" colspan="2">{{ draft.draft_user.name }}</td>
                 <th class="text_center">联系电话</th>
-                <td class="text_center" colspan="2">{{ request.user.mobile }}</td>
+                <td class="text_center" colspan="2">{{ draft.draft_user.mobile }}</td>
             </tr>
             <tr>
                 <th class="text_center">*标题</th>
-                <td colspan="5"><input style="width: 100%" id="title"></input></td>
+                <td colspan="5"><input readonly="readonly" style="width: 100%" id="title" value="{{ draft.title }}"></td>
             </tr>
             <tr>
                 <th colspan="6" class="text_center">请在以下表格中填写需要领用的宣传物资</th>
@@ -42,13 +42,8 @@
 
 
             <section>
-                <tr>
-                    <td colspan="6">
-                    <button id="add_button" onclick="addonclick()">添加</button>
 
-                </tr>
                 <tr>
-
                 <th class="text_center"style="color:#2894FF">名称</th>
                 <th class="text_center"style="color:#2894FF">单位</th>
                 <th class="text_center"style="color:#2894FF">数量</th>
@@ -57,39 +52,34 @@
                 <th class="text_center"style="color:#2894FF">操作</th>
                 </tr>
 
+                {% for needitem in needitems %}
                 <tr id="message0">
-                    <td><input style="width: 100%"></td>
-                    <td><input style="width: 100%"></td>
-                    <td><input style="width: 100%" type="number"></td>
+                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.name }}" ></td>
+                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.unit }}"></td>
+                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.nums }}"></td>
+                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.use_method }}"></td>
+                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.remark }}"></td>
                     <td>
-                        <select style="width: 100%">
-                            <option>社区街道</option>
-                            <option>单位企业</option>
-                            <option>学校</option>
-                            <option>Audi</option>
-                        </select>
-                    </td>
-                    <td><input style="width: 100%"></input></td>
-                    <td>
-
                     </td>
                 </tr>
+                {% endfor %}
 
             </section>
 
             <tr>
                 <th><div class="remark_text">备注</div></th>
-                <td colspan="6"><textarea class="remark_textarea" id="remarks"> </textarea></td>
+                <td colspan="6"><textarea class="remark_textarea" id="remarks" readonly="readonly" >{{ draft.itemsreceive.remark }} </textarea></td>
             </tr>
             <tr>
                 <th><div class="textarea_style">附件</div></th>
                     <td colspan="6">
+                        <input type="hidden" id="lis_id" name="lis_id" value="">
                         <input type="file" name="file" id="file_upload">
                     </td>
             </tr>
             <tr>
                 <th><div class="textarea_style">领导审批意见</div></th>
-                <td colspan="6"></td>
+                <td colspan="6">{{ draft.itemsreceive.opinion.content }}</td>
             </tr>
             <tr>
                 <th colspan="3">选择意见：
@@ -198,107 +188,21 @@
 
 {% block custom_js %}
     <script type="text/javascript">
-    	var k=1;
-        var deletid=[0];
-        function addonclick(){                  //添加行
-            var tab=document.getElementById('order');
-            var n=document.getElementById('message0').rowIndex+1;
-            var tr=tab.insertRow(n);
-            
-            tr.setAttribute("id","message"+k)
-            var td2=tr.insertCell(0)
-            var td3=tr.insertCell(1)
-            var td4=tr.insertCell(2)
-            var td5=tr.insertCell(3)
-            var td6=tr.insertCell(4)
-            var td1=tr.insertCell(5)
-            
-            deletid.push(k)
-
-            td1.innerHTML="<button type='button' id='delete"+k+"' onclick='deleteRow(this.id)'>删除</button>"
-            td2.innerHTML="<input style='width: 100%'></input>"
-            td3.innerHTML="<input style='width: 100%'></input>"
-            td4.innerHTML="<input style='width: 100%' type='number'></input>"
-            td5.innerHTML="<select style='width: 100%'> <option>社区街道</option> <option>单位企业</option> <option>学校</option> <option>Audi</option> </select>"
-            td6.innerHTML="<input style='width: 100%'></input>"
-			k++;
-            }
-        function deleteRow(k)           //删除行
-        {
-
-            k = parseInt(k.substring(6));
-            alert(k);
-            $("#message"+ k +"").remove();
-            deletid.pop(k)
-        }
-
-        function send()
-        {
-
-
-        	var state = $("#state").html(); 			//获取状态
-        	var time=$("#applytime").html();            //获取申请时间
-        	var title=$("#title").val();                 // 获取标题
-        	var remarks=$("#remarks").val();              // 获取备注
-
+        function send() {
+            var opinion = $("#input_suggest").val()
+            var lis_id = "{{ draft.id }}";
             $.ajax({
-            url: "{% url 'xc:item_receive_draft' %}",
-            type: 'POST',
-            cache: false,
-            data: {"state": state, "title": title, 'time': time, "remark": remarks, 'accept_user': selected_user, "style": "物资领用申请"},
-
-            dataType: "json",
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-            },
+                type: "POST",
+                data : {"opinion": opinion, "lis_id": lis_id},
+                url:{% url 'itemreceiver_opinion' %},
+                cache: false,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                },
                 success: function (data) {
-                    var lis_id = data.lis_id;
-                    var formData = new FormData();
-                    formData.append("file", $("#file_upload")[0].files[0]);
-                    formData.append("lis_id", lis_id);
-
-                    for (var i in deletid)	{										//获取领用内容
-                        var name = $("#message"+ i +" td:eq(0) input").val();		//获取物资名称
-                        var place = $("#message"+ i +" td:eq(1) input").val();		//获取领用单位
-                        var count = $("#message"+ i +" td:eq(2) input").val();		//获取数量
-                        var direction = $("#message"+ i +" td:eq(3) select").val();	//获取使用方向
-                        var remark = $("#message"+ i +" td:eq(4) input").val();		//获取备注
-                        $.ajax({
-                            url: "{% url 'xc:need_item' %}",
-                            type: 'POST',
-                            cache: false,
-                            data: {"name": name, "place": place, 'count': count, "direction": direction, 'remark': remark, 'lis_id': lis_id},
-                            dataType: "json",
-                            beforeSend: function (xhr, settings) {
-                                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                            },
-                            success: function (data) {
-
-                            }
-                        });
-                    }
-                    $.ajax({
-                            url:"{% url 'xc:item_receive_upload' %}",
-                            type: "POST",
-                            data: formData,
-                            cache: false,
-                            processData: false,  // 不处理数据
-                            contentType: false,   // 不设置内容类型
-                            beforeSend: function (xhr, settings) {
-                                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                            },
-                            success: function (data) {
-                                if (data.status === 'success'){
-                                    window.location.reload();
-                                }else if(data.status === 'fail'){
-                                    window.location.reload();
-                                }
-                            }
-                        })
-                }, error: function (data) {
-            }
-            });
-
+                    window.location.reload();
+                }
+            })
         }
 
     </script>

@@ -23,7 +23,11 @@
                 {% for draft in has_draft %}
 				<tr>
 					<td>{{ draft.id }}</td>
-					<td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% if draft.style == '宣传信息申请' %}
+                        <td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '物资领用申请' %}
+                        <td><a href="{% url 'handle_itemreveiver_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>
 					<td>{{ draft.add_time }}</td>
@@ -33,7 +37,11 @@
                 {% for draft in all_draft %}
 				<tr>
 					<td>{{ draft.id }}</td>
-					<td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% if draft.style == '宣传信息申请' %}
+					    <td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '物资领用申请' %}
+                        <td><a href="{% url 'handle_itemreveiver_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>
 					<td>{{ draft.add_time }}</td>
