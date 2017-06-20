@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>宣传工作总结</title>
+	<link rel="stylesheet" href="css/write_css.css">
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="kindeditor/default/default.css" />
+    <script charset="utf-8" src="kindeditor/kindeditor-min.js"></script>
+    <script charset="utf-8" src="kindeditor/zh_CN.js"></script>
+</head>
+<body>
+	<div class="container" >
+    <header >
+        <h4 class="text_center">工作总结报告</h4>
+        <p style="color:#2894FF">状态：待审批</p>
+
+    </header>
+    <section>
+        <table class="table table-bordered">
+            <tbody>
+
+            <tr>
+                <th class="text_center">拟稿部门</th>
+                <td class="text_center" colspan="2">First Name</td>
+                <th class="text_center" >拟稿时间</th>
+                <td class="text_center" colspan="2">Username</td>
+            </tr>
+            <tr>
+                <th class="text_center">拟稿人</th>
+                <td class="text_center" colspan="2">Mark</td>
+                <th class="text_center">联系电话</th>
+                <td class="text_center" colspan="2">123456789</td>
+            </tr>
+            
+            <section>
+            <tr>
+                <th colspan="6" class="text_center">工作报告总结</th>
+            </tr>
+            <tr>
+            <td  colspan="6" class="text_center">
+            <textarea name="content" style="width:100%;height:500px;visibility:hidden;">KindEditor</textarea>
+            </td>
+            </tr>                      
+            </section>
+
+            <tr>
+                <th><div class="textarea_style">附件</div></th>
+                <td colspan="5"><input type="file" name=""></td>
+            </tr>
+            <tr>
+                <th><div class="textarea_style">领导审批意见</div></th>
+                <td colspan="6"></td>
+            </tr>
+            <tr>
+                <th colspan="3">选择意见：
+                    <select style="width: 80%" id="sele_suggest"  onchange="change()">
+                        <option>----------请选择----------</option>
+                        <option>同意</option>
+                        <option>拟同意，待领导审批。</option>
+                        <option>请重新修改。</option>
+                    </select></th>
+                <th colspan="3">功能操作：</th>
+            </tr>
+            <tr>
+                <th colspan="3">
+                    填写审批意见：
+                    <textarea class="remark_textarea" id="input_suggest"> </textarea>
+                </th>
+                <td colspan="3">
+                    <div>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送科室领导</button>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送部门领导</button></div>
+                    <div style="padding-top: 5px">
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送中心领导</button>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">退回拟稿人</button></div>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+</div>
+<!-- KindEditor编辑器 -->
+<script language="javascript">
+	var editor;
+	KindEditor.ready(function(K) {
+		editor = K.create('textarea[name="content"]', {
+			allowFileManager : true
+		});
+		K('input[name=getHtml]').click(function(e) {
+			alert(editor.html());
+		});
+	});
+</script>
+<script language="javascript">
+	var editor;
+	KindEditor.ready(function(K) {
+		editor = K.create('textarea[name="content"]', {
+			resizeType : 1,
+			allowPreviewEmoticons : false,
+			allowImageUpload : false,
+			items : [
+			'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+			'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+			'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+		});
+	});
+</script>
+<script language='javascript'>
+	KindEditor.ready(function(K) {
+		K.create('#content1', {
+			pasteType : 0 
+        }); //为0表示不能向编辑器红粘帖
+		K.create('#content2', {
+			pasteType : 1
+        }); //为1表示会把粘贴板中的样式过虑，保留纯文本进行黏贴
+		K.create('#content3', {
+			pasteType : 2
+        }); //为2表示粘帖的时候，会把html样式一起粘帖进去
+	});
+</script>
+    <script type="text/javascript">
+        function addonclick(){                  //添加行
+            var tab=document.getElementById('order');
+            var n=document.getElementById('message').rowIndex+1;
+            var tr=tab.insertRow(n);
+            var n=Math.random();
+            tr.setAttribute("id",n)
+            var td2=tr.insertCell(0)
+            var td3=tr.insertCell(1)
+            var td4=tr.insertCell(2)
+            var td5=tr.insertCell(3)
+            var td6=tr.insertCell(4)
+            var td1=tr.insertCell(5)
+            td1.innerHTML="<button type='button' onclick='deleteRow(this)'>删除</button>"
+            td2.innerHTML="<input style='width: 100%'></input>"
+            td3.innerHTML="<input style='width: 100%'></input>"
+            td4.innerHTML="<textarea style='width: 100%; height:25px'></textarea>"
+            td5.innerHTML="<input style='width: 100%'></input>"
+            td6.innerHTML="<input style='width: 100%'></input>"
+
+            }
+        function deleteRow(r)           //删除行
+        {
+            var i=r.parentNode.parentNode.rowIndex;
+            document.getElementById('order').deleteRow(i);
+        }
+
+        function change() {             //获取常用意见
+            var obj=document.getElementById('sele_suggest').value;
+            document.getElementById('input_suggest').value=obj;
+        }
+        $(function () { $('#myModal').modal('hide')});          //隐藏弹出框
+        function test(){                                           //隐藏部门人员
+            document.getElementById('a').style.display='none';
+            document.getElementById('b').style.display='none';
+            document.getElementById('c').style.display='none';
+            var value=document.getElementById('select').value;
+            document.getElementById(value).style.display='block';
+        }
+    </script>
+</body>
+</html>
