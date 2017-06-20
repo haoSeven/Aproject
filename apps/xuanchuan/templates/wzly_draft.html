@@ -84,7 +84,6 @@
             <tr>
                 <th><div class="textarea_style">附件</div></th>
                     <td colspan="6">
-                        <input type="hidden" id="lis_id" name="lis_id" value="">
                         <input type="file" name="file" id="file_upload">
                     </td>
             </tr>
@@ -254,6 +253,10 @@
             },
                 success: function (data) {
                     var lis_id = data.lis_id;
+                    var formData = new FormData();
+                    formData.append("file", $("#file_upload")[0].files[0]);
+                    formData.append("lis_id", lis_id);
+
                     for (var i in deletid)	{										//获取领用内容
                         var name = $("#message"+ i +" td:eq(0) input").val();		//获取物资名称
                         var place = $("#message"+ i +" td:eq(1) input").val();		//获取领用单位
@@ -274,6 +277,24 @@
                             }
                         });
                     }
+                    $.ajax({
+                            url:"{% url 'xc:item_receive_upload' %}",
+                            type: "POST",
+                            data: formData,
+                            cache: false,
+                            processData: false,  // 不处理数据
+                            contentType: false,   // 不设置内容类型
+                            beforeSend: function (xhr, settings) {
+                                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                            },
+                            success: function (data) {
+                                if (data.status === 'success'){
+                                    window.location.reload();
+                                }else if(data.status === 'fail'){
+                                    window.location.reload();
+                                }
+                            }
+                        })
                 }, error: function (data) {
             }
             });
