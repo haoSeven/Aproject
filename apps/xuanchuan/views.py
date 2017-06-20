@@ -525,6 +525,10 @@ class ItemReceiveView(LoginRequiredMixin, View):
 
 class ReceiveItemsView(LoginRequiredMixin, View):
 
+    """
+    宣传物资领用表 附属表 需要的领用的物资
+    """
+
     def post(self, request):
 
         lis_id = request.POST.get('lis_id', '')
@@ -533,7 +537,7 @@ class ReceiveItemsView(LoginRequiredMixin, View):
         count = request.POST.get('count', 0)
         direction = request.POST.get('direction', '')
         remark = request.POST.get('remark', '')
-        if lis_id:
+        if lis_id and name:
             need_item = NeedItem()
             need_item.name = name
             need_item.unit = place
@@ -544,6 +548,27 @@ class ReceiveItemsView(LoginRequiredMixin, View):
             need_item.save()
 
             return HttpResponse('{"status": "success"}', content_type="application/json")
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+class ItemReceiveDraftFileUploadView(View):
+
+    """
+    保存宣传信息起草表附件
+    """
+
+    def post(self, request, *args, **kwargs):
+
+        lis_id = request.POST.get('lis_id', '')
+        file = request.FILES.get("file", None)
+
+        if file:
+            item_receive = ItemsReceive.objects.get(id=lis_id)
+            item_receive.file = file
+            item_receive.save()
+
+            return HttpResponse('{"status": "success"}', content_type="application/json")
+
         return HttpResponse('{"status": "fail"}', content_type="application/json")
 
 
