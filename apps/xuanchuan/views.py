@@ -11,7 +11,7 @@ from django.core import serializers
 from pure_pagination import PageNotAnInteger, Paginator
 
 from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount,\
-    ItemMakeCount, ItemReceiveCount, NeedItem
+    ItemMakeCount, ItemReceiveCount, NeedItem, ItemMake
 from users.models import UserProfile, Office, Team
 from utils.mixin_utils import LoginRequiredMixin
 
@@ -474,10 +474,12 @@ class ItemReceiveView(LoginRequiredMixin, View):
     def get(self, request):
         add_time = datetime.now()
         all_office = Office.objects.all()
+        all_item = ItemMake.objects.all()
 
         return render(request, 'wzly_draft.html', {
             'add_time': add_time,
             "all_office": all_office,
+            'all_item': all_item,
         })
 
     def post(self, request):

@@ -58,7 +58,11 @@
                 </tr>
 
                 <tr id="message0">
-                    <td><input style="width: 100%"></td>
+                    <td><select id="">
+                        {% for item in all_item %}
+                        <option>{{ item.name }}</option>
+                        {% endfor %}
+                    </select></td>
                     <td><input style="width: 100%"></td>
                     <td><input style="width: 100%" type="number"></td>
                     <td>
@@ -258,7 +262,7 @@
                     formData.append("lis_id", lis_id);
 
                     for (var i in deletid)	{										//获取领用内容
-                        var name = $("#message"+ i +" td:eq(0) input").val();		//获取物资名称
+                        var name = $("#message"+ i +" td:eq(0) select").val();		//获取物资名称
                         var place = $("#message"+ i +" td:eq(1) input").val();		//获取领用单位
                         var count = $("#message"+ i +" td:eq(2) input").val();		//获取数量
                         var direction = $("#message"+ i +" td:eq(3) select").val();	//获取使用方向
