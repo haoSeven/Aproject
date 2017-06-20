@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import SchemeQueryView, SchemeDraftView
+from .views import SchemeQueryView, SchemeDraftView,SchemeFileUploadView
 
 
 urlpatterns = [
@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^Scheme_query/$', SchemeQueryView.as_view(), name='Scheme_query'),
     # 宣传方案起草
     url(r'^schemedraft/$', SchemeDraftView.as_view(), name='scheme_draft'),
+    # 宣传方案附件上传
+    url(r'^schemefileupload/$', SchemeFileUploadView.as_view(), name='scheme_file_upload'),
 ]

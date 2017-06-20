@@ -12,13 +12,14 @@
 	<link rel="stylesheet" href="{% static 'kindeditor/default/default.css' %}" />
     <script charset="utf-8" src="{% static 'kindeditor/kindeditor-min.js' %}"></script>
     <script charset="utf-8" src="{% static 'kindeditor/zh_CN.js' %}"></script>
+    <script src="{% static 'js/event.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="container" >
     <header >
         <h4 class="text_center">工作方案</h4>
-        <p style="color:#2894FF">状态：待审批</p>
+        <p style="color:#2894FF" id="status">状态：待审批</p>
 
     </header>
     <section>
@@ -27,24 +28,24 @@
 
             <tr>
                 <th class="text_center">拟稿部门</th>
-                <td class="text_center" colspan="2">First Name</td>
+                <td class="text_center" colspan="2">{{ request.user.team.team_name }}</td>
                 <th class="text_center" >拟稿时间</th>
-                <td class="text_center" colspan="2">Username</td>
+                <td class="text_center" colspan="2" id="add_time">{{ add_time }}</td>
             </tr>
             <tr>
                 <th class="text_center">拟稿人</th>
-                <td class="text_center" colspan="2">Mark</td>
+                <td class="text_center" colspan="2">{{ request.user.name }}</td>
                 <th class="text_center">联系电话</th>
-                <td class="text_center" colspan="2">123456789</td>
+                <td class="text_center" colspan="2">{{ request.user.mobile }}</td>
             </tr>
             <tr>
                 <th class="text_center">*标题</th>
-                <td colspan="5"><input style="width: 100%"></input></td>
+                <td colspan="5"><input style="width: 100%" id="title"></td>
             </tr>
             <tr>
                 <th class="text_center">*方案类别
                 <td class="text_center" colspan="2">
-                    <select style="width: 100%">
+                    <select style="width: 100%" id="category">
                         <option>普通宣传活动</option>
                         <option>重大专项宣传活动</option>
                         <option>固定献血者活动</option>
@@ -57,21 +58,21 @@
 
             <tr>
                 <th class="text_center">*负责人</th>
-                <td class="text_center" colspan="2"><input name="principal"></td>
+                <td class="text_center" colspan="2"><input name="principal" id="principal"></td>
                 <th class="text_center">*成员</th>
-                <td class="text_center" colspan="2"><input name="member"></td>
+                <td class="text_center" colspan="2"><input name="member" id="member"></td>
             </tr>
              <tr>
                 <th class="text_center">*预算(元)</th>
-                <td class="text_center" colspan="2"><input name="budget"></td>
+                <td class="text_center" colspan="2"><input name="budget" id="budget"></td>
                 <th class="text_center">*实际费用(元)</th>
-                <td class="text_center" colspan="2"><input name="actual_cost"></td>
+                <td class="text_center" colspan="2"><input name="actual_cost" id="actual_cost"></td>
             </tr>
             <tr>
                 <th class="text_center">*方案执行开始时间</th>
-                <td class="text_center" colspan="2"><input name="start_time"></td>
+                <td class="text_center" colspan="2"><input name="start_time" id="start_time"></td>
                 <th class="text_center">*方案执行结束时间</th>
-                <td class="text_center" colspan="2"><input name=""></td>
+                <td class="text_center" colspan="2"><input name="end_time" id="end_time"></td>
             </tr>
             <section>
             <tr>
@@ -156,11 +157,11 @@
 
             <tr>
                 <th><div class="remark_text">备注</div></th>
-                <td colspan="6"><textarea class="remark_textarea"> </textarea></td>
+                <td colspan="6"><textarea class="remark_textarea" id="remark"></textarea></td>
             </tr>
             <tr>
                 <th><div class="textarea_style">附件</div></th>
-                <td colspan="5"><input type="file" name=""></td>
+                <td colspan="5"><input type="file" name="file" id="file_upload"></td>
             </tr>
             <tr>
                 <th><div class="textarea_style">领导审批意见</div></th>
@@ -183,7 +184,7 @@
                 </th>
                 <td colspan="3">
                     <div>
-                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送科室领导</button>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal" onclick="send()">送科室领导</button>
                         <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送部门领导</button></div>
                     <div style="padding-top: 5px">
                         <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送中心领导</button>
@@ -194,6 +195,79 @@
             </tbody>
         </table>
     </section>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:180%">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        选择提交
+                    </h4>
+                </div>
+                <div class="modal-body">
+                   <div id='inputbox' class="box" style="height:100%;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card card-block" style="height:400px; width: 80%; overflow:auto;">
+                              <h4 class="card-title">组织机构</h4>
+                              <p class="card-text">
+                                  <ul id="tree" class="filetree">
+                                    <li><span class="folder">血液中心</span>
+                                        <ul>
+                                            {% for office in all_office %}
+                                            <li><span class="folder" id="{{ office.id }}">{{ office.office_name }}</span>
+                                                <ul>
+                                                    {% for team in office.get_team %}
+                                                    <li><span class="folder"><a onclick="getUser(this.id)" id="{{ team.id }}">{{ team.team_name }}</a></span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">候选人员</h4>
+                            <p class="card-text">
+                            <ul id="get_user">
+
+                            </ul>
+
+                            </p>
+                          </div>
+                      </div>
+                      <div class="col-xs-2" style="margin-top: 20%">
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
+                         <br><br>
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;"> <还原 </button>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">选中人员</h4>
+                          <p class="card-text">
+                             <ul id="select_user">
+
+                            </ul>
+                             </p>
+                         </div>
+                     </div>
+                 </div></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="send()">
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
 </div>
 {% endblock %}
@@ -278,5 +352,61 @@
             var value=document.getElementById('select').value;
             document.getElementById(value).style.display='block';
         }
+    </script>
+
+    <script type="text/javascript">
+    function send() {
+        var add_time = $("#add_time").html();
+        var title = $("#title").val();
+        var category = $("#category").val();
+        var principal = $("#principal").val();
+        var  member = $("#member").val();
+        var budget = $("#budget").val();
+        var actual_cost = $("#actual_cost").val();
+        var start_time = $("#start_time").val();
+        var end_time = $("#end_time").val();
+        var remark = $("#remark").val();
+        var status = $("#status").html();
+
+        var send_data = {"accept_user": selected_user, "status": status, "add_time": add_time, "title": title, "category": category, "principal": principal, "member": member, "budget": budget,
+        "actual_cost": actual_cost, "start_time": start_time, "end_time": end_time, "remark": remark};
+
+        console.log(send_data);
+
+        $.ajax({
+            url: "{% url 'fa:scheme_draft' %}",
+            type: "POST",
+            data: send_data,
+            cache: false,
+            dataType: "json",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+            },
+            success: function (data) {
+                var lis_id = data.lis_id;
+                var formData = new FormData();
+                formData.append("file", $("#file_upload")[0].files[0]);
+                formData.append("lis_id", lis_id);
+                $.ajax({
+                    url:"{% url 'fa:scheme_file_upload' %}",
+                    type: "POST",
+                    data: formData,
+                    cache: false,
+                    processData: false,  // 不处理数据
+                    contentType: false,   // 不设置内容类型
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    },
+                    success: function (data) {
+                        if (data.status === 'success'){
+                            window.location.reload();
+                        }else if(data.status === 'fail'){
+                            window.location.reload();
+                        }
+                    }
+                })
+            }
+        })
+    }
     </script>
 {% endblock %}

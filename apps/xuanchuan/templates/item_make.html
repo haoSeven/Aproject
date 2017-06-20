@@ -2,9 +2,12 @@
 {% load staticfiles %}
 
 {% block title %}
-宣传物资制作申请
+宣传品（资料）制作
 {% endblock %}
 
+{% block custom_css %}
+<script src="{% static 'js/template.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <div class="container" >
@@ -154,63 +157,62 @@
 </div>
 {% endblock %}
 
-
 {% block custom_js %}
 <script type="text/html" id="content_template">
-{{each temp_list as value i}}
+<% for(var i=0; i<temp.length; i++) {%>
          <tr>
-               <th colspan="4" class="text_center">宣传品（资料）内容表{{i+1}}</th>
+               <th colspan="4" class="text_center">宣传品（资料）内容表<%=i+1%></th>
           </tr>
          <tr>
                 <th class="text_center">宣传品类别</th>
                 <td>
-                    {{value.select1}}
+                <%=temp[i].select1%>
                 </td>
                 <th class="text_center">宣传品名称</th>
-                <td class="text_center">{{value.input0}}</td>
+                <td class="text_center"><%=temp[i].input0%></td>
 
             </tr>
 
         <tr>
             <th class="text_center" >制作方式</th>
             <td colspan="3">
-            {{value.radio1}}
+            <%=temp[i].radio1%>
             </td>
         </tr>
 
         <tr>
             <th class="text_center">要求完成时间</th>
-            <td class="text_center">{{value.input1}}</td>
+            <td class="text_center"><%=temp[i].input1%></td>
             <th class="text_center">规格</th>
-            <td class="text_center">{{value.input2}}</input></td>
+            <td class="text_center"><%=temp[i].input2%></td>
         </tr>
         <tr>
             <th class="text_center">单位</th>
-            <td class="text_center">{{value.input3}}</input></td>
+            <td class="text_center"><%=temp[i].input3%></td>
             <th class="text_center">制作数量</th>
-            <td class="text_center">{{value.input4}}</input></td>
+            <td class="text_center"><%=temp[i].input4%></td>
         </tr>
         <tr>
             <th class="text_center">广告公司名称</th>
-            <td colspan="3">{{value.input5}}</td>
+            <td colspan="3"><%=temp[i].input5%></td>
         </tr>
         <tr>
             <th class="text_center">广告公司联系人</th>
-            <td class="text_center">{{value.input6}}</td>
+            <td class="text_center"><%=temp[i].input6%></td>
             <th class="text_center">广告公司联系方式</th>
-            <td class="text_center">{{value.input7}}</td>
+            <td class="text_center"><%=temp[i].input7%></td>
         </tr>
         <tr>
             <th class="text_center" >费用（元）</th>
-            <td colspan="3">{{value.input8}}</td>
+            <td colspan="3"><%=temp[i].input8%></td>
         </tr>
         <tr>
             <th class="text_center">总费用（元）</th>
-            <td class="text_center">{{value.input9}}</td>
+            <td class="text_center"><%=temp[i].input9%></td>
             <th class="text_center">负责人</th>
-            <td class="text_center">{{value.input10}}</td>
+            <td class="text_center"><%=temp[i].input10%></td>
         </tr>
-        {{/each}}
+        <%}%> 
     </script>
 <script type="text/javascript">
 
@@ -232,22 +234,10 @@
 var temp=new Array();
 var select1;var radio1;var input0;var input1;var input2;var input3;var input4;var input5;var input6;var input7;var input8;var input9;var input10;
 var xcinput ;
-// temp.push(xcinput);
 var lab=0;
  function btnAdd()
  {
 
- 	/*temp[lab].select1 = $("#select1 option:selected").val();//获取值
- 	temp[lab].input1 = $('#input1').val();
- 	temp[lab].input2 = $('#input2').val();
- 	temp[lab].input3 = $('#input3').val();
- 	temp[lab].input4 = $('#input4').val();
- 	temp[lab].input5 = $('#input5').val();
-    temp[lab].input6 = $('#input6').val();
- 	temp[lab].input7 = $('#input7').val();
- 	temp[lab].input8 = $('#input8').val();
- 	temp[lab].input9 = $('#input9').val();
- 	temp[lab].input10 = $('#input10').val();*/
  	select1 = $("#select1 option:selected").val();//获取值
  	radio1 = $('input[name="Made"]:checked').val();
  	input0 = $('#input0').val();
@@ -264,7 +254,7 @@ var lab=0;
  	xcinput = new xc_input( select1, radio1, input0, input1, input2, input3, input4, input5, input6, input7, input8, input9,input10) ;
  	temp[lab]=xcinput;
  	lab++;
- 	var html = template('content_template',{temp_list:temp});
+ 	var html = template('content_template',temp);
    document.getElementById('xuan_content').innerHTML=html;
  }
  function btnDel(){
