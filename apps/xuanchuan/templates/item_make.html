@@ -6,263 +6,355 @@
 {% endblock %}
 
 {% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/starter-template.css' %}">
 <script src="{% static 'js/template.js' %}"></script>
+    <script src="{% static 'js/event.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container" >
-    <header >
-        <h4 class="text_center">宣传品（资料）制作</h4>
-        <p style="color:#2894FF">状态：待审批</p>
+    <div class="container" >
+        <header >
+            <h4 class="text_center">宣传品（资料）制作</h4>
+            <p style="color:#2894FF">状态：待审批</p>
 
-    </header>
-
-    <section>
-        <table class="table table-bordered">
-            <tbody>
-
-            <tr>
-                <th class="text_center">申请部门</th>
-                <td class="text_center">First Name</td>
-                <th class="text_center">申请时间</th>
-                <td class="text_center">Username</td>
-            </tr>
-            <tr>
-                <th class="text_center">申请人</th>
-                <td class="text_center">Mark</td>
-                <th class="text_center">联系电话</th>
-                <td class="text_center">123456789</td>
-            </tr>
-            <tr>
-                <th class="text_center">*标题</th>
-                <td colspan="3"><input style="width: 100%"></input></td>
-            </tr>
-            <tr>
-            <th colspan="4" class="text_center">请在以下表格中填写宣传品（资料）内容</th>
-            </tr>
-
+        </header>
 
         <section>
-            <tr>
-                    <td colspan="4">
-                          <button type="submit" id="btn_submit" onclick="btnAdd()">添加</button>
-                          <button type="submit" id="btn_submit" onclick="btnDel()">清空</button>
+            <table class="table table-bordered">
+                <tbody>
+
+                <tr>
+                    <th class="text_center">申请部门</th>
+                    <td class="text_center">First Name</td>
+                    <th class="text_center">申请时间</th>
+                    <td class="text_center">Username</td>
+                </tr>
+                <tr>
+                    <th class="text_center">申请人</th>
+                    <td class="text_center">Mark</td>
+                    <th class="text_center">联系电话</th>
+                    <td class="text_center">123456789</td>
+                </tr>
+                <tr>
+                    <th class="text_center">*标题</th>
+                    <td colspan="3"><input style="width: 100%"></input></td>
+                </tr>
+                <tr>
+                    <th colspan="4" class="text_center">请在以下表格中填写宣传品（资料）内容</th>
+                </tr>
+                </tbody>
+            </table>
+            <div class="">
+                <div class="col-md-2">
+                    <button type="button" onclick="addblock()" class="btn">添加</button>
+                </div>
+                <div id="block">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="text_center">宣传品类别</th>
+                            <td>
+                                <select style="width: 100%; height: auto%;" id="select1" class="form-control">
+                                    <option>宣传（献血、知识）手册</option>
+                                    <option>电梯、海报广告</option>
+                                    <option>电视媒体视频（材料）</option>
+                                    <option>宣传、活动（指引）单张</option>
+                                    <option>其他</option>
+                                </select>
+                            </td>
+                            <th class="text_center">宣传品名称</th>
+                            <td class="text_center"><input style="width: 100%" id="input0"></td>
+
+                        </tr>
+
+                        <tr>
+                            <th class="text_center" >制作方式</th>
+                            <td colspan="3">
+                                <label><input name="Made" type="radio" value="内部制作" checked/>内部制作 </label>
+                                <label><input name="Made" type="radio" value="广告公司制作" />广告公司制作 </label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="text_center">要求完成时间</th>
+                            <td class="text_center"><input style="width: 100%" id="input1"></td>
+                            <th class="text_center">规格</th>
+                            <td class="text_center"><input style="width: 100%" id="input2"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center">单位</th>
+                            <td class="text_center"><input style="width: 100%" id="input3"></td>
+                            <th class="text_center">制作数量</th>
+                            <td class="text_center"><input style="width: 100%" id="input4"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center">广告公司名称</th>
+                            <td colspan="3"><input style="width: 100%" id="input5"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center">广告公司联系人</th>
+                            <td class="text_center"><input style="width: 100%" id="input6"></td>
+                            <th class="text_center">广告公司联系方式</th>
+                            <td class="text_center"><input style="width: 100%" id="input7"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center" >费用（元）</th>
+                            <td colspan="3"><input style="width: 34%" id="input8"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <th width="30%" class="text_center">
+                       总费用
+                    </th>
+                    <td><input readonly="readonly"></td>
+                </tr>
+                <tr>
+                    <th width="30%"><div class="remark_text">备注</div></th>
+                    <td colspan="70%"><textarea class="remark_textarea"> </textarea></td>
+                </tr>
+                <tr>
+                    <th><div class="textarea_style">附件</div></th>
+                    <td colspan="3"><input type="file" name=""></td>
+                </tr>
+                <tr>
+                    <th><div class="textarea_style">领导审批意见</div></th>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <th colspan="3">选择意见：
+                        <select style="width: 80%" id="sele_suggest"  onchange="change()">
+                            <option>----------请选择----------</option>
+                            <option>同意</option>
+                            <option>拟同意，待领导审批。</option>
+                            <option>请重新修改。</option>
+                        </select></th>
+                    <th colspan="3">功能操作：</th>
+                </tr>
+                <tr>
+                    <th colspan="3">
+                        填写审批意见：
+                        <textarea class="remark_textarea" id="input_suggest"> </textarea>
+                    </th>
+                    <td colspan="3">
+                        <div>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送科室领导</button>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送部门领导</button></div>
+                        <div style="padding-top: 5px">
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送中心领导</button>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">退回拟稿人</button></div>
                     </td>
-            </tr>
-            <tr>
-                <th class="text_center">宣传品类别</th>
-                <td>
-                    <select style="width: 50%" id="select1">
-                        <option>Volvo</option>
-                        <option>Saab</option>
-                        <option>Mercedes</option>
-                        <option>Audi</option>
-                    </select>
-                </td>
-                <th class="text_center">宣传品名称</th>
-                <td class="text_center"><input style="width: 100%" id="input0"></input></td>
 
-            </tr>
+                </tr>
+                </tbody>
 
-            <tr>
-                <th class="text_center" >制作方式</th>
-                <td colspan="3">
-
-                    <label><input name="Made" type="radio" value="内部制作" />内部制作 </label>
-                    <label><input name="Made" type="radio" value="广告公司制作" />广告公司制作 </label>
-                </td>
-            </tr>
-
-            <tr>
-                <th class="text_center">要求完成时间</th>
-                <td class="text_center"><input style="width: 100%" id="input1"></input></td>
-                <th class="text_center">规格</th>
-                <td class="text_center"><input style="width: 100%" id="input2"></input></td>
-            </tr>
-            <tr>
-                <th class="text_center">单位</th>
-                <td class="text_center"><input style="width: 100%" id="input3"></input></td>
-                <th class="text_center">制作数量</th>
-                <td class="text_center"><input style="width: 100%" id="input4"></input></td>
-            </tr>
-            <tr>
-                <th class="text_center">广告公司名称</th>
-                <td colspan="3"><input style="width: 100%" id="input5"></input></td>
-            </tr>
-            <tr>
-                <th class="text_center">广告公司联系人</th>
-                <td class="text_center"><input style="width: 100%" id="input6"></input></td>
-                <th class="text_center">广告公司联系方式</th>
-                <td class="text_center"><input style="width: 100%" id="input7"></input></td>
-            </tr>
-            <tr>
-                <th class="text_center" >费用（元）</th>
-                <td colspan="3"><input style="width: 34%" id="input8"></input></td>
-            </tr>
-            <tr>
-                <th class="text_center">总费用（元）</th>
-                <td class="text_center"><input style="width: 100%" id="input9"></input></td>
-                <th class="text_center">负责人</th>
-                <td class="text_center"><input style="width: 100%" id="input10"></input></td>
-            </tr>
-            <table class="table table-bordered" id="xuan_content">
-
-              </table>
-
+            </table>
         </section>
-
-            <tr>
-                <th><div class="remark_text">备注</div></th>
-                <td colspan="3"><textarea class="remark_textarea"> </textarea></td>
-            </tr>
-            <tr>
-                <th><div class="textarea_style">附件</div></th>
-                <td colspan="3"><input type="file" name=""></td>
-            </tr>
-            <tr>
-                <th><div class="textarea_style">领导审批意见</div></th>
-                <td colspan="3"></td>
-            </tr>
-            <tr>
-                <th colspan="2">选择意见：
-                    <select style="width: 80%">
-                        <option>----------请选择----------</option>
-                        <option>Saab</option>
-                        <option>Mercedes</option>
-                        <option>Audi</option>
-                    </select></th>
-                <th colspan="2">功能操作：</th>
-            </tr>
-            <tr>
-                <th colspan="2">
-                    填写审批意见：
-                    <textarea class="remark_textarea"> </textarea>
-                </th>
-                <th colspan="2">
-                    <div>
-                        <button class="btn btn-info">送科室领导</button>
-                        <button class="btn btn-info">送部门领导</button>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:180%">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        选择提交
+                    </h4>
+                </div>
+                <div class="modal-body">
+                   <div id='inputbox' class="box" style="height:100%;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card card-block" style="height:400px; width: 80%; overflow:auto;">
+                              <h4 class="card-title">组织机构</h4>
+                              <p class="card-text">
+                                  <ul id="tree" class="filetree">
+                                    <li><span class="folder">血液中心</span>
+                                        <ul>
+                                            {% for office in all_office %}
+                                            <li><span class="folder" id="{{ office.id }}">{{ office.office_name }}</span>
+                                                <ul>
+                                                    {% for team in office.get_team %}
+                                                    <li><span class="folder"><a onclick="getUser(this.id)" id="{{ team.id }}">{{ team.team_name }}</a></span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
                     </div>
-                    <div style="margin-top: 10px">
-                        <button class="btn btn-info">送中心领导</button>
-                        <button class="btn btn-info">退回拟稿人</button>
-                    </div>
-                </th>
+                    <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">候选人员</h4>
+                            <p class="card-text">
+                            <ul id="get_user">
 
-            </tr>
-            </tbody>
+                            </ul>
 
-        </table>
-    </section>
-</div>
+                            </p>
+                          </div>
+                      </div>
+                      <div class="col-xs-2" style="margin-top: 20%">
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
+                         <br><br>
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;"> <还原 </button>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">选中人员</h4>
+                          <p class="card-text">
+                             <ul id="select_user">
+
+                            </ul>
+                             </p>
+                         </div>
+                     </div>
+                 </div></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="send">
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    </div>
 {% endblock %}
 
 {% block custom_js %}
-<script type="text/html" id="content_template">
-<% for(var i=0; i<temp.length; i++) {%>
-         <tr>
-               <th colspan="4" class="text_center">宣传品（资料）内容表<%=i+1%></th>
-          </tr>
-         <tr>
-                <th class="text_center">宣传品类别</th>
-                <td>
-                <%=temp[i].select1%>
-                </td>
-                <th class="text_center">宣传品名称</th>
-                <td class="text_center"><%=temp[i].input0%></td>
+    <script type="text/html" id="add_block">
+    <div>
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-6 my_table">
+                <span >宣传品类别</span>
+                <span>#category</span>
+            </div>
+            <div class="col-md-6 my_table">
+                <span>宣传品名称</span>
+                <span>#item_name</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 my_table">
+                <span >制作方式</span>
+                <span>#make_methed</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 my_table">
+                <span >要求完成时间</span>
+                <span>#time</span>
+            </div>
+            <div class="col-md-6 my_table">
+                <span>规格</span>
+                <span>#norm</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 my_table">
+                <span >单位</span>
+                <span>#unit</span>
+            </div>
+            <div class="col-md-6 my_table">
+                <span>制作数量</span>
+                <span>#nums</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 my_table">
+                <span >广告公司名称</span>
+                <span>#adv_name</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 my_table">
+                <span >广告公司联系人</span>
+                <span>#adv_contact_person</span>
+            </div>
+            <div class="col-md-6 my_table">
+                <span>广告公司联系方式</span>
+                <span>#adv_contact_way</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 my_table">
+                <span >费用</span>
+                <span>#cost</span>
+            </div>
+            <div class="col-md-6">
+                <button type="button" id="#delect_id" onclick="removeblock(this.id)" class="btn">删除</button>
+            </div>
 
-            </tr>
-
-        <tr>
-            <th class="text_center" >制作方式</th>
-            <td colspan="3">
-            <%=temp[i].radio1%>
-            </td>
-        </tr>
-
-        <tr>
-            <th class="text_center">要求完成时间</th>
-            <td class="text_center"><%=temp[i].input1%></td>
-            <th class="text_center">规格</th>
-            <td class="text_center"><%=temp[i].input2%></td>
-        </tr>
-        <tr>
-            <th class="text_center">单位</th>
-            <td class="text_center"><%=temp[i].input3%></td>
-            <th class="text_center">制作数量</th>
-            <td class="text_center"><%=temp[i].input4%></td>
-        </tr>
-        <tr>
-            <th class="text_center">广告公司名称</th>
-            <td colspan="3"><%=temp[i].input5%></td>
-        </tr>
-        <tr>
-            <th class="text_center">广告公司联系人</th>
-            <td class="text_center"><%=temp[i].input6%></td>
-            <th class="text_center">广告公司联系方式</th>
-            <td class="text_center"><%=temp[i].input7%></td>
-        </tr>
-        <tr>
-            <th class="text_center" >费用（元）</th>
-            <td colspan="3"><%=temp[i].input8%></td>
-        </tr>
-        <tr>
-            <th class="text_center">总费用（元）</th>
-            <td class="text_center"><%=temp[i].input9%></td>
-            <th class="text_center">负责人</th>
-            <td class="text_center"><%=temp[i].input10%></td>
-        </tr>
-        <%}%> 
+        </div>
+    </div>
     </script>
-<script type="text/javascript">
 
-	function xc_input ( select1, radio1, input0, input1, input2, input3, input4, input5, input6, input7, input8, input9, input10 ) {
-    this.select1 = select1;
-    this.radio1 = radio1;
-    this.input0 = input0;
-    this.input1 = input1;
-    this.input2 = input2;
-    this.input3 = input3;
-    this.input4 = input4;
-    this.input5 = input5;
-    this.input6 = input6;
-    this.input7 = input7;
-    this.input8 = input8;
-    this.input9 = input9;
-    this.input10 = input10;
-}
-var temp=new Array();
-var select1;var radio1;var input0;var input1;var input2;var input3;var input4;var input5;var input6;var input7;var input8;var input9;var input10;
-var xcinput ;
-var lab=0;
- function btnAdd()
- {
+    <script type="text/javascript">
+    var i = 1;
+    var data = {};
+    function addblock() {
+        var select = $("#select1").val();
+        $("#select1").val("宣传（献血、知识）手册");
+        var item_name = $("#input0").val();
+        $("#input0").val("");
+        var make_methed = $("input[name='Made']:checked").val();
+        var time = $("#input1").val();
+        $("#input1").val("");
+        var norm = $("#input2").val();
+        $("#input2").val("");
+        var unit = $("#input3").val();
+        $("#input3").val("");
+        var nums = $("#input4").val();
+        $("#input4").val("");
+        var adv_name = $("#input5").val();
+        $("#input5").val("");
+        var adv_contact_person = $("#input6").val();
+        $("#input6").val("");
+        var adv_contact_way = $("#input7").val();
+        $("#input7").val("");
+        var cost = $("#input8").val();
+        $("#input8").val("");
 
- 	select1 = $("#select1 option:selected").val();//获取值
- 	radio1 = $('input[name="Made"]:checked').val();
- 	input0 = $('#input0').val();
- 	input1 = $('#input1').val();
- 	input2 = $('#input2').val();
- 	input3 = $('#input3').val();
- 	input4 = $('#input4').val();
- 	input5 = $('#input5').val();
-    input6 = $('#input6').val();
- 	input7 = $('#input7').val();
- 	input8 = $('#input8').val();
- 	input9 = $('#input9').val();
- 	input10 = $('#input10').val();
- 	xcinput = new xc_input( select1, radio1, input0, input1, input2, input3, input4, input5, input6, input7, input8, input9,input10) ;
- 	temp[lab]=xcinput;
- 	lab++;
- 	var html = template('content_template',temp);
-   document.getElementById('xuan_content').innerHTML=html;
- }
- function btnDel(){
-  	 //$("#xuan_content").remove();
+        var tmp = {"select": select, "item_name": item_name, "make_methed": make_methed, "time": time,
+            "norm": norm, "unit": unit, "nums": nums, "adv_name": adv_name, "adv_contact_person": adv_contact_person,
+        "adv_contact_way": adv_contact_way, "cost": cost};
+        data[i] = tmp;
 
-  	  $("#xuan_content").children().remove();
-  	 temp.splice(0);
-  	 lab=0;
-  }
-</script>
+        console.log(data);
+
+        var block_id = "delect" + i;
+
+        var patten = $("#add_block").html();
+        patten = '<div id="block'+ i +'">'+ patten + '</div>';
+        i++;
+
+        patten = patten.replace(/#category/gi, select);
+        patten = patten.replace(/#item_name/gi, item_name);
+        patten = patten.replace(/#make_methed/gi, make_methed);
+        patten = patten.replace(/#time/gi, time);
+        patten = patten.replace(/#norm/gi, norm);
+        patten = patten.replace(/#unit/gi, unit);
+        patten = patten.replace(/#nums/gi, nums);
+        patten = patten.replace(/#adv_name/gi, adv_name);
+        patten = patten.replace(/#adv_contact_person/gi, adv_contact_person);
+        patten = patten.replace(/#adv_contact_way/gi, adv_contact_way);
+        patten = patten.replace(/#cost/gi, cost);
+        patten = patten.replace(/#delect_id/gi, block_id);
+
+        $("#block").append(patten);
+    }
+
+    function removeblock(id) {
+        var block_id = id.substring(6);
+        block_id = "block" + block_id;
+        $("#"+ block_id +"").remove();
+    }
+    </script>
 {% endblock %}

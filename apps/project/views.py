@@ -7,7 +7,7 @@ from django.views import View
 from django.http import HttpResponse
 
 from .models import Scheme, DraftBase
-from users.models import UserProfile
+from users.models import UserProfile, Office
 # Create your views here.
 
 
@@ -27,8 +27,12 @@ class SchemeDraftView(View):
     """
 
     def get(self, request):
-        return render(request, 'xc_ scheme.html', {
-            "add_time": datetime.now()
+
+        all_office = Office.objects.all()
+
+        return render(request, 'xc_scheme.html', {
+            "add_time": datetime.now(),
+            "all_office": all_office,
         })
 
     def post(self, request):
@@ -43,6 +47,7 @@ class SchemeDraftView(View):
             end_time = request.POST.get('end_time', '')
             remark = request.POST.get('remark', '')
             status = request.POST.get('status', '')
+            content = request.POST.get('content', '')
             style = "宣传方案申请"
             accept_user = request.POST.get('accept_user[]', [])
 
@@ -69,6 +74,7 @@ class SchemeDraftView(View):
             scheme.start_time = start_time
             scheme.end_time = end_time
             scheme.remark = remark
+            scheme.content = content
             scheme.main = draft_base
             scheme.save()
 

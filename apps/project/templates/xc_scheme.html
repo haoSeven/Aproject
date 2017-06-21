@@ -261,7 +261,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         关闭
                     </button>
-                    <button type="button" class="btn btn-primary" onclick="send()">
+                    <button type="button" class="btn btn-primary" id="send">
                         提交
                     </button>
                 </div>
@@ -275,44 +275,20 @@
 
 {% block custom_js %}
 <!-- KindEditor编辑器 -->
-<script language="javascript">
-	var editor;
-	KindEditor.ready(function(K) {
-		editor = K.create('textarea[name="content"]', {
-			allowFileManager : true
-		});
-		K('input[name=getHtml]').click(function(e) {
-			alert(editor.html());
-		});
-	});
-</script>
-<script language="javascript">
-	var editor;
-	KindEditor.ready(function(K) {
-		editor = K.create('textarea[name="content"]', {
-			resizeType : 1,
-			allowPreviewEmoticons : false,
-			allowImageUpload : false,
-			items : [
-			'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
-			'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
-			'insertunorderedlist', '|', 'emoticons', 'image', 'link']
-		});
-	});
-</script>
-<script language='javascript'>
-	KindEditor.ready(function(K) {
-		K.create('#content1', {
-			pasteType : 0
-        }); //为0表示不能向编辑器红粘帖
-		K.create('#content2', {
-			pasteType : 1
-        }); //为1表示会把粘贴板中的样式过虑，保留纯文本进行黏贴
-		K.create('#content3', {
-			pasteType : 2
-        }); //为2表示粘帖的时候，会把html样式一起粘帖进去
-	});
-</script>
+    <script type="text/javascript">
+    var editor;
+    var content;
+    KindEditor.ready(function(K) {
+        editor = K.create('textarea[name="content"]', {
+            allowFileManager : true
+        });
+        K('#send').click(function(e) {
+            content = editor.text();
+            alert(content)
+            send(content);
+        });
+    });
+    </script>
     <script type="text/javascript">
         function addonclick(){                  //添加行
             var tab=document.getElementById('order');
@@ -355,7 +331,7 @@
     </script>
 
     <script type="text/javascript">
-    function send() {
+    function send(content) {
         var add_time = $("#add_time").html();
         var title = $("#title").val();
         var category = $("#category").val();
@@ -369,7 +345,7 @@
         var status = $("#status").html();
 
         var send_data = {"accept_user": selected_user, "status": status, "add_time": add_time, "title": title, "category": category, "principal": principal, "member": member, "budget": budget,
-        "actual_cost": actual_cost, "start_time": start_time, "end_time": end_time, "remark": remark};
+        "actual_cost": actual_cost, "start_time": start_time, "end_time": end_time, "remark": remark, "content": content};
 
         console.log(send_data);
 

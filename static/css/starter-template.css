@@ -1,10 +1,17 @@
-body {
-  padding-top: 5rem;
-}
 .starter-template {
   padding: 3rem 1.5rem;
 }
 
 p.text-temp {
   margin-top: 5rem;
+}
+
+.my_table {
+    border: 2px solid black;
+    font-size: 18px;
+}
+
+.my_table span {
+    margin-left: 10px;
+    margin-right: 70px;
 }
