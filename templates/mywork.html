@@ -5,8 +5,8 @@
 		<thead>
 {#			<button type="button" class="btn btn-secondary">代办({{ no_count }})</button>#}
 {#			<button type="button" class="btn btn-secondary">已办({{ has_count }})</button>#}
-            <a href="?shiwu=daiban" style="margin: 0 5px;">代办({{ no_count }})&nbsp&nbsp</a>
-            <a href="?shiwu=yiban" style="margin: 0 5px;">已办({{ has_count }})&nbsp&nbsp</a>
+            <a href="?shiwu=daiban&style={{ style }}" style="margin: 0 5px;">代办({{ no_count }})&nbsp&nbsp</a>
+            <a href="?shiwu=yiban&style={{ style }}" style="margin: 0 5px;">已办({{ has_count }})&nbsp&nbsp</a>
 			<a>>>更多</a>
 		</thead>
 			<thead>
@@ -19,7 +19,7 @@
 				</tr>
 			</thead>
 			<tbody>
-            {% if status == 2 %}
+            {% if shiwu == 'yiban' %}
                 {% for draft in has_draft %}
 				<tr>
 					<td>{{ draft.id }}</td>
@@ -27,13 +27,15 @@
                         <td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% elif draft.style == '物资领用申请' %}
                         <td><a href="{% url 'handle_itemreveiver_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '宣传计划申请' %}
+                        <td><a href="{% url 'handle_plan_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>
 					<td>{{ draft.add_time }}</td>
 				</tr>
             {% endfor %}
-                {% else %}
+                {% elif shiwu == 'daiban' %}
                 {% for draft in all_draft %}
 				<tr>
 					<td>{{ draft.id }}</td>
@@ -41,6 +43,8 @@
 					    <td><a href="{% url 'handle_message_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% elif draft.style == '物资领用申请' %}
                         <td><a href="{% url 'handle_itemreveiver_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '宣传计划申请' %}
+                        <td><a href="{% url 'handle_plan_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>
@@ -54,19 +58,19 @@
 		<div class="col-md-6">
 		<table class="table table-bordered">
 		<thead>
-			<button type="button" class="btn btn-secondary">我参与的计划(2)</button>
-			<button type="button" class="btn btn-secondary">我参与的方案(2)</button>
+        <button type="button" class="btn btn-secondary"><a href="?shiwu={{ shiwu }}&style=plan">我参与的计划({{ plan_count }})</a></button>
+        <button type="button" class="btn btn-secondary"><a href="?shiwu={{ shiwu }}&style=project">我参与的方案(2)</a></button>
 			<button type="button" class="btn btn-secondary">>>更多</button>
 		</thead>
 			<tbody>
+            {% if style == 'plan' %}
+            {% for plan in allplan_draft %}
 				<tr>
-					<td width="80%">Tanmay</td>
-					<td width="20%">Bangalore</td>
+					<td width="65%"><a href="{% url 'input_plan' plan.id plan.style %}">{{ plan.title }}</a></td>
+					<td width="35%">{{ plan.add_time }}</td>
 				</tr>
-				<tr>
-					<td width="80%">Sachin</td>
-					<td width="20%">Mumbai</td>
-				</tr>
+            {% endfor %}
+            {% endif %}
 			</tbody>
 		</table></div>
 		<div class="col-md-6">

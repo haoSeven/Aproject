@@ -124,7 +124,7 @@ class PlanSearchView(View):
         all_plan = PropagatePlan.objects.all()
         # 计算页数
         count = all_plan.count()
-        count = count % 3 + 1
+        count = count // 5 + 1
 
         title = request.GET.get("title", '')
         proposer = request.GET.get("proposer", '')
@@ -146,7 +146,7 @@ class PlanSearchView(View):
         except PageNotAnInteger:
             page = 1
 
-        p = Paginator(all_plan, 3, request=request)
+        p = Paginator(all_plan, 5, request=request)
 
         messages = p.page(page)
         return render(request, 'workplan_search.html',{
