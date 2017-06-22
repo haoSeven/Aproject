@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.views.static import serve
 
 from users.views import Index, HandleMessageDraftView, LoginView, LogoutView,HandleItemsReceiveView,\
-    HandlePlanDraftView, InputPlanView, InputPlanScheduleView,InputPlanFileUploadView
+    HandlePlanDraftView, InputPlanView, InputPlanScheduleView, InputPlanFileUploadView, HandleSchemeDraftView,\
+    InputSchemeView
+
 from xuanchuan.views import GetReceiverView, OverViewView
 from plan.views import PlanSearchView
 from .settings import MEDIA_ROOT
@@ -44,8 +46,12 @@ urlpatterns = [
     url(r'^itemreceiver/(?P<draft_id>\d+)&(?P<style>.*)/$', HandleItemsReceiveView.as_view(), name='handle_itemreveiver_draft'),
     #审批宣传计划申请
     url(r'^plandraft/(?P<draft_id>\d+)&(?P<style>.*)/$', HandlePlanDraftView.as_view(),name='handle_plan_draft'),
+    #审批宣传方案申请
+    url(r'^schemedraft/(?P<draft_id>\d+)&(?P<style>.*)/$', HandleSchemeDraftView.as_view(), name='handle_scheme_draft'),
     #宣传计划填报
     url(r'^inputplan/(?P<draft_id>\d+)&(?P<style>.*)/$', InputPlanView.as_view(),name='input_plan'),
+    #宣传方案填报
+    url(r'^inputscheme/(?P<draft_id>\d+)&(?P<style>.*)/$', InputSchemeView.as_view(), name='input_scheme'),
     #填报计划进度
     url(r'^planschedule/(?P<plan_id>\d+)/$', InputPlanScheduleView.as_view(), name='plan_schedule'),
     # 提交宣传信息审批建议
@@ -54,6 +60,8 @@ urlpatterns = [
     url(r'^itemreceiveropinion/$', HandleItemsReceiveView.as_view(), name='itemreceiver_opinion'),
     # 提交计划信息审批建议
     url(r'^plandraftopinion/$', HandlePlanDraftView.as_view(), name='plandraft_opinion'),
+    # 提交宣传方案建议
+    url(r'^schemedraftopinion/$', HandleSchemeDraftView.as_view(), name='schemedraft_opinion'),
     #填写项目进度
     url(r'^inputschedule/$', InputPlanScheduleView.as_view(), name='input_schedule'),
     #项目进度文件上传

@@ -29,6 +29,8 @@
                         <td><a href="{% url 'handle_itemreveiver_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% elif draft.style == '宣传计划申请' %}
                         <td><a href="{% url 'handle_plan_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '宣传方案申请' %}
+                        <td><a href="{% url 'handle_scheme_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>
@@ -45,6 +47,8 @@
                         <td><a href="{% url 'handle_itemreveiver_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% elif draft.style == '宣传计划申请' %}
                         <td><a href="{% url 'handle_plan_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '宣传方案申请' %}
+                        <td><a href="{% url 'handle_scheme_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>
@@ -59,7 +63,7 @@
 		<table class="table table-bordered">
 		<thead>
         <button type="button" class="btn btn-secondary"><a href="?shiwu={{ shiwu }}&style=plan">我参与的计划({{ plan_count }})</a></button>
-        <button type="button" class="btn btn-secondary"><a href="?shiwu={{ shiwu }}&style=project">我参与的方案(2)</a></button>
+        <button type="button" class="btn btn-secondary"><a href="?shiwu={{ shiwu }}&style=project">我参与的方案({{ project_count }})</a></button>
 			<button type="button" class="btn btn-secondary">>>更多</button>
 		</thead>
 			<tbody>
@@ -68,6 +72,14 @@
 				<tr>
 					<td width="65%"><a href="{% url 'input_plan' plan.id plan.style %}">{{ plan.title }}</a></td>
 					<td width="35%">{{ plan.add_time }}</td>
+				</tr>
+            {% endfor %}
+            {% endif %}
+            {% if style == 'project' %}
+            {% for project in allproject_draft %}
+				<tr>
+					<td width="65%"><a href="{% url 'input_scheme' project.id project.style %}">{{ project.title }}</a></td>
+					<td width="35%">{{ project.add_time }}</td>
 				</tr>
             {% endfor %}
             {% endif %}

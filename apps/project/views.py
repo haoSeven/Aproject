@@ -6,7 +6,8 @@ from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
 
-from .models import Scheme, DraftBase
+from xuanchuan.models import DraftBase
+from .models import Scheme, AddScheme
 from users.models import UserProfile, Office
 # Create your views here.
 
@@ -49,7 +50,7 @@ class SchemeDraftView(View):
             status = request.POST.get('status', '')
             content = request.POST.get('content', '')
             style = "宣传方案申请"
-            accept_user = request.POST.get('accept_user[]', [])
+            accept_user = request.POST.getlist('accept_user[]', [])
 
             # 修改时间格式
             time = request.POST.get('add_time', '')
@@ -57,36 +58,59 @@ class SchemeDraftView(View):
             time = re.sub(patten, '-', time)
             time = re.sub('日', '', time)
 
-            draft_base = DraftBase()
-            draft_base.title = title
-            draft_base.status = status
-            draft_base.add_time = time
-            draft_base.draft_user = request.user
-            draft_base.style = style
-            draft_base.save()
+            if title:
+                draft_base = DraftBase()
+                draft_base.title = title
+                draft_base.status = status
+                draft_base.add_time = time
+                draft_base.draft_user = request.user
+                draft_base.style = style
+                draft_base.save()
 
-            scheme = Scheme()
-            scheme.category = category
-            scheme.principal = principal
-            scheme.member = member
-            scheme.budget = budget
-            scheme.actual_cost = actual_cost
-            scheme.start_time = start_time
-            scheme.end_time = end_time
-            scheme.remark = remark
-            scheme.content = content
-            scheme.main = draft_base
-            scheme.save()
+                scheme = Scheme()
+                scheme.category = category
+                scheme.principal = principal
+                scheme.member = member
+                scheme.budget = budget
+                scheme.actual_cost = actual_cost
+                scheme.start_time = start_time
+                scheme.end_time = end_time
+                scheme.remark = remark
+                scheme.content = content
+                scheme.main = draft_base
+                scheme.save()
 
-            for a in accept_user:
-                accept_user = UserProfile.objects.get(id=a)
-                if accept_user:
-                    draft_base.accept_user.add(accept_user)
+                lis_draft_base = DraftBase.objects.get(id=draft_base.id)
+                for a in accept_user:
+                    accept_user = UserProfile.objects.get(id=a)
+                    if accept_user:
+                        lis_draft_base.accept_user.add(accept_user)
 
-            recall = {"status": "success", "lis_id": scheme.id}
-            return HttpResponse(json.dumps(recall))
+                recall = {"status": "success", "lis_id": scheme.id}
+                return HttpResponse(json.dumps(recall))
+
         return HttpResponse('{"status": "fail"}', content_type="application/json")
 
+
+class AddSchemeDraftView(View):
+    def post(self, request):
+        lis_id = request.POST.get('lis_id', '')
+        style_name = request.POST.get('style_name', '')
+        content = request.POST.get('content', '')
+        finish_time = request.POST.get('finish_time', '')
+        target_user = request.POST.get('target_user', '')
+
+        if lis_id and style_name:
+            project_menu = AddScheme()
+            project_menu.style_name = style_name
+            project_menu.content = content
+            project_menu.time = finish_time
+            project_menu.principal = target_user
+            project_menu.lis_id = lis_id
+            project_menu.save()
+
+            return HttpResponse('{"status": "success"}', content_type="application/json")
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
 
 class SchemeFileUploadView(View):
 

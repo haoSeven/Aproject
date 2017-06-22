@@ -20,7 +20,7 @@
     <header >
         <h4 class="text_center">工作方案</h4>
        <span>态状：</span>
-        <span style="color:#2894FF" id="state">未审核</span>
+        <span style="color:#2894FF" id="state">{{ draft.status }}</span>
 
 
     </header>
@@ -30,51 +30,45 @@
 
             <tr>
                 <th class="text_center">拟稿部门</th>
-                <td class="text_center" colspan="2">{{ request.user.team.team_name }}</td>
+                <td class="text_center" colspan="2">{{ draft.draft_user.team }}</td>
                 <th class="text_center" >拟稿时间</th>
-                <td class="text_center" colspan="2" id="add_time">{{ add_time }}</td>
+                <td class="text_center" colspan="2" id="add_time">{{ draft.add_time }}</td>
             </tr>
             <tr>
                 <th class="text_center">拟稿人</th>
-                <td class="text_center" colspan="2">{{ request.user.name }}</td>
+                <td class="text_center" colspan="2">{{ draft.draft_user.name }}</td>
                 <th class="text_center">联系电话</th>
-                <td class="text_center" colspan="2">{{ request.user.mobile }}</td>
+                <td class="text_center" colspan="2">{{ draft.draft_user.mobile }}</td>
             </tr>
             <tr>
                 <th class="text_center">*标题</th>
-                <td colspan="5"><input style="width: 100%" id="title"></td>
+                <td colspan="5"><input style="width: 100%" id="title" readonly="readonly" value="{{ draft.title }}"></td>
             </tr>
             <tr>
                 <th class="text_center">*方案类别
                 <td class="text_center" colspan="2">
-                    <select style="width: 100%" id="category">
-                        <option>普通宣传活动</option>
-                        <option>重大专项宣传活动</option>
-                        <option>固定献血者活动</option>
-                        <option>成分献血者活动</option>
-                        <option>稀有血型献血者活动</option>
-                        <option>其他</option>
-                    </select></td></th>
+                <input style="width: 100%"  readonly="readonly" value="{{ draft.scheme.category }}">
+            </td></th>
                    <th class="text_center"></th><td class="text_center" colspan="2"></td>
             </tr>
 
             <tr>
                 <th class="text_center">*负责人</th>
-                <td class="text_center" colspan="2"><input name="principal" id="principal"></td>
+                <td class="text_center" colspan="2"><input name="principal" id="principal" readonly="readonly" value="{{ draft.scheme.principal }}"></td>
                 <th class="text_center">*成员</th>
-                <td class="text_center" colspan="2"><input name="member" id="member"></td>
+                <td class="text_center" colspan="2"><input name="member" id="member" readonly="readonly" value="{{ draft.scheme.member }}"></td>
             </tr>
              <tr>
                 <th class="text_center">*预算(元)</th>
-                <td class="text_center" colspan="2"><input name="budget" id="budget"></td>
+                <td class="text_center" colspan="2"><input name="budget" id="budget" readonly="readonly" value="{{ draft.scheme.budget }}"></td>
                 <th class="text_center">*实际费用(元)</th>
-                <td class="text_center" colspan="2"><input name="actual_cost" id="actual_cost"></td>
+                <td class="text_center" colspan="2"><input name="actual_cost" id="actual_cost" readonly="readonly" value="{{ draft.scheme.actual_cost }}"></td>
             </tr>
             <tr>
                 <th class="text_center">*方案执行开始时间</th>
-                <td class="text_center" colspan="2"><input name="start_time" id="start_time"></td>
+                <td class="text_center" colspan="2"><input name="start_time" id="start_time" readonly="readonly" value="{{ draft.scheme.start_time }}"></td>
                 <th class="text_center">*方案执行结束时间</th>
-                <td class="text_center" colspan="2"><input name="end_time" id="end_time"></td>
+                <td class="text_center" colspan="2"><input name="end_time" id="end_time" readonly="readonly" value="{{ draft.scheme.end_time }}"></td>
             </tr>
             <section>
             <tr>
@@ -90,15 +84,11 @@
             <td  colspan="6" class="text_center">
             <div id="myTabContent" class="tab-content">
             	<div class="tab-pane fade in active" id="main_text">
-            		<textarea name="content" style="width:100%;height:500px;visibility:hidden;">KindEditor</textarea>
+            		<textarea name="content" style="width:100%;height:500px;visibility:hidden;">{{ draft.scheme.content }}</textarea>
             	</div>
             	<div class="tab-pane fade" id="project">
             		<table class="table table-bordered" id="order">
-            			 <tr>
-                    <td colspan="6">
-                    <button id="add_button" onclick="addonclick()">添加</button>
-                    </td>
-                </tr>
+
                 <tr>
                 <th class="text_center"style="color:#2894FF">No.</th>
                 <th class="text_center"style="color:#2894FF">类别</th>
@@ -107,15 +97,16 @@
                 <th class="text_center"style="color:#2894FF">负责人</th>
                 <th class="text_center"style="color:#2894FF">操作</th>
                 </tr>
-
-                <tr id="message0">
-                    <td style="width: 5%"></td>
-                    <td style="width: 15%"><input style="width: 100%"></td>
-                    <td ><input style="width: 100%"></td>
-                    <td style="width: 10%"><input style="width: 100%"></td>
-                    <td style="width: 10%"><input style="width: 100%"></td>
-                    <td style="width: 7%"></td>
-                </tr>
+                        {% for secheme in scheme_messages %}
+                            <tr id="message0">
+                                <td style="width: 5%"></td>
+                                <td style="width: 15%"><input style="width: 100%" readonly="readonly" value="{{ secheme.style_name }}"></td>
+                                <td ><input style="width: 100%" readonly="readonly" value="{{ secheme.content }}"></td>
+                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ secheme.time }}"></td>
+                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ secheme.principal }}"></td>
+                                <td style="width: 7%"></td>
+                            </tr>
+                        {% endfor %}
             		</table>
             		</div>
 
@@ -159,7 +150,7 @@
 
             <tr>
                 <th><div class="remark_text">备注</div></th>
-                <td colspan="6"><textarea class="remark_textarea" id="remark"></textarea></td>
+                <td colspan="6"><textarea class="remark_textarea" id="remark" readonly="readonly" >{{ draft.scheme.remark }} </textarea></td>
             </tr>
             <tr>
                 <th><div class="textarea_style">附件</div></th>
@@ -291,114 +282,21 @@
     });
     </script>
     <script type="text/javascript">
-        var k =1;
-        var deletid=[0];
-        function addonclick(){                  //添加行
-            var tab=document.getElementById('order');
-            var n=document.getElementById('message0').rowIndex+1;
-            var tr=tab.insertRow(n);
-
-            tr.setAttribute("id","message"+k);
-            var td2=tr.insertCell(0)
-            var td3=tr.insertCell(1)
-            var td4=tr.insertCell(2)
-            var td5=tr.insertCell(3)
-            var td6=tr.insertCell(4)
-            var td1=tr.insertCell(5)
-
-            deletid.push(k);
-
-            td1.innerHTML="<button type='button' id='delete"+k+"' onclick='deleteRow(this.id)'>删除</button>"
-            td2.innerHTML=""
-            td3.innerHTML="<input style='width: 100%'>"
-            td4.innerHTML="<input style='width: 100%'>"
-            td5.innerHTML="<input style='width: 100%'>"
-            td6.innerHTML="<input style='width: 100%'>"
-             k++;
-            }
-        function deleteRow(k)           //删除行
-        {
-            k = parseInt(k.substring(6));
-            alert(k);
-            $("#message"+ k +"").remove();
-            deletid.splice(k,1);
-        }
-    </script>
-
-    <script type="text/javascript">
     function send(content) {
-        var add_time = $("#add_time").html();
-        var title = $("#title").val();
-        var category = $("#category").val();
-        var principal = $("#principal").val();
-        var  member = $("#member").val();
-        var budget = $("#budget").val();
-        var actual_cost = $("#actual_cost").val();
-        var start_time = $("#start_time").val();
-        var end_time = $("#end_time").val();
-        var remark = $("#remark").val();
-        var status = $("#state").html();
-
-        var send_data = {"accept_user": selected_user, "status": status, "add_time": add_time, "title": title, "category": category, "principal": principal, "member": member, "budget": budget,
-        "actual_cost": actual_cost, "start_time": start_time, "end_time": end_time, "remark": remark, "content": content};
-
-        console.log(send_data);
-
-        $.ajax({
-            url: "{% url 'fa:scheme_draft' %}",
-            type: "POST",
-            data: send_data,
-            cache: false,
-            dataType: "json",
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-            },
-            success: function (data) {
-                var lis_id = data.lis_id;
-                var formData = new FormData();
-                formData.append("file", $("#file_upload")[0].files[0]);
-                formData.append("lis_id", lis_id);
-
-                deletid.forEach(function (i,setting) {
-                    console.log(i);
-                    var style_name = $("#message"+ i +" td:eq(1) input").val();		//获取项目名称
-                    var content = $("#message"+ i +" td:eq(2) input").val();		//获取项目内容
-                    var finish_time = $("#message"+ i +" td:eq(3) input").val();	//获取完成时间
-                    var target_user = $("#message"+ i +" td:eq(4) input").val();		//获取负责人
-                    $.ajax({
-                        url: "{% url 'fa:scheme_message' %}",
-                        type: 'POST',
-                        cache: false,
-                        data: {"style_name": style_name, "content": content, 'finish_time': finish_time, "target_user": target_user,  'lis_id': lis_id},
-                        dataType: "json",
-                        beforeSend: function (xhr, settings) {
-                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                        },
-                        success: function (data) {
-                        }
-                    });
-                });
-
-                $.ajax({
-                    url:"{% url 'fa:scheme_file_upload' %}",
-                    type: "POST",
-                    data: formData,
-                    cache: false,
-                    processData: false,  // 不处理数据
-                    contentType: false,   // 不设置内容类型
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    },
-                    success: function (data) {
-                        if (data.status === 'success'){
-                            window.location.reload();
-                        }else if(data.status === 'fail'){
-                            window.location.reload();
-                        }
-                    }
-                })
-            }
-        })
+            var opinion = $("#input_suggest").val()
+            var lis_id = "{{ draft.id }}";
+            $.ajax({
+                type: "POST",
+                data : {"opinion": opinion, "lis_id": lis_id},
+                url:{% url 'schemedraft_opinion' %},
+                cache: false,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                },
+                success: function (data) {
+                    window.location.reload();
+                }
+            })
     }
     </script>
 {% endblock %}

@@ -8,6 +8,7 @@ from django.views.generic import View
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
+from project.models import AddScheme,Scheme
 from plan.models import PropagatePlan,WorkTarget
 from xuanchuan.models import MessageDraft, Opinion, DraftBase, ItemsReceive, NeedItem
 from .forms import LoginForm
@@ -21,18 +22,21 @@ class Index(View):
             all_draft = DraftBase.objects.filter(accept_user=request.user, status='未审核').order_by('-add_time')
             has_draft = DraftBase.objects.filter(accept_user=request.user, status='已审批').order_by('-add_time')
             allplan_draft = DraftBase.objects.filter(draft_user=request.user, status='已审批', style='宣传计划申请').order_by('-add_time')
+            allproject_draft = DraftBase.objects.filter(draft_user=request.user, status='已审批', style='宣传方案申请').order_by('-add_time')
 
             no_count = all_draft.count()
             has_count = has_draft.count()
             plan_count = allplan_draft.count()
+            project_count = allproject_draft.count()
         else:
             all_draft = None
             has_draft = None
             allplan_draft = None
+            allproject_draft = None
             no_count = 0
             has_count = 0
             plan_count = 0
-
+            project_count = 0
         shiwu = request.GET.get('shiwu' '')
         style = request.GET.get('style' '')
         if shiwu == None:
@@ -46,9 +50,11 @@ class Index(View):
             "no_count": no_count,
             "has_count": has_count,
             "plan_count": plan_count,
+            "project_count": project_count,
             'shiwu': shiwu,
             'style': style,
             'allplan_draft': allplan_draft,
+            'allproject_draft': allproject_draft,
         })
 
 
@@ -151,6 +157,40 @@ class HandlePlanDraftView(View):
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
 
+class HandleSchemeDraftView(View):
+    """
+    审批方案页面
+    """
+    def get(self, request, draft_id, style):
+
+        draft = DraftBase.objects.get(id=draft_id, style=style)
+        scheme_messages = draft.scheme.addscheme_set.all()
+
+        return render(request, 'sp_scheme.html', {
+            'draft': draft,
+            'scheme_messages': scheme_messages
+        })
+
+    def post(self, request):
+        content = request.POST.get('opinion', '')
+        lis_id = request.POST.get('lis_id', '')
+
+        opinion = Opinion()
+        opinion.content = content
+        opinion.leader = request.user
+        opinion.save()
+
+        draft = DraftBase.objects.filter(id=lis_id)
+        if draft:
+            draft = DraftBase.objects.get(id=lis_id)
+            draft.scheme.opinion_id= opinion.id
+            draft.status = '已审批'
+            draft.scheme.save()
+            draft.save()
+
+            return JsonResponse({"status": "success"})
+        return JsonResponse({"status": "fail"})
+
 class InputPlanView(View):
     """
     获取填写计划页面
@@ -162,6 +202,18 @@ class InputPlanView(View):
         return render(request, 'tb_plan.html', {
             'draft': draft,
             'project_menu': project_menu
+        })
+class InputSchemeView(View):
+    """
+    获取填写方案页面
+    """
+    def get(self, request, draft_id, style):
+        draft = DraftBase.objects.get(id=draft_id, style=style)
+        scheme_messages = draft.scheme.addscheme_set.all()
+
+        return render(request, 'tb_scheme.html', {
+            'draft': draft,
+            'scheme_messages': scheme_messages
         })
 
 class InputPlanScheduleView(View):
