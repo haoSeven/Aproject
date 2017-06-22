@@ -449,22 +449,114 @@ class ItemMakeView(LoginRequiredMixin, View):
 
     def get(self, request):
         add_time = datetime.now()
+        all_office = Office.objects.all()
 
         return render(request, 'item_make.html', {
             'add_time': add_time,
+            "all_office": all_office,
         })
 
     def post(self, request):
+
         title = request.POST.get('title', '')
-        status = request.POST.get('state', '')
+        status = request.POST.get('status', '')
+        remark = request.POST.get('remark', '')
+        accept_users = request.POST.getlist('accept_user[]', [])
+        all_cost = request.POST.get('all_cost', 0)
+        style = "宣传物资制作申请"
 
         # 修改时间格式
-        time = request.POST.get('time', '')
+        time = request.POST.get('add_time', '')
         patten = '年|月'
         time = re.sub(patten, '-', time)
         time = re.sub('日', '', time)
 
-        pass
+        if title:
+            draft_base = DraftBase()
+            draft_base.title = title
+            draft_base.status = status
+            draft_base.style = style
+            draft_base.add_time = time
+            draft_base.draft_user = request.user
+            draft_base.save()
+
+            item_make = ItemsMake()
+            item_make.remark = remark
+            item_make.main = draft_base
+            item_make.sum_cost = all_cost
+            item_make.save()
+
+            # 修改   保存接受人的id
+            for a in accept_users:
+                accept_user = UserProfile.objects.get(id=a)
+                if accept_user:
+                    draft_base.accept_user.add(accept_user)
+
+            recall = {"status": "success", "lis_id": item_make.id}
+
+            return HttpResponse(json.dumps(recall))
+
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+class ItemView(View):
+
+    """
+    物品信息
+    """
+
+    def post(self, request):
+
+        lis_id = request.POST.get('lis_id', '')
+        select = request.POST.get('select', '')
+        item_name = request.POST.get('item_name', '')
+        make_methed = request.POST.get('make_methed', '')
+        time = request.POST.get('time', '')
+        norm = request.POST.get('norm', '')
+        unit = request.POST.get('unit', '')
+        nums = request.POST.get('nums', 0)
+        adv_name = request.POST.get('adv_name', '')
+        adv_contact_person = request.POST.get('adv_contact_person', '')
+        adv_contact_way = request.POST.get('adv_contact_way', '')
+        cost = request.POST.get('cost', '')
+
+        if lis_id and item_name:
+            item = ItemMake()
+            item.name = item_name
+            item.category = select
+            item.make_method = make_methed
+            item.require_time = time
+            item.standard = norm
+            item.unit = unit
+            item.nums = nums
+            item.adv_com_name = adv_name
+            item.adv_com_contact = adv_contact_person
+            item.adv_com_mobile = adv_contact_way
+            item.cost = cost
+            item.lis_id = lis_id
+            item.save()
+
+            return HttpResponse('{"status": "success"}', content_type="application/json")
+
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+class ItemMakeFileUploadView(View):
+    """
+    宣传物资制作 文件上传
+    """
+    def post(self, request):
+        lis_id = request.POST.get('lis_id', '')
+        file = request.FILES.get("file", None)
+
+        if file:
+            item_make = ItemsMake.objects.get(id=lis_id)
+            item_make.file = file
+            item_make.save()
+
+            return HttpResponse('{"status": "success"}', content_type="application/json")
+
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
 
 
 class ItemReceiveView(LoginRequiredMixin, View):
