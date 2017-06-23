@@ -19,6 +19,11 @@ class SchemeQueryView(View):
     """
 
     def get(self, request):
+        all_scheme = Scheme.objects.all()
+        # 计算页数
+        count = all_scheme.count()
+        count = count // 5 + 1
+
         return render(request, 'Scheme_query.html', {})
 
 
