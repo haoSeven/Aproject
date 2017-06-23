@@ -268,7 +268,7 @@
         var n=document.getElementById('message0').rowIndex+1;
         var tr=tab.insertRow(n);
 
-        tr.setAttribute("id","message"+k)
+        tr.setAttribute("id","message"+k);
         var td2=tr.insertCell(0)
         var td3=tr.insertCell(1)
         var td4=tr.insertCell(2)
@@ -291,7 +291,7 @@
         k = parseInt(k.substring(6));
         alert(k);
         $("#message"+ k +"").remove();
-        deletid.pop(k);
+        deletid.splice(k,1);
     }
 
 
@@ -326,7 +326,8 @@
                 var formData = new FormData();
                 formData.append("file", $("#file_upload")[0].files[0]);
                 formData.append("lis_id", lis_id);
-                for (var i in deletid)	{										//获取领用内容
+                deletid.forEach(function (i,setting) {
+                    console.log(i);
                     var name = $("#message"+ i +" td:eq(1) input").val();		//获取项目名称
                     var content = $("#message"+ i +" td:eq(2) input").val();		//获取项目内容
                     var finish_time = $("#message"+ i +" td:eq(3) input").val();	//获取完成时间
@@ -343,7 +344,7 @@
                         success: function (data) {
                         }
                     });
-                }
+                });
                 $.ajax({
                     url:"{% url 'jh:plan_file_upload' %}",
                     type: "POST",
@@ -356,9 +357,9 @@
                     },
                     success: function (data) {
                         if (data.status === 'success'){
-                            window.location.reload();
+
                         }else if(data.status === 'fail'){
-                            window.location.reload();
+
                         }
                     }
                 })
