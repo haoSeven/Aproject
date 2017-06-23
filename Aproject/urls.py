@@ -19,7 +19,7 @@ from django.views.static import serve
 
 from users.views import Index, HandleMessageDraftView, LoginView, LogoutView,HandleItemsReceiveView,\
     HandlePlanDraftView, InputPlanView, InputPlanScheduleView, InputPlanFileUploadView, HandleSchemeDraftView,\
-    InputSchemeView, InputSchemeScheduleView
+    InputSchemeView, InputSchemeScheduleView,HandleItemMakeView
 
 from xuanchuan.views import GetReceiverView, OverViewView
 from plan.views import PlanSearchView
@@ -48,6 +48,8 @@ urlpatterns = [
     url(r'^plandraft/(?P<draft_id>\d+)&(?P<style>.*)/$', HandlePlanDraftView.as_view(),name='handle_plan_draft'),
     #审批宣传方案申请
     url(r'^schemedraft/(?P<draft_id>\d+)&(?P<style>.*)/$', HandleSchemeDraftView.as_view(), name='handle_scheme_draft'),
+    #审批宣传物资制作申请
+    url(r'^itemmakedraft/(?P<draft_id>\d+)&(?P<style>.*)/$', HandleItemMakeView.as_view(), name='handle_itemmake_draft'),
     #宣传计划填报
     url(r'^inputplan/(?P<draft_id>\d+)&(?P<style>.*)/$', InputPlanView.as_view(),name='input_plan'),
     #宣传方案填报
@@ -58,6 +60,8 @@ urlpatterns = [
     url(r'^projectschedule/(?P<scheme_id>\d+)/$', InputSchemeScheduleView.as_view(), name='project_schedule'),
     # 提交宣传信息审批建议
     url(r'^sendopinion/$', HandleMessageDraftView.as_view(), name='send_opinion'),
+    # 提交物资制作审批建议
+    url(r'^itemmakeopinion/$', HandleItemMakeView.as_view(), name='itemmake_opinion'),
     # 提交物资领用审批建议
     url(r'^itemreceiveropinion/$', HandleItemsReceiveView.as_view(), name='itemreceiver_opinion'),
     # 提交计划信息审批建议

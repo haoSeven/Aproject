@@ -123,6 +123,36 @@ class HandleItemsReceiveView(View):
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
 
+class HandleItemMakeView(View):
+    def get(self, request, draft_id, style):
+
+        draft = DraftBase.objects.get(id=draft_id, style=style)
+        items = draft.itemsmake.itemmake_set.all()
+
+        return render(request, 'sp_itemmake.html', {
+            'draft': draft,
+            'items': items
+        })
+    def post(self, request):
+        content = request.POST.get('opinion', '')
+        lis_id = request.POST.get('lis_id', '')
+
+        opinion = Opinion()
+        opinion.content = content
+        opinion.leader = request.user
+        opinion.save()
+
+        draft = DraftBase.objects.get(id=lis_id)
+
+        if draft:
+            draft.itemsmake.opinion_id = opinion.id
+            draft.status = '已审批'
+            draft.itemsmake.save()
+            draft.save()
+
+            return JsonResponse({"status": "success"})
+        return JsonResponse({"status": "fail"})
+
 class HandlePlanDraftView(View):
     """
     审批计划页面
