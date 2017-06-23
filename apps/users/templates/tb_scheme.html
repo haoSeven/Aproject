@@ -97,14 +97,14 @@
                 <th class="text_center"style="color:#2894FF">负责人</th>
                 <th class="text_center"style="color:#2894FF">操作</th>
                 </tr>
-                        {% for secheme in scheme_messages %}
+                        {% for scheme in scheme_messages %}
                             <tr id="message0">
                                 <td style="width: 5%"></td>
-                                <td style="width: 15%"><input style="width: 100%" readonly="readonly" value="{{ secheme.style_name }}"></td>
-                                <td ><input style="width: 100%" readonly="readonly" value="{{ secheme.content }}"></td>
-                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ secheme.time }}"></td>
-                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ secheme.principal }}"></td>
-                                <td style="width: 7%"></td>
+                                <td style="width: 15%"><input style="width: 100%" readonly="readonly" value="{{ scheme.style_name }}"></td>
+                                <td ><input style="width: 100%" readonly="readonly" value="{{ scheme.content }}"></td>
+                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ scheme.time }}"></td>
+                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ scheme.principal }}"></td>
+                                <td style="width: 7%"><button><a href="{% url 'project_schedule' scheme.id  %}">填报</a></button></td>
                             </tr>
                         {% endfor %}
             		</table>

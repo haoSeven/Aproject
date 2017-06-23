@@ -245,6 +245,37 @@ class InputPlanScheduleView(View):
             return HttpResponse(json.dumps(recall))
         return JsonResponse({"status": "fail"})
 
+
+class InputSchemeScheduleView(View):
+    """
+    填写方案进度
+     """
+    def get(self, request, scheme_id):
+        addscheme = AddScheme.objects.get(id=scheme_id)
+
+        return render(request, 'scheme_table.html', {
+            'addscheme': addscheme
+        })
+
+
+    def post(self,request):
+        schedule = request.POST.get('schedule', '')
+        complete_status = request.POST.get('complete_status', '')
+        is_finish = request.POST.get('is_finish', '')
+        lis_id = request.POST.get('lis_id', '')
+
+        scheme = AddScheme.objects.filter(id=lis_id)
+        if scheme:
+            scheme = AddScheme.objects.get(id=lis_id)
+            scheme.schedule = schedule
+            scheme.complete_status = complete_status
+            scheme.is_finished = is_finish
+            scheme.save()
+
+            recall = {"status": "success"}
+            return HttpResponse(json.dumps(recall))
+        return JsonResponse({"status": "fail"})
+
 class InputPlanFileUploadView(View):
     def post(self, request, *args, **kwargs):
 

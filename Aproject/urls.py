@@ -19,7 +19,7 @@ from django.views.static import serve
 
 from users.views import Index, HandleMessageDraftView, LoginView, LogoutView,HandleItemsReceiveView,\
     HandlePlanDraftView, InputPlanView, InputPlanScheduleView, InputPlanFileUploadView, HandleSchemeDraftView,\
-    InputSchemeView
+    InputSchemeView, InputSchemeScheduleView
 
 from xuanchuan.views import GetReceiverView, OverViewView
 from plan.views import PlanSearchView
@@ -54,6 +54,8 @@ urlpatterns = [
     url(r'^inputscheme/(?P<draft_id>\d+)&(?P<style>.*)/$', InputSchemeView.as_view(), name='input_scheme'),
     #填报计划进度
     url(r'^planschedule/(?P<plan_id>\d+)/$', InputPlanScheduleView.as_view(), name='plan_schedule'),
+    #填报方案进度
+    url(r'^projectschedule/(?P<scheme_id>\d+)/$', InputSchemeScheduleView.as_view(), name='project_schedule'),
     # 提交宣传信息审批建议
     url(r'^sendopinion/$', HandleMessageDraftView.as_view(), name='send_opinion'),
     # 提交物资领用审批建议
@@ -64,6 +66,8 @@ urlpatterns = [
     url(r'^schemedraftopinion/$', HandleSchemeDraftView.as_view(), name='schemedraft_opinion'),
     #填写项目进度
     url(r'^inputschedule/$', InputPlanScheduleView.as_view(), name='input_schedule'),
+    #填写方案进度
+    url(r'^inputschemeschedule/$', InputSchemeScheduleView.as_view(), name='input_scheme_schedule'),
     #项目进度文件上传
     url(r'^schedulefileupload/$', InputPlanFileUploadView.as_view(), name='schedule_file_upload'),
     # 获取发送人
