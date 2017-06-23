@@ -58,7 +58,7 @@
                 </tr>
 
                 <tr id="message0">
-                    <td><select id="">
+                    <td><select id="" style="width: 100%" class="form-control">
                         {% for item in all_item %}
                         <option>{{ item.name }}</option>
                         {% endfor %}
@@ -220,7 +220,11 @@
             deletid.push(k)
 
             td1.innerHTML="<button type='button' id='delete"+k+"' onclick='deleteRow(this.id)'>删除</button>"
-            td2.innerHTML="<input style='width: 100%'></input>"
+            td2.innerHTML='<select id="" style="width: 100%" class="form-control">'+
+                        '{% for item in all_item %}'+
+                        '<option>{{ item.name }}</option>'+
+                        '{% endfor %}'+
+                    '</select>';
             td3.innerHTML="<input style='width: 100%'></input>"
             td4.innerHTML="<input style='width: 100%' type='number'></input>"
             td5.innerHTML="<select style='width: 100%'> <option>社区街道</option> <option>单位企业</option> <option>学校</option> <option>Audi</option> </select>"

@@ -7,16 +7,14 @@
 
 {% block custom_css %}
     <link rel="stylesheet" href="{% static 'css/starter-template.css' %}">
-<script src="{% static 'js/template.js' %}"></script>
+    <script src="{% static 'js/template.js' %}"></script>
     <script src="{% static 'js/event.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <div class="container" >
         <header >
             <h4 class="text_center">宣传品（资料）制作</h4>
-            <p style="color:#2894FF">状态：待审批</p>
-
+            <p style="color:#2894FF">状态：<span id="status">待审批</span></p>
         </header>
 
         <section>
@@ -25,19 +23,19 @@
 
                 <tr>
                     <th class="text_center">申请部门</th>
-                    <td class="text_center">First Name</td>
+                    <td class="text_center">{{ request.user.team.team_name }}</td>
                     <th class="text_center">申请时间</th>
-                    <td class="text_center">Username</td>
+                    <td class="text_center" id="add_time">{{ add_time }}</td>
                 </tr>
                 <tr>
                     <th class="text_center">申请人</th>
-                    <td class="text_center">Mark</td>
+                    <td class="text_center">{{ request.user.name }}</td>
                     <th class="text_center">联系电话</th>
-                    <td class="text_center">123456789</td>
+                    <td class="text_center">{{ request.user.mobile }}</td>
                 </tr>
                 <tr>
                     <th class="text_center">*标题</th>
-                    <td colspan="3"><input style="width: 100%"></input></td>
+                    <td colspan="3"><input style="width: 100%" id="title"></td>
                 </tr>
                 <tr>
                     <th colspan="4" class="text_center">请在以下表格中填写宣传品（资料）内容</th>
@@ -84,7 +82,7 @@
                             <th class="text_center">单位</th>
                             <td class="text_center"><input style="width: 100%" id="input3"></td>
                             <th class="text_center">制作数量</th>
-                            <td class="text_center"><input style="width: 100%" id="input4"></td>
+                            <td class="text_center"><input style="width: 100%" type="number" id="input4"></td>
                         </tr>
                         <tr>
                             <th class="text_center">广告公司名称</th>
@@ -94,11 +92,11 @@
                             <th class="text_center">广告公司联系人</th>
                             <td class="text_center"><input style="width: 100%" id="input6"></td>
                             <th class="text_center">广告公司联系方式</th>
-                            <td class="text_center"><input style="width: 100%" id="input7"></td>
+                            <td class="text_center"><input style="width: 100%" id="input7" maxlength="11"></td>
                         </tr>
                         <tr>
                             <th class="text_center" >费用（元）</th>
-                            <td colspan="3"><input style="width: 34%" id="input8"></td>
+                            <td colspan="3"><input style="width: 34%" type="number" id="input8"></td>
                         </tr>
                     </table>
                 </div>
@@ -109,15 +107,15 @@
                     <th width="30%" class="text_center">
                        总费用
                     </th>
-                    <td><input readonly="readonly"></td>
+                    <td><input readonly="readonly" id="input9" value="0" type="number"></td>
                 </tr>
                 <tr>
                     <th width="30%"><div class="remark_text">备注</div></th>
-                    <td colspan="70%"><textarea class="remark_textarea"> </textarea></td>
+                    <td colspan="70%"><textarea class="remark_textarea" id="remark"></textarea></td>
                 </tr>
                 <tr>
                     <th><div class="textarea_style">附件</div></th>
-                    <td colspan="3"><input type="file" name=""></td>
+                    <td colspan="3"><input type="file" name="file" id="file_upload"></td>
                 </tr>
                 <tr>
                     <th><div class="textarea_style">领导审批意见</div></th>
@@ -152,7 +150,8 @@
 
             </table>
         </section>
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="width:180%">
                 <div class="modal-header">
@@ -197,7 +196,7 @@
                           </div>
                       </div>
                       <div class="col-xs-2" style="margin-top: 20%">
-                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
                          <br><br>
                          <button type="button" class="btn btn-secondary" style="vertical-align:middle;"> <还原 </button>
                      </div>
@@ -218,17 +217,18 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         关闭
                     </button>
-                    <button type="button" class="btn btn-primary" id="send">
+                    <button type="button" class="btn btn-primary" id="send_form" onclick="send()">
                         提交
                     </button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    </div>
 {% endblock %}
 
 {% block custom_js %}
+    <script src="{% static 'js/jquery.cookie.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/jquery.treeview.js' %}" type="text/javascript"></script>
     <script type="text/html" id="add_block">
     <div>
         <div class="row" style="margin-top: 20px">
@@ -297,9 +297,11 @@
     </script>
 
     <script type="text/javascript">
-    var i = 1;
+    var i = 0;
+    var lis = [0];
     var data = {};
     function addblock() {
+        i++;
         var select = $("#select1").val();
         $("#select1").val("宣传（献血、知识）手册");
         var item_name = $("#input0").val();
@@ -321,19 +323,25 @@
         $("#input7").val("");
         var cost = $("#input8").val();
         $("#input8").val("");
+        var all_cost = parseInt($("#input9").val());
+        all_cost += parseInt(cost);
+
+        $("#input9").val(all_cost);
+
+        lis.push(i);
 
         var tmp = {"select": select, "item_name": item_name, "make_methed": make_methed, "time": time,
             "norm": norm, "unit": unit, "nums": nums, "adv_name": adv_name, "adv_contact_person": adv_contact_person,
         "adv_contact_way": adv_contact_way, "cost": cost};
-        data[i] = tmp;
 
-        console.log(data);
+        data[i] = tmp;
+        console.log(typeof i);
+        console.log(lis);
 
         var block_id = "delect" + i;
 
         var patten = $("#add_block").html();
         patten = '<div id="block'+ i +'">'+ patten + '</div>';
-        i++;
 
         patten = patten.replace(/#category/gi, select);
         patten = patten.replace(/#item_name/gi, item_name);
@@ -352,9 +360,76 @@
     }
 
     function removeblock(id) {
-        var block_id = id.substring(6);
+        var block_id = parseInt(id.substring(6));
+        lis.splice(block_id, 1);
+        delete data[block_id];
         block_id = "block" + block_id;
         $("#"+ block_id +"").remove();
     }
+
+    function send() {
+
+        var title = $("#title").val();
+        var remark = $("#remark").val();
+        var add_time = $("#add_time").html();
+        var status = $("#status").html();
+        var all_cost = $("#input9").val();
+
+        var send_data = {"all_cost": all_cost, "accept_user": selected_user, "status": status, "add_time": add_time, "title": title, "remark": remark};
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'xc:item_make_draft' %}",
+            cache: false,
+            data: send_data,
+            dataType: "json",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+            },
+            success: function (recall) {
+                var formData = new FormData();
+                formData.append("file", $("#file_upload")[0].files[0]);
+                formData.append("lis_id", recall.lis_id);
+                lis.forEach(function (index, value) {
+                    if(index !== 0){
+                        data[index].lis_id = recall.lis_id;
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'xc:add_item' %}",
+                            cache: false,
+                            data: data[index],
+                            dataType: "json",
+                            beforeSend: function (xhr, settings) {
+                                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                            },
+                            success: function (data) {
+                                k++;
+                            }
+                        })
+                    }
+                    $.ajax({
+                        url:"{% url 'xc:item_make_upload' %}",
+                        type: "POST",
+                        data: formData,
+                        cache: false,
+                        processData: false,  // 不处理数据
+                        contentType: false,   // 不设置内容类型
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        },
+                        success: function (data) {
+                            if (data.status === 'success'){
+                                window.location.reload();
+                            }else if(data.status === 'fail'){
+                                window.location.reload();
+                            }
+                        }
+                    });
+                })
+            }
+        });
+
+    }
+
     </script>
 {% endblock %}
