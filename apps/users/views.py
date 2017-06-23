@@ -1,10 +1,14 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+
 from django.core.urlresolvers import reverse
 from django.views.generic import View
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
+from plan.models import PropagatePlan,WorkTarget
 from xuanchuan.models import MessageDraft, Opinion, DraftBase, ItemsReceive, NeedItem
 from .forms import LoginForm
 
@@ -16,27 +20,35 @@ class Index(View):
         if request.user.is_authenticated():
             all_draft = DraftBase.objects.filter(accept_user=request.user, status='未审核').order_by('-add_time')
             has_draft = DraftBase.objects.filter(accept_user=request.user, status='已审批').order_by('-add_time')
+            allplan_draft = DraftBase.objects.filter(draft_user=request.user, status='已审批', style='宣传计划申请').order_by('-add_time')
 
             no_count = all_draft.count()
             has_count = has_draft.count()
+            plan_count = allplan_draft.count()
         else:
             all_draft = None
             has_draft = None
+            allplan_draft = None
             no_count = 0
             has_count = 0
-        show = request.GET.get('shiwu' '')
-        status = 1
-        if show == 'daiban':
-            status = 1
-        elif show == 'yiban':
-            status = 2
+            plan_count = 0
+
+        shiwu = request.GET.get('shiwu' '')
+        style = request.GET.get('style' '')
+        if shiwu == None:
+            shiwu = 'daiban'
+        if style == None:
+            style = 'plan'
 
         return render(request, 'mywork.html', {
             'all_draft': all_draft,
             'has_draft': has_draft,
             "no_count": no_count,
             "has_count": has_count,
-            'status': status,
+            "plan_count": plan_count,
+            'shiwu': shiwu,
+            'style': style,
+            'allplan_draft': allplan_draft,
         })
 
 
@@ -104,6 +116,99 @@ class HandleItemsReceiveView(View):
 
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
+
+class HandlePlanDraftView(View):
+    """
+    审批计划页面
+    """
+    def get(self, request, draft_id, style):
+
+        draft = DraftBase.objects.get(id=draft_id, style=style)
+        project_menu = draft.propagateplan.worktarget_set.all()
+
+        return render(request, 'sp_plan.html', {
+            'draft': draft,
+            'project_menu': project_menu
+        })
+
+    def post(self, request):
+        content = request.POST.get('opinion', '')
+        lis_id = request.POST.get('lis_id', '')
+
+        opinion = Opinion()
+        opinion.content = content
+        opinion.leader = request.user
+        opinion.save()
+
+        draft = DraftBase.objects.filter(id=lis_id)
+        if draft:
+            draft = DraftBase.objects.get(id=lis_id)
+            draft.propagateplan.opinion_id = opinion.id
+            draft.status = '已审批'
+            draft.propagateplan.save()
+            draft.save()
+
+            return JsonResponse({"status": "success"})
+        return JsonResponse({"status": "fail"})
+
+class InputPlanView(View):
+    """
+    获取填写计划页面
+    """
+    def get(self, request, draft_id, style):
+        draft = DraftBase.objects.get(id=draft_id, style=style)
+        project_menu = draft.propagateplan.worktarget_set.all()
+
+        return render(request, 'tb_plan.html', {
+            'draft': draft,
+            'project_menu': project_menu
+        })
+
+class InputPlanScheduleView(View):
+    """
+    填写计划进度
+    """
+
+    def get(self,request,plan_id):
+        plan = WorkTarget.objects.get(id = plan_id)
+        return render(request, 'Completion_table.html', {
+            'plan': plan
+        })
+
+    def post(self,request):
+        schedule = request.POST.get('schedule', '')
+        complete_status = request.POST.get('complete_status', '')
+        is_finish = request.POST.get('is_finish', '')
+        lis_id = request.POST.get('lis_id', '')
+
+        plan = WorkTarget.objects.filter(id=lis_id)
+        if plan:
+            plan = WorkTarget.objects.get(id=lis_id)
+            plan.schedule = schedule
+            plan.complete_status = complete_status
+            plan.is_finish = is_finish
+            plan.save()
+
+            recall = {"status": "success"}
+            return HttpResponse(json.dumps(recall))
+        return JsonResponse({"status": "fail"})
+
+class InputPlanFileUploadView(View):
+    def post(self, request, *args, **kwargs):
+
+        lis_id = request.POST.get('lis_id', '')
+        file = request.FILES.get("file", None)
+
+        if file:
+            input_plan = WorkTarget.objects.get(id=lis_id)
+            input_plan.file = file
+            input_plan.save()
+            return HttpResponse('{"status": "success"}', content_type="application/json")
+
+        return HttpResponse('{"status": "fail"}', content_type="application/json")
+
+
+
 
 class LoginView(View):
     """
