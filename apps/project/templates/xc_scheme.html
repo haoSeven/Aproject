@@ -110,7 +110,11 @@
 
                 <tr id="message0">
                     <td style="width: 5%"></td>
-                    <td style="width: 15%"><input style="width: 100%"></td>
+                    <td style="width: 15%">
+                        <select style="width: 100%" class="form-control">
+                            <option>献血活动</option>
+                            <option>活动安排分析</option>
+                        </select></td>
                     <td ><input style="width: 100%"></td>
                     <td style="width: 10%"><input style="width: 100%"></td>
                     <td style="width: 10%"><input style="width: 100%"></td>
@@ -310,7 +314,10 @@
 
             td1.innerHTML="<button type='button' id='delete"+k+"' onclick='deleteRow(this.id)'>删除</button>"
             td2.innerHTML=""
-            td3.innerHTML="<input style='width: 100%'>"
+            td3.innerHTML='<select id="" style="width: 100%" class="form-control">'+
+                        '<option>献血活动</option>'+
+                        '<option>活动安排分析</option>'+
+                    '</select>';
             td4.innerHTML="<input style='width: 100%'>"
             td5.innerHTML="<input style='width: 100%'>"
             td6.innerHTML="<input style='width: 100%'>"
@@ -361,7 +368,7 @@
 
                 deletid.forEach(function (i,setting) {
                     console.log(i);
-                    var style_name = $("#message"+ i +" td:eq(1) input").val();		//获取项目名称
+                    var style_name = $("#message"+ i +" td:eq(1) select").val();		//获取项目名称
                     var content = $("#message"+ i +" td:eq(2) input").val();		//获取项目内容
                     var finish_time = $("#message"+ i +" td:eq(3) input").val();	//获取完成时间
                     var target_user = $("#message"+ i +" td:eq(4) input").val();		//获取负责人

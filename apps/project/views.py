@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from xuanchuan.models import DraftBase
 from .models import Scheme, AddScheme
 from users.models import UserProfile, Office
+from pure_pagination import PageNotAnInteger, Paginator
 # Create your views here.
 
 
@@ -22,9 +23,39 @@ class SchemeQueryView(View):
         all_scheme = Scheme.objects.all()
         # 计算页数
         count = all_scheme.count()
-        count = count // 5 + 1
+        if not count % 5 == 0:
+            count = count // 5 + 1
+        else:
+            count = count // 5
 
-        return render(request, 'Scheme_query.html', {})
+        title = request.GET.get("title", '')
+        proposer = request.GET.get("proposer", '')
+        category = request.GET.get("category", '')
+        style = request.GET.get("style", '')
+
+        if title:
+            all_scheme = all_scheme.filter(main__title=title)
+        if proposer:
+            all_scheme = all_scheme.filter(main__draft_user__username=proposer)
+        if category:
+            all_scheme = all_scheme.filter(category=category)
+        if style:
+            all_scheme = all_scheme.filter(main__status=style)
+
+        # 分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_scheme, 5, request=request)
+
+        message = p.page(page)
+
+        return render(request, 'Scheme_query.html', {
+            'all_scheme': message,
+            "count": count
+        })
 
 
 class SchemeDraftView(View):
