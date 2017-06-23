@@ -229,7 +229,7 @@ class MessageSearchView(LoginRequiredMixin, View):
         all_messages = MessageDraft.objects.all()
         all_category = Category.objects.all()
         count = all_messages.count()
-        count = count % 3 + 1
+        count = count // 3 + 1
 
         title = request.GET.get("title", '')
         proposer = request.GET.get("proposer", '')
@@ -283,7 +283,7 @@ class ItemsMakeSearchView(LoginRequiredMixin, View):
         all_itemsmakemessage = ItemsMake.objects.all()
         # 计算页数
         count = all_itemsmakemessage.count()
-        count = count % 3 + 1
+        count = count // 3 + 1
         # 获取前端传递的 查询条件
         title = request.GET.get("title", '')
         proposer = request.GET.get("proposer", '')
@@ -374,7 +374,7 @@ class ItemReceiverSearchView(LoginRequiredMixin, View):
     def get(self,request):
         all_itemreceivemessage = ItemsReceive.objects.all()
         count = all_itemreceivemessage.count()
-        count = count % 3 + 1
+        count = count // 3 + 1
 
         title = request.GET.get("title", '')
         proposer = request.GET.get("proposer", '')
@@ -536,6 +536,43 @@ class ItemView(View):
             item.lis_id = lis_id
             item.save()
 
+            item_count = ItemMakeCount.objects.filter(user=request.user)
+            if item_count:
+                add_item_count = ItemMakeCount.objects.get(user=request.user)
+                if select == '宣传（献血、知识）手册':
+                    add_item_count.manual_count += 1
+                    add_item_count.save()
+                elif select == '电梯、海报广告	':
+                    add_item_count.leaflet_count += 1
+                    add_item_count.save()
+                elif select == '电视媒体视频(材料)':
+                    add_item_count.video_count += 1
+                    add_item_count.save()
+                elif select == '宣传、活动(指引)单张':
+                    add_item_count.adv_count += 1
+                    add_item_count.save()
+                elif select == '其他':
+                    add_item_count.other_count += 1
+                    add_item_count.save()
+            else:
+                add_item_count = ItemMakeCount()
+                add_item_count.user = request.user
+                if select == '宣传（献血、知识）手册':
+                    add_item_count.manual_count += 1
+                    add_item_count.save()
+                elif select == '电梯、海报广告	':
+                    add_item_count.leaflet_count += 1
+                    add_item_count.save()
+                elif select == '电视媒体视频(材料)':
+                    add_item_count.video_count += 1
+                    add_item_count.save()
+                elif select == '宣传、活动(指引)单张':
+                    add_item_count.adv_count += 1
+                    add_item_count.save()
+                elif select == '其他':
+                    add_item_count.other_count += 1
+                    add_item_count.save()
+
             return HttpResponse('{"status": "success"}', content_type="application/json")
 
         return HttpResponse('{"status": "fail"}', content_type="application/json")
@@ -566,7 +603,7 @@ class ItemReceiveView(LoginRequiredMixin, View):
     def get(self, request):
         add_time = datetime.now()
         all_office = Office.objects.all()
-        all_item = ItemMake.objects.all()
+        all_item = ItemMake.objects.filter(lis__main__status='已审批')
 
         return render(request, 'wzly_draft.html', {
             'add_time': add_time,
@@ -640,6 +677,43 @@ class ReceiveItemsView(LoginRequiredMixin, View):
             need_item.remark = remark
             need_item.lis_id = lis_id
             need_item.save()
+
+            item_count = ItemReceiveCount.objects.filter(user=request.user)
+            if item_count:
+                add_item_count = ItemReceiveCount.objects.get(user=request.user)
+                if name == '宣传手册':
+                    add_item_count.manual_count += 1
+                    add_item_count.save()
+                elif name == '纪念胸章':
+                    add_item_count.badge_count += 1
+                    add_item_count.save()
+                elif name == '样品吊坠':
+                    add_item_count.pendant_count += 1
+                    add_item_count.save()
+                elif name == '电影票':
+                    add_item_count.ticket_count += 1
+                    add_item_count.save()
+                elif name == '其他':
+                    add_item_count.other_count += 1
+                    add_item_count.save()
+            else:
+                add_item_count = ItemReceiveCount()
+                add_item_count.user = request.user
+                if name == '宣传手册':
+                    add_item_count.manual_count += 1
+                    add_item_count.save()
+                elif name == '纪念胸章':
+                    add_item_count.badge_count += 1
+                    add_item_count.save()
+                elif name == '样品吊坠':
+                    add_item_count.pendant_count += 1
+                    add_item_count.save()
+                elif name == '电影票':
+                    add_item_count.ticket_count += 1
+                    add_item_count.save()
+                elif name == '其他':
+                    add_item_count.other_count += 1
+                    add_item_count.save()
 
             return HttpResponse('{"status": "success"}', content_type="application/json")
         return HttpResponse('{"status": "fail"}', content_type="application/json")
