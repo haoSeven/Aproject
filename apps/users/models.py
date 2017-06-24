@@ -57,3 +57,10 @@ class UserProfile(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Message(models.Model):
+    """
+    系统信息
+    """
+    content = models.CharField(max_length=50, verbose_name='')

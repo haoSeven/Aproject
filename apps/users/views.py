@@ -37,6 +37,7 @@ class Index(View):
             has_count = 0
             plan_count = 0
             project_count = 0
+
         shiwu = request.GET.get('shiwu' '')
         style = request.GET.get('style' '')
         if shiwu == None:
@@ -91,6 +92,7 @@ class HandleMessageDraftView(View):
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
 
+
 class HandleItemsReceiveView(View):
 
     def get(self, request, draft_id, style):
@@ -122,6 +124,7 @@ class HandleItemsReceiveView(View):
 
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
+
 
 class HandlePlanDraftView(View):
     """
@@ -157,6 +160,7 @@ class HandlePlanDraftView(View):
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
 
+
 class HandleSchemeDraftView(View):
     """
     审批方案页面
@@ -191,6 +195,7 @@ class HandleSchemeDraftView(View):
             return JsonResponse({"status": "success"})
         return JsonResponse({"status": "fail"})
 
+
 class InputPlanView(View):
     """
     获取填写计划页面
@@ -203,6 +208,8 @@ class InputPlanView(View):
             'draft': draft,
             'project_menu': project_menu
         })
+
+
 class InputSchemeView(View):
     """
     获取填写方案页面
@@ -215,6 +222,7 @@ class InputSchemeView(View):
             'draft': draft,
             'scheme_messages': scheme_messages
         })
+
 
 class InputPlanScheduleView(View):
     """
@@ -257,7 +265,6 @@ class InputSchemeScheduleView(View):
             'addscheme': addscheme
         })
 
-
     def post(self,request):
         schedule = request.POST.get('schedule', '')
         complete_status = request.POST.get('complete_status', '')
@@ -276,6 +283,7 @@ class InputSchemeScheduleView(View):
             return HttpResponse(json.dumps(recall))
         return JsonResponse({"status": "fail"})
 
+
 class InputPlanFileUploadView(View):
     def post(self, request, *args, **kwargs):
 
@@ -289,8 +297,6 @@ class InputPlanFileUploadView(View):
             return HttpResponse('{"status": "success"}', content_type="application/json")
 
         return HttpResponse('{"status": "fail"}', content_type="application/json")
-
-
 
 
 class LoginView(View):
