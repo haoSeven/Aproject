@@ -746,7 +746,11 @@ class OverViewView(LoginRequiredMixin, View):
     """
     def get(self, request):
 
-        return render(request, 'Overview.html', {})
+
+
+        return render(request, 'Overview.html', {
+
+        })
 
 
 class ReportQueryView(LoginRequiredMixin, View):
