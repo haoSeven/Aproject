@@ -93,7 +93,7 @@ class ItemsMake(models.Model):
     remark = models.CharField(max_length=200, verbose_name='备注')
     file = models.FileField(upload_to='xc/files/%Y/%m', verbose_name='附件', max_length=100,
                             null=True, blank=True, default='')
-    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='')
+    opinion = models.ForeignKey(Opinion, verbose_name='领导意见', default='', null=True, blank=True)
     sum_cost = models.FloatField(verbose_name='总费用')
 
     class Meta:
@@ -106,7 +106,7 @@ class ItemsMake(models.Model):
 
 class ItemMake(models.Model):
     name = models.CharField(max_length=20, verbose_name='宣传品名称', null=True, blank=True)
-    require_time = models.DateTimeField(default=datetime.now, verbose_name='要求完成时间')
+    require_time = models.CharField(default='', verbose_name='要求完成时间', max_length=20 )
     standard = models.CharField(max_length=20, verbose_name='规格', null=True, blank=True)
     nums = models.IntegerField(verbose_name='数量')
     unit = models.CharField(max_length=20, verbose_name='单位', null=True, blank=True)
@@ -116,6 +116,7 @@ class ItemMake(models.Model):
     cost = models.FloatField(verbose_name='费用')
     lis = models.ForeignKey(ItemsMake, verbose_name='宣传资料制作表')
     make_method = models.CharField(max_length=20, verbose_name='制作方式')
+    category = models.CharField(max_length=20, default='', verbose_name='宣传品类别')
 
     class Meta:
         verbose_name = '宣传资料内容'

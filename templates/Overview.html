@@ -14,8 +14,8 @@
                   <h4 class="card-title">本年度宣传管理数据小档案</h4>
               </div>
               <ul class="list-group list-group-flush">
-                  <li class="list-group-item">宣传计划13项，完成15项</li>
-                  <li  class="list-group-item">宣传方案 16 项，完成 10 项</li>
+                  <li class="list-group-item">宣传计划 {{ all_plan.count }} 项</li>
+                  <li  class="list-group-item">宣传方案 {{ all_scheme_count }} 项</li>
                   <li class="list-group-item">
                      <div class="panel panel-default">
                          <div class="panel-heading" role="tab" id="headingOne">
@@ -25,12 +25,12 @@
                          </div>
                          <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                          <br>
-                             <p>电视媒体类 24 项</p>
-                             <p>网络媒体类 12 项</p>
-                             <p>电梯海报类 7 项</p>
-                             <p>新闻稿件类 5 项</p>
-                             <p>微博微信类 28 项</p>
-                             <p>其他 2 项</p>
+                             <p>电视媒体类 {{ tv_sum }} 项</p>
+                             <p>网络媒体类 {{ inter_sum }} 项</p>
+                             <p>电梯海报类 {{ lift_sum }} 项</p>
+                             <p>新闻稿件类 {{ news_sum }} 项</p>
+                             <p>微博微信类 {{ weibo_sum }} 项</p>
+                             <p>其他 {{ other_sum }} 项</p>
                          </div>
                      </div>
                  </li>
@@ -38,18 +38,18 @@
                      <div class="panel panel-default">
                          <div class="panel-heading" role="tab" id="headingTwo">
                              <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                 宣传品(资料)制作 15 项，完成12 项
+                                 宣传品(资料)制作 {{ all_item }} 项
                              </a>
                          </div>
                          <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
                              <br>
-                             <p> 内部制作 10 项</p>
-                             <p> 广告公司制作 5 项</p>
-                             <p> 总费用 3980.00 元</p>
+                             <p> 内部制作 {{ make_by_self }} 项</p>
+                             <p> 广告公司制作 {{ make_by_adv }} 项</p>
+                             <p> 总费用 {{ all_cost }} 元</p>
                          </div>
                      </div>
                  </li>
-                 <li  class="list-group-item">宣传物资领用 89 项</li>
+                 <li  class="list-group-item">宣传物资领用 {{ all_item_receive }} 项</li>
               </ul>
             </div>
         </div>
@@ -163,12 +163,12 @@
         };
         <!--近5月宣传品(资料)制作申请统计   -->
         var xAxis3 = {
-            categories: ['2015/03','2015/04','2015/05','2015/06','2015/07'],
+            categories: ['2017/02','2017/03','2017/04','2017/05','2017/06'],
             crosshair: true
         };
         <!--近5月宣传物资领用统计-->
         var xAxis4 = {
-            categories:  ['2015/03','2015/04','2015/05','2015/06','2015/07'],
+            categories:  ['2017/02','2017/03','2017/04','2017/05','2017/06'],
             crosshair: true
         };
         <!--本月宣传信息发布统计-->
@@ -185,25 +185,25 @@
         <!--本月宣传计划统计-->
         var series1= [{
             name:'',
-            data: [16, 32, 15, 22],
+            data: [{{ plan1 }}, {{ plan2 }}, {{ plan3 }}, {{ plan4 }}],
             showInLegend: false
         }];
         <!--本月宣传方案统计-->
         var series2= [{
             name:'',
-            data: [16, 32, 15, 22],
+            data: [{{ scheme1 }}, {{ scheme2 }}, {{ scheme3 }}, {{ scheme4 }}],
             showInLegend: false
         }];
         <!--近5月宣传品(资料)制作申请统计   -->
         var series3= [{
             name:'',
             type:'column',
-            data: [6, 14, 5, 10,8],
+            data: [0, 0, 0, 0,{{ all_item }}],
             showInLegend: false
         }, {
             name: '',
             type: 'line',
-            data: [6, 14, 5, 10, 8],
+            data: [0, 0, 0, 0, {{ all_item }}],
             showInLegend: false
         }
         ];
@@ -211,20 +211,20 @@
         var series4= [{
             name:'',
             type:'column',
-            data: [56, 81, 75, 90,53],
+            data: [0, 0, 0, 0,{{ all_item_receive }}],
             showInLegend: false
         },
             {
                 name:'',
                 type:'line',
-                data: [56, 81, 75, 90,53],
+                data: [0, 0, 0, 0, {{ all_item_receive }}],
                 showInLegend: false
             }
         ];
         <!--本月宣传信息发布统计-->
         var series5= [{
             name:'',
-            data: [15, 12, 9, 16,19,5],
+            data: [{{ tv_sum }}, {{ inter_sum }}, {{ lift_sum }}, {{ news_sum }}, {{ weibo_sum }}, {{ other_sum }}],
             showInLegend: false
         }];
 

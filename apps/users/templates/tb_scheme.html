@@ -1,0 +1,285 @@
+{% extends 'mainiframe.html' %}
+{% load staticfiles %}
+
+{% block title %}
+宣传方案管理
+{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="{% static 'kindeditor/default/default.css' %}" />
+    <script charset="utf-8" src="{% static 'kindeditor/kindeditor-min.js' %}"></script>
+    <script charset="utf-8" src="{% static 'kindeditor/zh_CN.js' %}"></script>
+    <script src="{% static 'js/event.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" >
+    <header >
+        <h4 class="text_center">工作方案</h4>
+       <span>态状：</span>
+        <span style="color:#2894FF" id="state">{{ draft.status }}</span>
+
+
+    </header>
+    <section>
+        <table class="table table-bordered">
+            <tbody>
+
+            <tr>
+                <th class="text_center">拟稿部门</th>
+                <td class="text_center" colspan="2">{{ draft.draft_user.team }}</td>
+                <th class="text_center" >拟稿时间</th>
+                <td class="text_center" colspan="2" id="add_time">{{ draft.add_time }}</td>
+            </tr>
+            <tr>
+                <th class="text_center">拟稿人</th>
+                <td class="text_center" colspan="2">{{ draft.draft_user.name }}</td>
+                <th class="text_center">联系电话</th>
+                <td class="text_center" colspan="2">{{ draft.draft_user.mobile }}</td>
+            </tr>
+            <tr>
+                <th class="text_center">*标题</th>
+                <td colspan="5"><input style="width: 100%" id="title" readonly="readonly" value="{{ draft.title }}"></td>
+            </tr>
+            <tr>
+                <th class="text_center">*方案类别
+                <td class="text_center" colspan="2">
+                <input style="width: 100%"  readonly="readonly" value="{{ draft.scheme.category }}">
+            </td></th>
+                   <th class="text_center"></th><td class="text_center" colspan="2"></td>
+            </tr>
+
+            <tr>
+                <th class="text_center">*负责人</th>
+                <td class="text_center" colspan="2"><input name="principal" id="principal" readonly="readonly" value="{{ draft.scheme.principal }}"></td>
+                <th class="text_center">*成员</th>
+                <td class="text_center" colspan="2"><input name="member" id="member" readonly="readonly" value="{{ draft.scheme.member }}"></td>
+            </tr>
+             <tr>
+                <th class="text_center">*预算(元)</th>
+                <td class="text_center" colspan="2"><input name="budget" id="budget" readonly="readonly" value="{{ draft.scheme.budget }}"></td>
+                <th class="text_center">*实际费用(元)</th>
+                <td class="text_center" colspan="2"><input name="actual_cost" id="actual_cost" readonly="readonly" value="{{ draft.scheme.actual_cost }}"></td>
+            </tr>
+            <tr>
+                <th class="text_center">*方案执行开始时间</th>
+                <td class="text_center" colspan="2"><input name="start_time" id="start_time" readonly="readonly" value="{{ draft.scheme.start_time }}"></td>
+                <th class="text_center">*方案执行结束时间</th>
+                <td class="text_center" colspan="2"><input name="end_time" id="end_time" readonly="readonly" value="{{ draft.scheme.end_time }}"></td>
+            </tr>
+            <section>
+            <tr>
+            <th colspan="6" class="text_center">
+            	<ul id="myTab" class="nav nav-tabs">
+            		<li class="active"><a href="#main_text" data-toggle="tab">正文</a></li>
+            		<li><a href="#project" data-toggle="tab">项目</a></li>
+            		<li><a href="#effect" data-toggle="tab">效果分析</a></li>
+            </ul>
+            </th>
+            </tr>
+            <tr>
+            <td  colspan="6" class="text_center">
+            <div id="myTabContent" class="tab-content">
+            	<div class="tab-pane fade in active" id="main_text">
+            		<textarea name="content" style="width:100%;height:500px;visibility:hidden;">{{ draft.scheme.content }}</textarea>
+            	</div>
+            	<div class="tab-pane fade" id="project">
+            		<table class="table table-bordered" id="order">
+
+                <tr>
+                <th class="text_center"style="color:#2894FF">No.</th>
+                <th class="text_center"style="color:#2894FF">类别</th>
+                <th class="text_center"style="color:#2894FF">内容具体</th>
+                <th class="text_center"style="color:#2894FF">要求完成时间</th>
+                <th class="text_center"style="color:#2894FF">负责人</th>
+                <th class="text_center"style="color:#2894FF">操作</th>
+                </tr>
+                        {% for scheme in scheme_messages %}
+                            <tr id="message0">
+                                <td style="width: 5%"></td>
+                                <td style="width: 15%"><input style="width: 100%" readonly="readonly" value="{{ scheme.style_name }}"></td>
+                                <td ><input style="width: 100%" readonly="readonly" value="{{ scheme.content }}"></td>
+                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ scheme.time }}"></td>
+                                <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ scheme.principal }}"></td>
+                                <td style="width: 7%"><button><a href="{% url 'project_schedule' scheme.id  %}">填报</a></button></td>
+                            </tr>
+                        {% endfor %}
+            		</table>
+            		</div>
+
+            	<div class="tab-pane fade" id="effect">
+            	<table class="table table-bordered">
+            	<tr>
+                <th class="text_center">*活动实际举办时间</th>
+                <td class="text_center" colspan="2"><input style="width: 100%"></input></td>
+                <th class="text_center" >*活动实际举办地点</th>
+                <td class="text_center" colspan="2"><input style="width: 100%"></input></td>
+                </tr>
+                <tr>
+                <th class="text_center">活动实际规模</th>
+                <td class="text_center" colspan="2"><input style="width: 100%"></input></td>
+                <th class="text_center" >活动效果</th>
+                <td class="text_center" colspan="2">
+                        <select style="width: 100%">
+                            <option>很好</option>
+                            <option>良好</option>
+                            <option>一般</option>
+                            <option>较差</option>
+                        </select>
+                </td>
+                </tr>
+                 <tr>
+                <th><div class="remark_text">参加单位或人员</div></th>
+                <td colspan="6"><textarea class="remark_textarea"> </textarea></td>
+                </tr>
+                <tr>
+                <th><div class="remark_text">活动效果分析与评估</div></th>
+                <td colspan="6"><textarea class="remark_textarea" style="width:100%;height:200px;">
+                </textarea></td>
+                </tr>
+                </table>
+            	</div>
+
+            	</div>
+            	</td>
+            	</tr>
+            </section>
+
+            <tr>
+                <th><div class="remark_text">备注</div></th>
+                <td colspan="6"><textarea class="remark_textarea" id="remark" readonly="readonly" >{{ draft.scheme.remark }} </textarea></td>
+            </tr>
+            <tr>
+                <th><div class="textarea_style">附件</div></th>
+                <td colspan="5"><a href="">{{ draft.scheme.file }}</a></td>
+            </tr>
+            <tr>
+                <th><div class="textarea_style">领导审批意见</div></th>
+                <td colspan="6"></td>
+            </tr>
+            <tr>
+                <th colspan="3">选择意见：
+                    <select style="width: 80%" id="sele_suggest"  onchange="change()">
+                        <option>----------请选择----------</option>
+                        <option>同意</option>
+                        <option>拟同意，待领导审批。</option>
+                        <option>请重新修改。</option>
+                    </select></th>
+                <th colspan="3">功能操作：</th>
+            </tr>
+            <tr>
+                <th colspan="3">
+                    填写审批意见：
+                    <textarea class="remark_textarea" id="input_suggest"> </textarea>
+                </th>
+                <td colspan="3">
+                    <div>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送科室领导</button>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送部门领导</button></div>
+                    <div style="padding-top: 5px">
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送中心领导</button>
+                        <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">退回拟稿人</button></div>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:180%">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        选择提交
+                    </h4>
+                </div>
+                <div class="modal-body">
+                   <div id='inputbox' class="box" style="height:100%;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card card-block" style="height:400px; width: 80%; overflow:auto;">
+                              <h4 class="card-title">组织机构</h4>
+                              <p class="card-text">
+                                  <ul id="tree" class="filetree">
+                                    <li><span class="folder">血液中心</span>
+                                        <ul>
+                                            {% for office in all_office %}
+                                            <li><span class="folder" id="{{ office.id }}">{{ office.office_name }}</span>
+                                                <ul>
+                                                    {% for team in office.get_team %}
+                                                    <li><span class="folder"><a onclick="getUser(this.id)" id="{{ team.id }}">{{ team.team_name }}</a></span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">候选人员</h4>
+                            <p class="card-text">
+                            <ul id="get_user">
+
+                            </ul>
+
+                            </p>
+                          </div>
+                      </div>
+                      <div class="col-xs-2" style="margin-top: 20%">
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
+                         <br><br>
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;"> <还原 </button>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">选中人员</h4>
+                          <p class="card-text">
+                             <ul id="select_user">
+
+                            </ul>
+                             </p>
+                         </div>
+                     </div>
+                 </div></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary"  id="send">
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
+{% endblock %}
+
+
+{% block custom_js %}
+<!-- KindEditor编辑器 -->
+    <script type="text/javascript">
+    var editor;
+    var content;
+    KindEditor.ready(function(K) {
+        editor = K.create('textarea[name="content"]', {
+            allowFileManager : true
+        });
+        K('#send').click(function(e) {
+            content = editor.text();
+            send(content);
+        });
+    });
+    </script>
+
+{% endblock %}

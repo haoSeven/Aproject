@@ -1,0 +1,245 @@
+{% extends 'mainiframe.html' %}
+{% load staticfiles %}
+
+{% block title %}
+宣传品（资料）制作
+{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/starter-template.css' %}">
+    <script src="{% static 'js/template.js' %}"></script>
+    <script src="{% static 'js/event.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+        <header >
+            <h4 class="text_center">宣传品（资料）制作</h4>
+            <p style="color:#2894FF">状态：<span id="status">{{ draft.status }}</span></p>
+        </header>
+
+        <section>
+            <table class="table table-bordered">
+                <tbody>
+
+                <tr>
+                    <th class="text_center">申请部门</th>
+                    <td class="text_center">{{ draft.draft_user.team }}</td>
+                    <th class="text_center">申请时间</th>
+                    <td class="text_center" id="add_time">{{ draft.add_time }}</td>
+                </tr>
+                <tr>
+                    <th class="text_center">申请人</th>
+                    <td class="text_center">{{ draft.draft_user.name }}</td>
+                    <th class="text_center">联系电话</th>
+                    <td class="text_center">{{ draft.draft_user.mobile }}</td>
+                </tr>
+                <tr>
+                    <th class="text_center">*标题</th>
+                    <td colspan="3"><input style="width: 100%" id="title" readonly="readonly" value="{{ draft.title }}"></td>
+                </tr>
+                <tr>
+                    <th colspan="4" class="text_center">请在以下表格中填写宣传品（资料）内容</th>
+                </tr>
+                </tbody>
+            </table>
+            <div class="">
+                <div id="block">
+                    {% for item in items %}
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="text_center">宣传品类别</th>
+                            <td>
+                                <input style="width: 100%" id="input0" readonly="readonly" value="{{ item.category }}">
+                            </td>
+                            <th class="text_center">宣传品名称</th>
+                            <td class="text_center"><input style="width: 100%" id="input0" readonly="readonly" value="{{ item.name }}"></td>
+
+                        </tr>
+
+                        <tr>
+                            <th class="text_center" >制作方式</th>
+                            <td colspan="3">
+                                {{ item.make_method }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="text_center">要求完成时间</th>
+                            <td class="text_center"><input style="width: 100%" id="input1" readonly="readonly" value="{{ item.require_time }}"></td>
+                            <th class="text_center">规格</th>
+                            <td class="text_center"><input style="width: 100%" id="input2" readonly="readonly" value="{{ item.standard }}"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center">单位</th>
+                            <td class="text_center"><input style="width: 100%" id="input3" readonly="readonly" value="{{ item.unit }}"></td>
+                            <th class="text_center">制作数量</th>
+                            <td class="text_center"><input style="width: 100%" type="number" id="input4" readonly="readonly" value="{{ item.nums }}"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center">广告公司名称</th>
+                            <td colspan="3"><input style="width: 100%" id="input5" readonly="readonly" value="{{ item.adv_com_name }}"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center">广告公司联系人</th>
+                            <td class="text_center"><input style="width: 100%" id="input6" readonly="readonly" value="{{ item.adv_com_contact }}"></td>
+                            <th class="text_center">广告公司联系方式</th>
+                            <td class="text_center"><input style="width: 100%" id="input7" maxlength="11" readonly="readonly" value="{{ item.adv_com_mobile }}"></td>
+                        </tr>
+                        <tr>
+                            <th class="text_center" >费用（元）</th>
+                            <td colspan="3"><input style="width: 34%" type="number" id="input8" readonly="readonly" value="{{ item.cost }}"></td>
+                        </tr>
+                    </table>
+                    {% endfor %}
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <th width="30%" class="text_center">
+                       总费用
+                    </th>
+                    <td><input readonly="readonly" id="input9" value="{{ draft.itemsmake.sum_cost }}" type="number"></td>
+                </tr>
+                <tr>
+                    <th width="30%"><div class="remark_text">备注</div></th>
+                    <td colspan="70%"><textarea class="remark_textarea" id="remark" readonly="readonly" >{{ draft.itemsmake.remark }}</textarea></td>
+                </tr>
+                <tr>
+                    <th><div class="textarea_style">附件</div></th>
+                    <td colspan="3"><a href="">{{ draft.itemsmake.file }}</a></td>
+                </tr>
+                <tr>
+                    <th><div class="textarea_style">领导审批意见</div></th>
+                    <td colspan="6">{{ draft.itemsmake.opinion.content }}</td>
+                </tr>
+                <tr>
+                    <th colspan="3">选择意见：
+                        <select style="width: 80%" id="sele_suggest"  onchange="change()">
+                            <option>----------请选择----------</option>
+                            <option>同意</option>
+                            <option>拟同意，待领导审批。</option>
+                            <option>请重新修改。</option>
+                        </select></th>
+                    <th colspan="3">功能操作：</th>
+                </tr>
+                <tr>
+                    <th colspan="3">
+                        填写审批意见：
+                        <textarea class="remark_textarea" id="input_suggest"> </textarea>
+                    </th>
+                    <td colspan="3">
+                        <div>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送科室领导</button>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送部门领导</button></div>
+                        <div style="padding-top: 5px">
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">送中心领导</button>
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">退回拟稿人</button></div>
+                    </td>
+
+                </tr>
+                </tbody>
+
+            </table>
+        </section>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:180%">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        选择提交
+                    </h4>
+                </div>
+                <div class="modal-body">
+                   <div id='inputbox' class="box" style="height:100%;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card card-block" style="height:400px; width: 80%; overflow:auto;">
+                              <h4 class="card-title">组织机构</h4>
+                              <p class="card-text">
+                                  <ul id="tree" class="filetree">
+                                    <li><span class="folder">血液中心</span>
+                                        <ul>
+                                            {% for office in all_office %}
+                                            <li><span class="folder" id="{{ office.id }}">{{ office.office_name }}</span>
+                                                <ul>
+                                                    {% for team in office.get_team %}
+                                                    <li><span class="folder"><a onclick="getUser(this.id)" id="{{ team.id }}">{{ team.team_name }}</a></span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">候选人员</h4>
+                            <p class="card-text">
+                            <ul id="get_user">
+
+                            </ul>
+
+                            </p>
+                          </div>
+                      </div>
+                      <div class="col-xs-2" style="margin-top: 20%">
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
+                         <br><br>
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;"> <还原 </button>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="card card-block" style="height:400px; overflow:auto;">
+                          <h4 class="card-title">选中人员</h4>
+                          <p class="card-text">
+                             <ul id="select_user">
+
+                            </ul>
+                             </p>
+                         </div>
+                     </div>
+                 </div></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="send_form" onclick="send()">
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'js/jquery.cookie.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/jquery.treeview.js' %}" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    function send() {
+    var opinion = $("#input_suggest").val();
+    var lis_id = "{{ draft.id }}";
+
+    $.ajax({
+        type: "POST",
+        data : {"opinion": opinion, "lis_id": lis_id},
+        url: {% url 'itemmake_opinion' %},
+        cache: false,
+        beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+        },
+        success: function (data) {
+            window.location.reload();
+        }
+    })
+    }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>工作项目完成情况填现报</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/write_css.css' %}">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container" >
+    <header >
+        <h4 align="center">工作项目完成情况填现报</h4>
+        <p style="color:#2894FF">状态：已审批</p>
+    </header>
+
+    <section>
+        <table class="table table-bordered" id="order">
+            <tbody>
+            <tr>
+                <th class="text_center">项目</th>
+                <td class="text_center" colspan="5">{{ plan.name }}</td>
+            </tr>
+
+            <tr>
+                <th class="text_center">具体内容</th>
+                <td class="text_center" colspan="5">{{ plan.content }}</td>
+            </tr>
+
+            <tr>
+                <th class="text_center">负责人</th>
+                <td class="text_center" colspan="5">{{ plan.target_user }}</td>
+            </tr>
+
+            <tr>
+                <th style="width: 20%" class="text_center">当前完成进度</th>
+                <td style="width: 30%"><input style="width: 100%" id="schedule" value="{{ plan.schedule }}"></td>
+                <th style="width: 20%" class="text_center">设为已完成</th>
+                {% if plan.is_finish == 0 %}
+                    <th class="text_center" scope="row" colspan="2"><input type="checkbox" id="is_finish">设为已完成</th>
+                {% else %}
+                    <th class="text_center" scope="row" colspan="2"><input type="checkbox" id="is_finish" checked="checked">设为已完成</th>
+                {% endif %}
+
+            </tr>
+
+            <tr>
+                <th class="text_center">完成情况</th>
+                <td class="text_center" colspan="5">
+                    <textarea name="MSG" style="width: 100%" rows=3 id="complete_status">{{ plan.complete_status }}</textarea>
+                    <p class="text-left">说明：请在这里填写当前完成情况。</p>
+                </td>
+            </tr>
+
+            <tr>
+                <th><div class="textarea_style">附件</div></th>
+                <td colspan="5"><input type="file" id="file_upload"></td>
+            </tr>
+
+            <tr>
+                <td colspan="6" align="center">
+                    <button onclick="send()">保存</button>
+                    <button onclick="c()">关闭</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+<script type="text/javascript">
+    function c() {
+        var url = "{% url 'input_plan' plan.propagate_plan.main.id plan.propagate_plan.main.style %}";
+        url = url.replace(/&amp;/g, '&');
+        window.location.href = url;
+    }
+
+    function send() {
+    var schedule = $("#schedule").val();
+    var complete_status = $("#complete_status").val();
+    var is_finish = 0;
+
+    if($('#is_finish').is(':checked')) {
+        is_finish = 1;
+    }
+            var lis_id = "{{ draft.id }}";
+            $.ajax({
+                type: "POST",
+                data : {"schedule": schedule, "complete_status": complete_status, "is_finish":is_finish, "lis_id":{{ plan.id }}},
+                url:{% url 'input_schedule' %},
+                cache: false,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                },
+                success: function (data) {
+                    var formData = new FormData();
+                    var lis_id = {{ plan.id }};
+                    alert(lis_id);
+                    formData.append("file", $("#file_upload")[0].files[0]);
+                    formData.append("lis_id", lis_id);
+                    $.ajax({
+                    url:"{% url 'schedule_file_upload' %}",
+                    type: "POST",
+                    data: formData,
+                    cache: false,
+                    processData: false,  // 不处理数据
+                    contentType: false,   // 不设置内容类型
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    },
+                    success: function (data) {
+                        if (data.status === 'success'){
+                            var url = "{% url 'input_plan' plan.propagate_plan.main.id plan.propagate_plan.main.style %}";
+                            url = url.replace(/&amp;/g, '&');
+                            window.location.href = url;
+                        }else if(data.status === 'fail'){
+                            var url = "{% url 'input_plan' plan.propagate_plan.main.id plan.propagate_plan.main.style %}";
+                            url = url.replace(/&amp;/g, '&');
+                            window.location.href = url;
+                        }
+                    }
+                })
+                }
+            });
+
+}
+</script>
+</body>
+</html>

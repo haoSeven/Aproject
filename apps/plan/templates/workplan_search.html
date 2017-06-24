@@ -1,7 +1,7 @@
 {% extends 'mainiframe.html' %}
 {% load staticfiles %}
 {% block title %}
-宣传物资制作查询
+宣传计划查询
 {% endblock %}
 
 {% block custom_css %}
@@ -46,7 +46,7 @@
     </form>
     <div class="col-xs-3">
 {#        <button type="submit"class="btn btn-secondary" >新建</button>#}
-        <button class="btn btn-secondary"><a href="{% url 'xc:message_draft' %}">新建</a></button>
+        <button class="btn btn-secondary"><a href="{% url 'jh:plan_draft' %}">新建</a></button>
         <button type="submit" class="btn btn-secondary">归纳</button>
         <button type="" class="btn btn-secondary" >删除</button>
     </div>
@@ -60,8 +60,8 @@
             <th>类别</th>
             <th>拟稿人</th>
             <th>拟稿时间</th>
-            <th>计划所属年月</th>
-            <th>完成情况</th>
+            <th>计划时间类别</th>
+            <th>计划类别</th>
             <th>状态</th>
         </tr>
         </thead>
@@ -74,8 +74,8 @@
             <td>{{ a_plan.plan_timestyle }}</td>
             <td>{{ a_plan.main.draft_user.name }}</td>
             <td>{{ a_plan.main.add_time }}</td>
-            <td>{{ a_plan.plan_time }}</td>
-            <td></td>
+            <td>{{ a_plan.plan_timestyle }}</td>
+            <td>{{ a_plan.plan_style }}</td>
             <td>{{ a_plan.main.status }}</td>
         </tr>
         {% endfor %}

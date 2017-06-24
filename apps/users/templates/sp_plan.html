@@ -1,84 +1,132 @@
-﻿{% extends 'mainiframe.html' %}
+{% extends 'mainiframe.html' %}
 {% load staticfiles %}
 
 {% block title %}
-宣传物资领用
+    工作计划申请
 {% endblock %}
 
-{% block content %}
 
-    <header >
-        <h4 class="text_center">宣传物资领用</h4>
+{% block content %}
+        <header >
+        <h4 class="text_center">工作计划申请</h4>
         <div>
         <span>态状：</span>
         <span style="color:#2894FF" id="state">{{ draft.status }}</span>
         </div>
-
     </header>
     <section>
-        <table class="table table-bordered" id="order">
+        <table class="table table-bordered">
             <tbody>
 
             <tr>
-                <th class="text_center">申请部门</th>
+                <th class="text_center">拟稿部门</th>
                 <td class="text_center" colspan="2">{{ draft.draft_user.team }}</td>
-                <th class="text_center" >申请时间</th>
-                <td class="text_center" colspan="2" id="applytime">{{ draft.add_time }}</td>
+                <th class="text_center" >拟稿时间</th>
+                <td class="text_center" colspan="2" id="apply_time">{{ draft.add_time }}</td>
             </tr>
             <tr>
-                <th class="text_center">申请人</th>
+                <th class="text_center">拟稿人</th>
                 <td class="text_center" colspan="2">{{ draft.draft_user.name }}</td>
                 <th class="text_center">联系电话</th>
                 <td class="text_center" colspan="2">{{ draft.draft_user.mobile }}</td>
             </tr>
             <tr>
                 <th class="text_center">*标题</th>
-                <td colspan="5"><input readonly="readonly" style="width: 100%" id="title" value="{{ draft.title }}"></td>
+                <td colspan="5"><input style="width: 100%" id="title" readonly="readonly" value="{{ draft.title }}"></td>
             </tr>
             <tr>
-                <th colspan="6" class="text_center">请在以下表格中填写需要领用的宣传物资</th>
+                <th class="text_center">*计划类别
+                <td class="text_center" colspan="2">
+                    <input style="width: 100%" id="time_style" readonly="readonly" value="{{ draft.propagateplan.plan_timestyle }}">
+                    </td></th>
+                   <th class="text_center"></th><td class="text_center" colspan="2"></td>
             </tr>
-
-
-
+            <tr>
+                <th class="text_center">*小组名称
+                <td class="text_center" colspan="2">
+                    <input style="width: 100%" readonly="readonly" value="{{ draft.propagateplan.team }}"></td></th>
+                  <th class="text_center">计划事务类别</th>
+                <td class="text_center" colspan="2">
+                    <input style="width: 100%" readonly="readonly" value="{{ draft.propagateplan.plan_style }}"></td>
+            </tr>
+            <tr>
+                <th class="text_center">*负责人</th>
+                <td colspan="2"><input style="width:100%;" id="blamer" readonly="readonly" value="{{ draft.propagateplan.blame_person }}"></td>
+                <th class="text_center">*成员</th>
+                <td colspan="2"><input style="width:100%;" id="member" readonly="readonly" value="{{ draft.propagateplan.member }}"></td>
+            </tr>
+            <tr>
+                <th class="text_center">*计划执行开始时间</th>
+                <td class="text_center" colspan="2"><input style="width:100%;" id="start_time" readonly="readonly" value="{{ draft.propagateplan.start_time }}"></td>
+                <th class="text_center">*计划执行结束时间</th>
+                <td class="text_center" colspan="2"><input style="width:100%;" id="end_time" readonly="readonly" value="{{ draft.propagateplan.end_time }}"></td>
+            </tr>
             <section>
-
+            <tr>
+            <th colspan="6" class="text_center">
+            	<ul id="myTab" class="nav nav-tabs">
+            		<li class="active">
+            			<a href="#main_text" data-toggle="tab">
+            				正文
+            			</a>
+            		</li>
+            		<li><a href="#project" data-toggle="tab">项目</a></li>
+            </ul>
+            </th>
+            </tr>
+            <tr>
+            <td  colspan="6" class="text_center">
+            <div id="myTabContent" class="tab-content">
+            	<div class="tab-pane fade in active" id="main_text">
+            		<textarea name="content" style="width:100%;height:500px;visibility:hidden;" readonly="readonly">{{ draft.propagateplan.content }}</textarea>
+            	</div>
+            	<div class="tab-pane fade" id="project">
+            		<table class="table table-bordered" id="order">
+            			 <tr>
+                    
+                </tr>
                 <tr>
-                <th class="text_center"style="color:#2894FF">名称</th>
-                <th class="text_center"style="color:#2894FF">单位</th>
-                <th class="text_center"style="color:#2894FF">数量</th>
-                <th class="text_center"style="color:#2894FF">使用方向</th>
-                <th class="text_center"style="color:#2894FF">备注</th>
+
+                <th class="text_center"style="color:#2894FF">No.</th>
+                <th class="text_center"style="color:#2894FF">项目</th>
+                <th class="text_center"style="color:#2894FF">内容具体</th>
+                <th class="text_center"style="color:#2894FF">要求完成时间</th>
+                <th class="text_center"style="color:#2894FF">负责人</th>
                 <th class="text_center"style="color:#2894FF">操作</th>
                 </tr>
-
-                {% for needitem in needitems %}
-                <tr id="message0">
-                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.name }}" ></td>
-                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.unit }}"></td>
-                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.nums }}"></td>
-                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.use_method }}"></td>
-                    <td><input style="width: 100%" readonly="readonly" value="{{ needitem.remark }}"></td>
-                    <td>
-                    </td>
+            {% for project in project_menu %}
+                <tr>
+                    <td style="width: 5%"></td>
+                        <td style="width: 15%"><input style="width: 100%" readonly="readonly" value="{{ project.name }}"></td>
+                        <td ><input style="width: 100%" readonly="readonly" value="{{ project.content }}"></td>
+                        <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ project.finish_time }}"></td>
+                        <td style="width: 10%"><input style="width: 100%" readonly="readonly" value="{{ project.target_user }}"></td>
+                        <td style="width: 7%"></td>
                 </tr>
-                {% endfor %}
+            {% endfor %}
 
+
+
+            		</table>
+            		</div>
+            	</div>
+            	</td>
+            	</tr>
             </section>
 
             <tr>
                 <th><div class="remark_text">备注</div></th>
-                <td colspan="6"><textarea class="remark_textarea" id="remarks" readonly="readonly" >{{ draft.itemsreceive.remark }} </textarea></td>
+                <td colspan="6"><textarea class="remark_textarea" id="remarks" readonly="readonly"> {{ draft.propagateplan.remark }}</textarea></td>
             </tr>
             <tr>
                 <th><div class="textarea_style">附件</div></th>
-                    <td colspan="6">
-                        <a href="">{{ draft.itemsreceive.file }}</a>
-                    </td>
+                <td colspan="5">
+                    <a>{{ draft.propagateplan.file }}</a>
+                </td>
             </tr>
             <tr>
                 <th><div class="textarea_style">领导审批意见</div></th>
-                <td colspan="6">{{ draft.itemsreceive.opinion.content }}</td>
+                <td colspan="6">{{ draft.propagateplan.opinion.content }}</td>
             </tr>
             <tr>
                 <th colspan="3">选择意见：
@@ -154,7 +202,7 @@
                           </div>
                       </div>
                       <div class="col-xs-2" style="margin-top: 20%">
-                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
+                         <button type="button" class="btn btn-secondary" style="vertical-align:middle;">全选></button>
                          <br><br>
                          <button type="button" class="btn btn-secondary" style="vertical-align:middle;"> <还原 </button>
                      </div>
@@ -184,16 +232,23 @@
     </div><!-- /.modal -->
 {% endblock %}
 
-
 {% block custom_js %}
-    <script type="text/javascript">
-        function send() {
-            var opinion = $("#input_suggest").val()
+<!-- KindEditor编辑器 -->
+<script type="text/javascript">
+    var editor;
+    var content;
+    KindEditor.ready(function(K) {
+        editor = K.create('textarea[name="content"]', {
+            allowFileManager : true
+        });
+    });
+function send() {
+    var opinion = $("#input_suggest").val()
             var lis_id = "{{ draft.id }}";
             $.ajax({
                 type: "POST",
                 data : {"opinion": opinion, "lis_id": lis_id},
-                url:{% url 'itemreceiver_opinion' %},
+                url:{% url 'plandraft_opinion' %},
                 cache: false,
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
@@ -202,13 +257,18 @@
                     window.location.reload();
                 }
             })
-        }
+}
+
 
     </script>
 {% endblock %}
 {% block custom_css %}
     <link rel="stylesheet" href="{% static 'css/write_css.css' %}">
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="{% static 'kindeditor/themes/default/default.css' %}" />
+    <script charset="utf-8" src="{% static 'kindeditor/kindeditor-min.js' %}"></script>
+    <script charset="utf-8" src="{% static 'kindeditor/zh_CN.js' %}"></script>
     <script src="{% static 'js/event.js' %}"></script>
 {% endblock %}
-
-
