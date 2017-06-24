@@ -11,6 +11,7 @@ from users.models import UserProfile, Office, Team
 from .models import PropagatePlan,WorkTarget
 from pure_pagination import PageNotAnInteger, Paginator
 
+
 class NewPlanDraftView(View):
     """
     新建宣传计划
@@ -102,6 +103,7 @@ class AddNewPlanDraftView(View):
             return HttpResponse('{"status": "success"}', content_type="application/json")
         return HttpResponse('{"status": "fail"}', content_type="application/json")
 
+
 class NewPlanFileUploadView(View):
     def post(self, request, *args, **kwargs):
 
@@ -116,6 +118,7 @@ class NewPlanFileUploadView(View):
             return HttpResponse('{"status": "success"}', content_type="application/json")
 
         return HttpResponse('{"status": "fail"}', content_type="application/json")
+
 
 class PlanSearchView(View):
 

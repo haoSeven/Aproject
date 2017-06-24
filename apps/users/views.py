@@ -81,7 +81,7 @@ class HandleMessageDraftView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
+        draft = DraftBase.objects.filter(id=lis_id, status='未审核')
 
         if draft:
             draft = DraftBase.objects.get(id=lis_id)
@@ -115,7 +115,7 @@ class HandleItemsReceiveView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
+        draft = DraftBase.objects.filter(id=lis_id, status='未审核')
 
         if draft:
             draft = DraftBase.objects.get(id=lis_id)
@@ -148,7 +148,7 @@ class HandleItemMakeView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
+        draft = DraftBase.objects.filter(id=lis_id, status='未审核')
 
         if draft:
             draft = DraftBase.objects.get(id=lis_id)
@@ -184,7 +184,7 @@ class HandlePlanDraftView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
+        draft = DraftBase.objects.filter(id=lis_id, status='未审核')
 
         if draft:
             draft = DraftBase.objects.get(id=lis_id)
@@ -220,7 +220,7 @@ class HandleSchemeDraftView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
+        draft = DraftBase.objects.filter(id=lis_id, status='未审核')
 
         if draft:
             draft = DraftBase.objects.get(id=lis_id)

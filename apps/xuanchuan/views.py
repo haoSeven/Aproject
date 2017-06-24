@@ -12,6 +12,8 @@ from pure_pagination import PageNotAnInteger, Paginator
 
 from .models import MessageDraft, ObjMedia, Category, ItemsMake, ItemsReceive, DraftBase, CategoryCount,\
     ItemMakeCount, ItemReceiveCount, NeedItem, ItemMake
+from plan.models import PropagatePlan
+from project.models import Scheme
 from users.models import UserProfile, Office, Team
 from utils.mixin_utils import LoginRequiredMixin
 
@@ -746,10 +748,64 @@ class OverViewView(LoginRequiredMixin, View):
     """
     def get(self, request):
 
+        all_plan = PropagatePlan.objects.filter(main__status='已审批')
+        all_plan_count = all_plan.count()
+        plan_1 = all_plan.filter(plan_style='宣传计划').count()
+        plan_2 = all_plan.filter(plan_style='经济预算计划').count()
+        plan_3 = all_plan.filter(plan_style='纪念品采购').count()
+        plan_4 = all_plan.filter(plan_style='物料计划').count()
+        all_scheme = Scheme.objects.filter(main__status='已审批')
+        all_scheme_count = all_scheme.count()
+        scheme1 = all_scheme.filter(category='普通宣传活动').count()
+        scheme2 = all_scheme.filter(category='重大专项宣传活动').count()
+        scheme3 = all_scheme.filter(category='固定献血者活动').count()
+        scheme4 = all_scheme.filter(category='成分献血者活动').count()
+        message_count = CategoryCount.objects.all()
+        all_item = ItemMake.objects.filter(lis__main__status='已审批')
+        all_item_receive = NeedItem.objects.all().count()
+        make_by_self = all_item.filter(make_method='内部制作').count()
+        make_by_adv = all_item.filter(make_method='广告公司制作').count()
 
+        all_cost = 0
+        for i in all_item:
+            all_cost += i.cost
+
+        tv_sum = 0
+        inter_sum = 0
+        lift_sum = 0
+        news_sum = 0
+        weibo_sum = 0
+        other_sum = 0
+        for c in message_count:
+            tv_sum += c.tv_count
+            inter_sum += c.internet_count
+            lift_sum += c.lift_count
+            news_sum += c.news_count
+            weibo_sum += c.webo_count
+            other_sum += c.other_count
 
         return render(request, 'Overview.html', {
-
+            'all_plan_count': all_plan_count,
+            'plan1': plan_1,
+            'plan2': plan_2,
+            'plan3': plan_3,
+            'plan4': plan_4,
+            'scheme1': scheme1,
+            'scheme2': scheme2,
+            'scheme3': scheme3,
+            'scheme4': scheme4,
+            'all_scheme_count': all_scheme_count,
+            'tv_sum': tv_sum,
+            'inter_sum': inter_sum,
+            'lift_sum': lift_sum,
+            'news_sum': news_sum,
+            'weibo_sum': weibo_sum,
+            'other_sum': other_sum,
+            'all_item': all_item.count(),
+            'all_cost': all_cost,
+            'make_by_self': make_by_self,
+            'make_by_adv': make_by_adv,
+            'all_item_receive': all_item_receive
         })
 
 
