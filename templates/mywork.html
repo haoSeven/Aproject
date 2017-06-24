@@ -31,6 +31,8 @@
                         <td><a href="{% url 'handle_plan_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% elif draft.style == '宣传方案申请' %}
                         <td><a href="{% url 'handle_scheme_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '宣传物资制作申请' %}
+                        <td><a href="{% url 'handle_itemmake_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>
@@ -49,6 +51,8 @@
                         <td><a href="{% url 'handle_plan_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% elif draft.style == '宣传方案申请' %}
                         <td><a href="{% url 'handle_scheme_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
+                    {% elif draft.style == '宣传物资制作申请' %}
+                        <td><a href="{% url 'handle_itemmake_draft' draft.id draft.style %}">{{ draft.title }}</a></td>
                     {% endif %}
 					<td>{{ draft.style }}</td>
 					<td>{{ draft.draft_user }}</td>

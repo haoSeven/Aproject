@@ -6,6 +6,7 @@
 {% endblock %}k %}
 
 {% block custom_css %}
+    <script type="text/javascript" src="{% static 'js/event.js' %}" ></script>
     <style>
         th {text-align:center}
         p{font-size:20px }
@@ -24,26 +25,26 @@
                 <label>拟稿人:</label>
                 <input type="text" id="proposer" style="height: 35px;width: 80px"/>
                 &nbsp&nbsp
-                <label>拟稿时间:</label>
-                <input type="text" id="applytime" style="height: 35px;width: 150px"/>
-                &nbsp&nbsp
                 <label>方案类别:</label>
-                <select style="height: 35px">
-                    <option value="1">全部</option>
-                    <option value="2">固定献血者活动</option>
+                <select style="height: 35px" id="category">
+                        <option value="">全部</option>
+                        <option value="普通宣传活动">普通宣传活动</option>
+                        <option value="重大专项宣传活动">重大专项宣传活动</option>
+                        <option value="固定献血者活动">固定献血者活动</option>
+                        <option value="成分献血者活动">成分献血者活动</option>
+                        <option value="稀有血型献血者活动">稀有血型献血者活动</option>
+                        <option value="其他">其他</option>
                 </select>
                 &nbsp&nbsp
                 <label>状态:</label>
-                <select style="height: 35px">
-                    <option value="1">全部</option>
-                    <option value="2">草稿</option>
-                    <option value="3">审核中</option>
-                    <option value="4">执行中</option>
-                    <option value="5">已完成</option>
+                <select style="height: 35px" id="style">
+                    <option value="">全部</option>
+                    <option value="已审批">已审批</option>
+                    <option value="未审核">未审核</option>
                 </select>
                 &nbsp
                 <div class="col-xs-3">
-                    <button type="submit"class="btn btn-secondary" >查询</button>
+                    <button type="submit"class="btn btn-secondary" onclick="SearchDraft()"><a id="search" href="#">查询</a></button>
                     <button type="reset" class="btn btn-secondary">重置</button>
                 </div>
             </div>
@@ -57,6 +58,7 @@
     <br>
     <table class="table table-bordered" style="text-align:center;">
         <thead>
+
         <tr >
             <th > <input type="checkbox"/></th>
             <th>No.</th>
@@ -65,79 +67,57 @@
             <th>拟稿人</th>
             <th>拟稿时间</th>
             <th>执行时间</th>
-            <th>完成情况</th>
             <th>状态</th>
         </tr>
         </thead>
         <tbody>
+        {% for scheme in all_scheme.object_list %}
         <tr>
             <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
+            <td>{{ scheme.id }}</td>
+            <td>{{ scheme.main.title }}</td>
+            <td>{{ scheme.category }}</td>
+            <td>{{ scheme.main.draft_user.name }}</td>
+            <td>{{ scheme.main.add_time }}</td>
+            <td>{{ scheme.start_time }}</td>
+            <td>{{ scheme.main.status }}</td>
         </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
-        <tr>
-            <th scope="row"><input type="checkbox"/></th>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-            <td>&nbsp</td>
-        </tr>
+        {% endfor %}
         </tbody>
     </table>
     <div style="text-align:center">
-        <a  href="#" id="btn1">首页</a>
-        <a  href="#" id="btn2">上一页</a>
-        <a  href="#" id="btn3">下一页</a>
-        <a  href="#" id="btn4">尾页</a>
+        <a  href="?page=1" id="btn1">首页</a>
+         {% if all_scheme.has_previous %}
+            <a  href="?{{ all_scheme.previous_page_number.querystring }}" id="btn2">上一页</a>
+             {% else %}
+            <a  href="" id="btn3">上一页</a>
+         {% endif %}
+        {% if all_scheme.has_next %}
+            <a  href="?{{ all_scheme.next_page_number.querystring }}" id="btn3">下一页</a>
+             {% else %}
+            <a  href="" id="btn3">下一页</a>
+         {% endif %}
+        <a  href="?page={{ count }}" id="btn4">尾页</a>
         <a>转到 </a>
         <input id="changePage" type="text" size="1" maxlength="4"/>
         <a>页 </a>
-        <a  href="#" id="btn5">跳转</a>
+        <a  href="#" id="btn5" onclick="Skip()">跳转</a>
     </div>
 
+{% endblock %}
+{% block custom_js %}
+
+    <script type="text/javascript">
+    function SearchDraft(){
+        var title = $("#title").val();
+        var proposer = $("#proposer").val();
+        var category = $("#category").val();
+        var style = $("#style").val();
+        console.log(title);
+        $("#search").attr("href","?title="+title+"&proposer="+proposer+"&category="+category+"" +
+            "&style="+style+"")
+    }
+    </script>
 {% endblock %}
 
 
