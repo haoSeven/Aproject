@@ -81,9 +81,10 @@ class HandleMessageDraftView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.get(id=lis_id)
+        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
 
-        if MessageDraft:
+        if draft:
+            draft = DraftBase.objects.get(id=lis_id)
             draft.messagedraft.opinion_id = opinion.id
             draft.status = '已审批'
             draft.messagedraft.save()
@@ -114,9 +115,10 @@ class HandleItemsReceiveView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.get(id=lis_id)
+        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
 
-        if ItemsReceive:
+        if draft:
+            draft = DraftBase.objects.get(id=lis_id)
             draft.itemsreceive.opinion_id = opinion.id
             draft.status = '已审批'
             draft.itemsreceive.save()
@@ -136,6 +138,7 @@ class HandleItemMakeView(View):
             'draft': draft,
             'items': items
         })
+
     def post(self, request):
         content = request.POST.get('opinion', '')
         lis_id = request.POST.get('lis_id', '')
@@ -145,9 +148,10 @@ class HandleItemMakeView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.get(id=lis_id)
+        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
 
         if draft:
+            draft = DraftBase.objects.get(id=lis_id)
             draft.itemsmake.opinion_id = opinion.id
             draft.status = '已审批'
             draft.itemsmake.save()
@@ -180,7 +184,8 @@ class HandlePlanDraftView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.filter(id=lis_id)
+        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
+
         if draft:
             draft = DraftBase.objects.get(id=lis_id)
             draft.propagateplan.opinion_id = opinion.id
@@ -215,7 +220,8 @@ class HandleSchemeDraftView(View):
         opinion.leader = request.user
         opinion.save()
 
-        draft = DraftBase.objects.filter(id=lis_id)
+        draft = DraftBase.objects.filter(id=lis_id, style='未审核')
+
         if draft:
             draft = DraftBase.objects.get(id=lis_id)
             draft.scheme.opinion_id= opinion.id
